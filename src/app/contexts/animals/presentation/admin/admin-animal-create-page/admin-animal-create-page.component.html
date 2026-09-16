@@ -2,14 +2,6 @@
   <div class="admin-form">
     <div class="admin-form__col">
       <app-file-upload hint="JPG, PNG до 10 МБ — загрузка на сервер появится позже"></app-file-upload>
-
-      <app-input
-        label="О животном"
-        [multiline]="true"
-        [rows]="6"
-        [value]="about()"
-        (valueChange)="about.set($event)"
-      ></app-input>
     </div>
 
     <div class="admin-form__col">
@@ -33,6 +25,15 @@
         (valueChange)="traitsInput.set($event)"
       ></app-input>
     </div>
+
+    <app-input
+      class="admin-form__about"
+      label="О животном"
+      [multiline]="true"
+      [rows]="5"
+      [value]="about()"
+      (valueChange)="about.set($event)"
+    ></app-input>
 
     <div class="admin-form__attributes">
       <div class="admin-form__group">
