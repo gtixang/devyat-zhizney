@@ -138,3 +138,17 @@ values
    true, true, false)
 on conflict (id) do nothing;
 ```
+
+## Тестовые фото (Unsplash, только для демонстрации)
+
+Свободно лицензированные фото (Unsplash License, использование без атрибуции разрешено) —
+подставлены только чтобы каталог не выглядел пустым при демонстрации. Это **не** фото
+реальных животных приюта — как только появятся настоящие фото, эти ссылки нужно заменить
+(см. обсуждение про Supabase Storage в чате).
+
+```sql
+update public.animals set photo_url = 'https://images.unsplash.com/photo-1668036268050-ca69ef2f0ca0?w=1200&auto=format&fit=crop&q=80' where id = 'luna';
+update public.animals set photo_url = 'https://images.unsplash.com/photo-1668194273694-89a5046f0181?w=1200&auto=format&fit=crop&q=80' where id = 'murka';
+update public.animals set photo_url = 'https://images.unsplash.com/photo-1559861985-8c8c4c0fcbb4?w=1200&auto=format&fit=crop&q=80' where id = 'bruno';
+update public.animals set photo_url = 'https://images.unsplash.com/photo-1653176070897-da3de9bbdc3c?w=1200&auto=format&fit=crop&q=80' where id = 'snezhok';
+```
