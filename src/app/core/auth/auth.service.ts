@@ -19,14 +19,26 @@ export class AuthService {
   readonly currentUser = this.currentUserSignal.asReadonly();
   readonly isAuthenticated = computed(() => this.currentUserSignal() !== null);
 
+  /**
+   * Восстановление сессии из localStorage — асинхронное (`getSession()` — промис).
+   * `authGuard` обязан дождаться его перед проверкой `isAuthenticated()`, иначе при
+   * перезагрузке страницы guard видит ещё не восстановленное состояние "не авторизован"
+   * и ошибочно перенаправляет на /login, хотя валидная сессия есть.
+   */
+  private readonly initialSessionLoaded: Promise<void>;
+
   constructor() {
-    this.supabase.auth.getSession().then(({ data }) => {
+    this.initialSessionLoaded = this.supabase.auth.getSession().then(({ data }) => {
       this.currentUserSignal.set(data.session?.user ?? null);
     });
 
     this.supabase.auth.onAuthStateChange((_event, session) => {
       this.currentUserSignal.set(session?.user ?? null);
     });
+  }
+
+  async waitUntilReady(): Promise<void> {
+    await this.initialSessionLoaded;
   }
 
   async signInWithPassword(email: string, password: string): Promise<void> {
