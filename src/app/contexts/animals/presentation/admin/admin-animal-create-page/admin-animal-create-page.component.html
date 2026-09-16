@@ -1,10 +1,8 @@
 <app-section class="admin-page" eyebrow="Админ-панель" heading="Добавить животное">
   <div class="admin-form">
-    <div class="admin-form__col">
-      <app-file-upload hint="JPG, PNG до 10 МБ — загрузка на сервер появится позже"></app-file-upload>
-    </div>
+    <app-file-upload class="admin-form__upload" hint="JPG, PNG до 10 МБ — загрузка на сервер появится позже"></app-file-upload>
 
-    <div class="admin-form__col">
+    <div class="admin-form__fields">
       <app-input label="Кличка" [value]="name()" (valueChange)="name.set($event)"></app-input>
 
       <app-input label="Вид" placeholder="Собака, Кошка…" [value]="species()" (valueChange)="species.set($event)"></app-input>
@@ -25,15 +23,6 @@
         (valueChange)="traitsInput.set($event)"
       ></app-input>
     </div>
-
-    <app-input
-      class="admin-form__about"
-      label="О животном"
-      [multiline]="true"
-      [rows]="5"
-      [value]="about()"
-      (valueChange)="about.set($event)"
-    ></app-input>
 
     <div class="admin-form__attributes">
       <div class="admin-form__group">
@@ -93,6 +82,14 @@
         </div>
       </div>
     </div>
+
+    <app-input
+      label="О животном"
+      [multiline]="true"
+      [rows]="5"
+      [value]="about()"
+      (valueChange)="about.set($event)"
+    ></app-input>
 
     @if (hasSubmitError()) {
       <p class="admin-form__error">Не удалось сохранить животное. Попробуйте ещё раз.</p>

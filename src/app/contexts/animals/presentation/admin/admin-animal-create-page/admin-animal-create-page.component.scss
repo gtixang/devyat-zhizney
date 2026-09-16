@@ -9,23 +9,12 @@
   gap: var(--space-5);
   max-width: 840px;
 
-  @include mixins.respond-to(desktop) {
-    grid-template-columns: 1fr 1fr;
-    align-items: start;
-  }
-
-  &__col {
+  &__fields {
     display: grid;
     gap: var(--space-5);
-    align-content: start;
-  }
 
-  &__about,
-  &__attributes,
-  &__error,
-  &__submit {
-    @include mixins.respond-to(desktop) {
-      grid-column: 1 / -1;
+    @include mixins.respond-to(tablet) {
+      grid-template-columns: repeat(2, 1fr);
     }
   }
 
