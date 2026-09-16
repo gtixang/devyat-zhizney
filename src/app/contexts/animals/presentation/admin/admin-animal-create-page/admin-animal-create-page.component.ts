@@ -7,6 +7,7 @@ import { AnimalsFacade } from '../../../application/animals.facade';
 import { Animal, AnimalGender, AnimalStatus } from '../../../domain/animal.model';
 import { ButtonComponent } from '../../../../../shared/ui/button/button.component';
 import { CheckboxComponent } from '../../../../../shared/ui/checkbox/checkbox.component';
+import { FileUploadComponent } from '../../../../../shared/ui/file-upload/file-upload.component';
 import { InputComponent } from '../../../../../shared/ui/input/input.component';
 import { RadioComponent } from '../../../../../shared/ui/radio/radio.component';
 import { SectionComponent } from '../../../../../shared/ui/section/section.component';
@@ -18,15 +19,15 @@ type SubmitState = { readonly status: 'pending' | 'success' | 'error' };
  * `animals` через AnimalsFacade.create() — доступно только куратору (RLS insert-политика,
  * docs/database/schema.md), маршрут защищён authGuard.
  *
- * Фото не загружается на этом этапе (осознанное решение — см. обсуждение в чате):
- * FileUploadComponent умеет только локальный выбор+превью, реальная загрузка требует
+ * Фото не загружается на сервер на этом этапе (осознанное решение — см. обсуждение в чате):
+ * FileUploadComponent показан для превью выбранного файла, но реальная загрузка требует
  * отдельной настройки Supabase Storage. `photoUrl` сохраняется пустым, как и у остальных
  * животных — каталог уже умеет показывать плейсхолдер вместо фото.
  */
 @Component({
   selector: 'app-admin-animal-create-page',
   standalone: true,
-  imports: [ButtonComponent, CheckboxComponent, InputComponent, RadioComponent, SectionComponent],
+  imports: [ButtonComponent, CheckboxComponent, FileUploadComponent, InputComponent, RadioComponent, SectionComponent],
   templateUrl: './admin-animal-create-page.component.html',
   styleUrl: './admin-animal-create-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
