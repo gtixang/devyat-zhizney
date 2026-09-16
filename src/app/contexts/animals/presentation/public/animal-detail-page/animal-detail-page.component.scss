@@ -62,8 +62,14 @@
   }
 
   &__photo {
+    width: 100%;
     aspect-ratio: 4 / 5;
     border-radius: var(--radius-lg);
+    object-fit: cover;
+    background: var(--color-background);
+  }
+
+  &__photo--placeholder {
     display: flex;
     align-items: center;
     justify-content: center;
