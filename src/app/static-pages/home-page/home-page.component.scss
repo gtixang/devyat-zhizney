@@ -152,12 +152,18 @@
   max-width: 1280px;
 }
 
+.home-hero,
+.home-featured,
+.home-steps,
+.home-help {
+  margin: 0 auto;
+}
+
 .home-featured,
 .home-steps,
 .home-help {
   display: block;
   padding: var(--space-9) var(--space-6);
-  margin: 0 auto;
 }
 
 // Сетка карточек — 1 колонка / 2 (планшет) / 4 (десктоп) — одинаковая у обеих секций.
