@@ -1,0 +1,22 @@
+<app-section class="animal-catalog-page" eyebrow="Каталог" heading="Ищет семью" headingLevel="h1">
+  <p class="animal-catalog-page__lede">Помогаем животным найти человека, которому они смогут доверять.</p>
+
+  <div class="animal-catalog-page__toolbar">
+    <app-tabs
+      class="animal-catalog-page__filter"
+      [tabs]="speciesFilters()"
+      ariaLabel="Фильтр по виду животного"
+      (activeIdChange)="onSpeciesFilterChange($event)"
+    ></app-tabs>
+
+    <p class="animal-catalog-page__count" aria-live="polite">{{ resultsCountLabel() }}</p>
+  </div>
+
+  <div class="animal-catalog-page__grid">
+    @for (animal of filteredAnimals(); track animal.id) {
+      <app-animal-card [animal]="animal"></app-animal-card>
+    } @empty {
+      <p class="animal-catalog-page__empty-text">По вашему запросу пушистиков не найдено.</p>
+    }
+  </div>
+</app-section>

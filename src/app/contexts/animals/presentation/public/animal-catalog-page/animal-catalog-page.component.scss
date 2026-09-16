@@ -1,0 +1,62 @@
+@use 'mixins';
+
+.animal-catalog-page {
+  display: block;
+  padding: var(--space-9) var(--space-6);
+  max-width: 1280px;
+  margin: 0 auto;
+
+  &__lede {
+    max-width: 60ch;
+    color: var(--color-text-secondary);
+    font-size: var(--text-body-lg-size);
+  }
+
+  &__toolbar {
+    margin-top: var(--space-7);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+
+    @include mixins.respond-to(tablet) {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
+  &__filter {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  &__count {
+    color: var(--color-text-secondary);
+    font-size: var(--text-body-sm-size);
+    white-space: nowrap;
+  }
+
+  &__grid {
+    margin-top: var(--space-7);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+
+    @include mixins.respond-to(tablet) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include mixins.respond-to(desktop) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  &__empty-text {
+    grid-column: 1 / -1;
+    color: var(--color-text-secondary);
+    text-align: center;
+    padding: var(--space-9) 0;
+  }
+}

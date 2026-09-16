@@ -1,0 +1,63 @@
+{
+  "product": "Девять жизней",
+  "name": "design-system",
+  "version": "2.0.0",
+  "theme": "dark-editorial",
+  "status": "current",
+  "summary": "Единая тёмная (dark / modern / editorial) дизайн-система для сайта пристройства животных «Девять жизней»: публичная часть и админ-панель куратора. Заменяет собой предыдущее светлое направление (палитра confetti/marquee из v1) — старая палитра нигде в проекте не используется.",
+  "supersedes": {
+    "version": "1.0.0",
+    "reason": "Светлая палитра с розово-конфетти подложками карточек и бегущей строкой статистики (\"Project Paws\") заменена тёмной editorial-системой по требованию нового визуального направления.",
+    "removed_decisions": [
+      "confetti-подложки под фото карточек",
+      "полноширинная розовая marquee-строка статистики",
+      "зелёный/пастельный/терракотовый акцентные цвета из docs/specs/styles.md"
+    ]
+  },
+  "single_source_of_truth": {
+    "design_direction": "docs/design-direction.md",
+    "note": "Все цвета, типографика, компоненты и правила взаимодействия в этом design-system обязаны соответствовать docs/design-direction.md. При конфликте — правит design-direction.md."
+  },
+  "sources": {
+    "product_structure_schemas": [
+      "docs/scheme/general-schema.txt",
+      "docs/scheme/main-page.txt",
+      "docs/scheme/pet-card.txt",
+      "docs/scheme/adoption-application.txt",
+      "docs/scheme/admin-panel.txt"
+    ],
+    "code_style_specs": [
+      "docs/specs/styles.md",
+      "docs/specs/angular-html.md",
+      "docs/specs/ts.md"
+    ],
+    "brand_assets": [
+      "docs/brand/logo/logo-mark--on-dark.png",
+      "docs/brand/logo/logo-mark--ink.png",
+      "docs/brand/logo/logo-mark--original.png"
+    ]
+  },
+  "files": [
+    {
+      "path": "docs/design-system/index.html",
+      "purpose": "Единственная HTML-страница дизайн-системы: живой, визуально работающий каталог всех токенов и переиспользуемых компонентов (цвета, типографика, spacing/radius/shadow, кнопки, карточки животных, фильтры, бейджи/статусы, формы, навигация, hero, статистика, секции). Самодостаточный файл: вся разметка, стили и минимальный demo-JS (мобильное меню) находятся внутри него — без внешних CSS/JS файлов проекта."
+    }
+  ],
+  "tokens_location": {
+    "where": "docs/design-system/index.html, блок :root { ... } в <style>",
+    "how_to_reuse_in_app": "При переносе в Angular значения токенов (--color-*, --text-*, --space-*, --radius-*, --shadow-*) копируются как есть в src/styles/_variables.scss (см. docs/specs/styles.md). В шаблонах компонентов эти токены используются внутри собственных БЭМ-селекторов компонента (например, .pet-card__name { color: var(--color-text-primary); }), а не как общие utility-классы — utility-CSS и Tailwind в проекте запрещены."
+  },
+  "component_class_naming": {
+    "convention": "БЭМ, без префиксов и без утилитарных классов",
+    "real_component_classes": [
+      "btn", "pet-card", "filter-pill", "filter-group", "badge", "form-field",
+      "input", "textarea", "select", "checkbox", "radio", "range", "file-upload",
+      "site-header", "nav-link", "mobile-menu", "hero", "stats", "stat-card",
+      "section", "news-card", "cta-band", "help-card", "volunteer-card"
+    ],
+    "documentation_only_classes": {
+      "prefix": "dss-",
+      "note": "Классы с префиксом dss- (dss-section, dss-swatch, dss-toc и т.п.) — это разметка/оформление самой страницы дизайн-системы (навигация по разделам, подписи, сетки примеров). Их не нужно переносить в Angular-компоненты — переносятся только классы из component_class_naming.real_component_classes и CSS-токены."
+    }
+  }
+}

@@ -1,0 +1,102 @@
+<app-section
+  class="adoption-page"
+  eyebrow="Анкета"
+  heading="Хочу познакомиться"
+  headingLevel="h1"
+>
+  @if (animal(); as pet) {
+    <p class="adoption-page__pet">Питомец: {{ pet.name }}</p>
+  }
+
+  @if (!isSubmitted()) {
+    <div class="adoption-form">
+      <app-input label="Имя" [value]="applicantName()" (valueChange)="applicantName.set($event)"></app-input>
+
+      <app-input
+        label="Телефон"
+        type="tel"
+        [value]="phone()"
+        (valueChange)="phone.set($event)"
+      ></app-input>
+
+      <app-input label="Telegram" [value]="telegram()" (valueChange)="telegram.set($event)"></app-input>
+
+      <app-input
+        label="Где вы живёте?"
+        [value]="city()"
+        (valueChange)="city.set($event)"
+      ></app-input>
+
+      <div class="adoption-form__toggle">
+        <span class="adoption-form__toggle-label">Есть ли другие животные?</span>
+        <div class="toggle-group" role="group" aria-label="Есть ли другие животные?">
+          <button
+            type="button"
+            class="toggle-group__option"
+            [class.toggle-group__option--active]="hasOtherAnimals() === true"
+            (click)="onHasOtherAnimalsChange(true)"
+          >
+            Да
+          </button>
+          <button
+            type="button"
+            class="toggle-group__option"
+            [class.toggle-group__option--active]="hasOtherAnimals() === false"
+            (click)="onHasOtherAnimalsChange(false)"
+          >
+            Нет
+          </button>
+        </div>
+      </div>
+
+      <div class="adoption-form__toggle">
+        <span class="adoption-form__toggle-label">Есть ли дети?</span>
+        <div class="toggle-group" role="group" aria-label="Есть ли дети?">
+          <button
+            type="button"
+            class="toggle-group__option"
+            [class.toggle-group__option--active]="hasChildren() === true"
+            (click)="onHasChildrenChange(true)"
+          >
+            Да
+          </button>
+          <button
+            type="button"
+            class="toggle-group__option"
+            [class.toggle-group__option--active]="hasChildren() === false"
+            (click)="onHasChildrenChange(false)"
+          >
+            Нет
+          </button>
+        </div>
+      </div>
+
+      <app-input
+        label="Расскажите немного о себе"
+        [multiline]="true"
+        [value]="aboutApplicant()"
+        (valueChange)="aboutApplicant.set($event)"
+      ></app-input>
+
+      @if (hasSubmitError()) {
+        <p class="adoption-form__error">Не удалось отправить заявку. Проверьте связь и попробуйте ещё раз.</p>
+      }
+
+      <app-button
+        class="adoption-form__submit"
+        variant="accent"
+        [fullWidth]="true"
+        [disabled]="!canSubmit() || isSubmitting()"
+        (pressed)="onSubmit()"
+      >
+        {{ isSubmitting() ? 'Отправка…' : 'Отправить заявку' }}
+      </app-button>
+    </div>
+  } @else {
+    <div class="adoption-form__success">
+      <p>Спасибо! Заявка отправлена.</p>
+      <p class="adoption-form__success-note">Куратор свяжется с вами в ближайшее время.</p>
+      <a routerLink="/animals">Вернуться в каталог</a>
+    </div>
+  }
+</app-section>

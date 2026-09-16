@@ -1,0 +1,20 @@
+.login-page {
+  display: block;
+  padding: var(--space-11) var(--space-6);
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.login-form {
+  display: grid;
+  gap: var(--space-5);
+
+  &__error {
+    color: var(--color-error);
+    font-size: var(--text-body-sm-size);
+  }
+
+  &__submit {
+    margin-top: var(--space-2);
+  }
+}

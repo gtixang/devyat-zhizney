@@ -1,0 +1,30 @@
+<app-section class="admin-page" eyebrow="Админ-панель" heading="Заявки">
+  <div class="admin-table-wrap">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th scope="col">Заявитель</th>
+          <th scope="col">Питомец</th>
+          <th scope="col">Телефон</th>
+          <th scope="col">Статус</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track row.application.id) {
+          <tr>
+            <td>{{ row.application.applicantName }}</td>
+            <td>{{ row.animalName }}</td>
+            <td>{{ row.application.phone }}</td>
+            <td>
+              <app-badge [tone]="statusTone(row.application.status)">{{ statusLabel(row.application.status) }}</app-badge>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="4" class="admin-table__empty">Заявок пока нет.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</app-section>

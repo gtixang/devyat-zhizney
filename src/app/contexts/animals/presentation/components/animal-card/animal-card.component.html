@@ -1,0 +1,31 @@
+<article class="animal-card">
+  <a
+    class="animal-card__photo-wrap"
+    [routerLink]="['/animals', animal().id]"
+    [attr.aria-label]="'Открыть анкету: ' + animal().name"
+  >
+    @if (animal().photoUrl) {
+      <img class="animal-card__photo" [src]="animal().photoUrl" [alt]="'Фото ' + animal().name" loading="lazy" />
+    } @else {
+      <div class="animal-card__photo animal-card__photo--placeholder" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M4 10c0-1 1-2 2-2s2 1 2 2M16 10c0-1 1-2 2-2s2 1 2 2M8 15c1.5 1.5 6.5 1.5 8 0" />
+        </svg>
+      </div>
+    }
+    <app-badge class="animal-card__status" [tone]="statusTone()">{{ statusLabel() }}</app-badge>
+  </a>
+
+  <div class="animal-card__body">
+    <div class="animal-card__name">{{ animal().name }}</div>
+    <div class="animal-card__meta">{{ animal().species }} · {{ animal().age }} лет</div>
+
+    @if (animal().traits.length > 0) {
+      <p class="animal-card__desc">{{ animal().traits.join(', ') }}</p>
+    }
+
+    <div class="animal-card__footer">
+      <a class="animal-card__link" [routerLink]="['/animals', animal().id]">Познакомиться →</a>
+    </div>
+  </div>
+</article>

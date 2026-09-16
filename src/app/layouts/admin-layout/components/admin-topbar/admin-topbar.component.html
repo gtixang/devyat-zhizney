@@ -1,0 +1,9 @@
+<header class="admin-topbar">
+  @if (authService.currentUser(); as user) {
+    <p class="admin-topbar__greeting">Добрый день, {{ user.email }}</p>
+  } @else {
+    <p class="admin-topbar__greeting">Добрый день</p>
+  }
+
+  <app-button variant="ghost" size="sm" (pressed)="onSignOut()">Выйти</app-button>
+</header>

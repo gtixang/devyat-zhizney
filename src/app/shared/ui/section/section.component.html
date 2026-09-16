@@ -1,0 +1,19 @@
+<section class="section">
+  @if (eyebrow() || heading()) {
+    <header class="section__head">
+      @if (eyebrow()) {
+        <p class="section__eyebrow">{{ eyebrow() }}</p>
+      }
+      @if (heading()) {
+        @if (headingLevel() === 'h1') {
+          <h1 class="section__heading">{{ heading() }}</h1>
+        } @else {
+          <h2 class="section__heading">{{ heading() }}</h2>
+        }
+      }
+    </header>
+  }
+  <div class="section__body">
+    <ng-content></ng-content>
+  </div>
+</section>

@@ -1,0 +1,124 @@
+@use 'mixins';
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  height: 52px;
+  padding: 0 var(--space-6);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-button-size);
+  font-weight: var(--text-button-weight);
+  white-space: nowrap;
+  border: 1px solid transparent;
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast);
+
+  &:focus-visible {
+    @include mixins.focus-ring;
+    border-radius: var(--radius-pill);
+  }
+
+  &--sm {
+    height: 40px;
+    padding: 0 var(--space-5);
+    font-size: 0.9375rem;
+  }
+
+  &--full {
+    display: flex;
+    width: 100%;
+  }
+
+  &--primary {
+    background: var(--color-primary);
+    color: var(--color-text-primary);
+
+    &:hover:not(:disabled) {
+      background: var(--color-primary-hover);
+    }
+
+    &:active:not(:disabled) {
+      background: var(--color-primary-active);
+      transform: scale(0.98);
+    }
+  }
+
+  &--accent {
+    background: var(--color-accent);
+    color: var(--color-text-primary);
+
+    &:hover:not(:disabled) {
+      background: var(--color-accent-hover);
+    }
+
+    &:active:not(:disabled) {
+      background: var(--color-accent-active);
+      transform: scale(0.98);
+    }
+  }
+
+  &--secondary {
+    background: transparent;
+    color: var(--color-text-primary);
+    border-color: var(--color-border-strong);
+
+    &:hover:not(:disabled) {
+      background: var(--color-surface-hover);
+    }
+
+    &:active:not(:disabled) {
+      background: var(--color-surface-active);
+      transform: scale(0.98);
+    }
+  }
+
+  &--ghost {
+    background: var(--color-surface);
+    color: var(--color-text-primary);
+
+    &:hover:not(:disabled) {
+      background: var(--color-surface-hover);
+    }
+
+    &:active:not(:disabled) {
+      background: var(--color-surface-active);
+      transform: scale(0.98);
+    }
+  }
+
+  &--text {
+    height: auto;
+    padding: 0;
+    color: var(--color-primary);
+    border-radius: var(--radius-sm);
+
+    &:hover:not(:disabled) {
+      color: var(--color-primary-hover);
+      text-decoration: underline;
+    }
+
+    &:active:not(:disabled) {
+      color: var(--color-primary-active);
+    }
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    color: var(--color-text-disabled);
+
+    &.btn--primary,
+    &.btn--accent,
+    &.btn--ghost {
+      background: var(--color-surface);
+    }
+
+    &.btn--secondary {
+      border-color: var(--color-border);
+    }
+  }
+}

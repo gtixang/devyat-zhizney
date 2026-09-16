@@ -1,0 +1,32 @@
+<app-section class="admin-page" eyebrow="Админ-панель" heading="Животные">
+  <div class="admin-page__actions">
+    <app-button variant="accent" size="sm" link="/admin/animals/new">Добавить животное</app-button>
+  </div>
+
+  <div class="admin-table-wrap">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th scope="col">Кличка</th>
+          <th scope="col">Вид</th>
+          <th scope="col">Возраст</th>
+          <th scope="col">Статус</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (animal of animals(); track animal.id) {
+          <tr>
+            <td>{{ animal.name }}</td>
+            <td>{{ animal.species }}</td>
+            <td>{{ animal.age }}</td>
+            <td><app-badge [tone]="statusTone(animal.status)">{{ statusLabel(animal.status) }}</app-badge></td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="4" class="admin-table__empty">Животных пока нет.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</app-section>

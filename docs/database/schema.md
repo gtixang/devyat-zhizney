@@ -1,0 +1,140 @@
+# Схема БД (Supabase / PostgreSQL)
+
+Соответствует доменным моделям:
+
+- [`src/app/contexts/animals/domain/animal.model.ts`](../../src/app/contexts/animals/domain/animal.model.ts)
+- [`src/app/contexts/adoption/domain/adoption-application.model.ts`](../../src/app/contexts/adoption/domain/adoption-application.model.ts)
+
+Таблицы в Postgres используют `snake_case` (идиоматично для SQL), домен на клиенте — `camelCase`.
+Маппинг между ними — в infrastructure-слое каждого контекста
+(`animals.repository.ts`, `adoption-applications.repository.ts`), компоненты и
+application-слой продолжают работать только с camelCase-моделями.
+
+`animals.id` — читаемый текстовый slug (`luna`, `bruno`), а не UUID: он уже используется
+в URL (`/animals/:id`, `/animals/:id/adopt`) и в mock-данных, менять на UUID нет причин.
+
+## Как применить
+
+Выполнить весь скрипт ниже в Supabase Dashboard → **SQL Editor** → New query → Run.
+Скрипт идемпотентен (`if not exists`), повторный запуск ничего не сломает.
+
+```sql
+create extension if not exists "pgcrypto";
+
+-- ============================================================
+-- animals
+-- ============================================================
+create table if not exists public.animals (
+  id text primary key,
+  name text not null,
+  species text not null,
+  gender text not null check (gender in ('male', 'female')),
+  age integer not null check (age >= 0),
+  status text not null default 'in_shelter' check (status in ('in_shelter', 'in_foster')),
+  traits text[] not null default '{}',
+  about text not null default '',
+  vaccinated boolean not null default false,
+  sterilized boolean not null default false,
+  dewormed boolean not null default false,
+  photo_url text not null default '',
+  created_at timestamptz not null default now()
+);
+
+alter table public.animals enable row level security;
+
+drop policy if exists "Публичное чтение животных" on public.animals;
+create policy "Публичное чтение животных"
+  on public.animals for select
+  to anon, authenticated
+  using (true);
+
+drop policy if exists "Куратор добавляет животных" on public.animals;
+create policy "Куратор добавляет животных"
+  on public.animals for insert
+  to authenticated
+  with check (true);
+
+drop policy if exists "Куратор редактирует животных" on public.animals;
+create policy "Куратор редактирует животных"
+  on public.animals for update
+  to authenticated
+  using (true)
+  with check (true);
+
+-- ============================================================
+-- adoption_applications
+-- ============================================================
+create table if not exists public.adoption_applications (
+  id uuid primary key default gen_random_uuid(),
+  animal_id text not null references public.animals (id) on delete cascade,
+  applicant_name text not null,
+  phone text not null,
+  telegram text not null default '',
+  city text not null default '',
+  has_other_animals boolean not null default false,
+  has_children boolean not null default false,
+  about_applicant text not null default '',
+  status text not null default 'new' check (status in ('new', 'in_progress', 'approved')),
+  created_at timestamptz not null default now()
+);
+
+alter table public.adoption_applications enable row level security;
+
+drop policy if exists "Публичная отправка заявки" on public.adoption_applications;
+create policy "Публичная отправка заявки"
+  on public.adoption_applications for insert
+  to anon, authenticated
+  with check (true);
+
+drop policy if exists "Куратор читает заявки" on public.adoption_applications;
+create policy "Куратор читает заявки"
+  on public.adoption_applications for select
+  to authenticated
+  using (true);
+
+drop policy if exists "Куратор меняет статус заявки" on public.adoption_applications;
+create policy "Куратор меняет статус заявки"
+  on public.adoption_applications for update
+  to authenticated
+  using (true)
+  with check (true);
+```
+
+## Логика доступа (RLS)
+
+| Таблица                | Кто читает                | Кто пишет                                  |
+| ----------------------- | -------------------------- | -------------------------------------------- |
+| `animals`                | все (аноним + куратор)     | только авторизованный куратор (insert/update) |
+| `adoption_applications`  | только авторизованный куратор | insert — все (форма анкеты); update — только куратор |
+
+Отдельной системы ролей (admin/куратор/волонтёр) пока нет — используется единственное
+деление Supabase Auth "аноним / авторизованный", как и в `AuthService`
+(`isAuthenticated`). Полноценные роли — отдельная задача, когда появится реальная
+потребность больше чем в одном курат­оре.
+
+## Опционально: тестовые данные
+
+Тот же набор, что в `animals.mock-data.ts` — если хотите сразу увидеть что-то на
+странице каталога после переключения с mock на реальные данные:
+
+```sql
+insert into public.animals (id, name, species, gender, age, status, traits, about, vaccinated, sterilized, dewormed)
+values
+  ('luna', 'Луна', 'Собака', 'female', 3, 'in_shelter',
+   array['Спокойная', 'Дружелюбная', 'Приучена к выгулу'],
+   'Луна очень ласковая и любит людей, легко находит общий язык с детьми и другими животными.',
+   true, true, true),
+  ('murka', 'Мурка', 'Кошка', 'female', 1, 'in_shelter',
+   array['Ласковая', 'Любит спать на руках'],
+   'Мурка обожает нежиться на солнышке и совсем не боится других животных.',
+   true, false, true),
+  ('bruno', 'Бруно', 'Собака', 'male', 2, 'in_foster',
+   array['Активный', 'Любит детей'],
+   'Бруно ищет активную семью, готов на долгие прогулки и игры.',
+   true, true, true),
+  ('snezhok', 'Снежок', 'Кошка', 'male', 4, 'in_shelter',
+   array['Спокойный', 'Аккуратный'],
+   'Снежок — рассудительный кот, который ценит тишину и уют.',
+   true, true, false)
+on conflict (id) do nothing;
+```

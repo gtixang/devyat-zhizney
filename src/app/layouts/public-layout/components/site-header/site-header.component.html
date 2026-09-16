@@ -1,0 +1,37 @@
+<header class="site-header">
+  <a class="site-header__brand" routerLink="/">
+    <img class="site-header__logo" src="/brand/logo-mark.png" alt="Логотип «Девять жизней»" />
+    Девять жизней
+  </a>
+
+  <nav class="site-header__nav">
+    <a class="nav-link" routerLink="/animals" routerLinkActive="nav-link--active">Животные</a>
+    <a class="nav-link" routerLink="/help" routerLinkActive="nav-link--active">Помочь</a>
+    <a class="nav-link" routerLink="/volunteers" routerLinkActive="nav-link--active">Волонтёрам</a>
+    <a class="nav-link" routerLink="/about" routerLinkActive="nav-link--active">О нас</a>
+  </nav>
+
+  <div class="site-header__actions">
+    <app-button variant="accent" size="sm" link="/help">Поддержать</app-button>
+    <button
+      type="button"
+      class="site-header__burger"
+      [attr.aria-expanded]="isMobileMenuOpen()"
+      aria-controls="mobileMenu"
+      (click)="onToggleMobileMenu()"
+    >
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M4 7h16M4 12h16M4 17h16" />
+      </svg>
+    </button>
+  </div>
+
+  @if (isMobileMenuOpen()) {
+    <nav class="mobile-menu" id="mobileMenu">
+      <a class="mobile-menu__link" routerLink="/animals" (click)="onCloseMobileMenu()">Животные</a>
+      <a class="mobile-menu__link" routerLink="/help" (click)="onCloseMobileMenu()">Помочь</a>
+      <a class="mobile-menu__link" routerLink="/volunteers" (click)="onCloseMobileMenu()">Волонтёрам</a>
+      <a class="mobile-menu__link" routerLink="/about" (click)="onCloseMobileMenu()">О нас</a>
+    </nav>
+  }
+</header>

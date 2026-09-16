@@ -1,0 +1,17 @@
+<label class="checkbox" [class.checkbox--disabled]="disabled()">
+  <input
+    type="checkbox"
+    class="checkbox__input"
+    [checked]="checked()"
+    [disabled]="disabled()"
+    (change)="onChange($event)"
+  />
+  <span class="checkbox__box">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+      <path d="M20 6 9 17l-5-5" />
+    </svg>
+  </span>
+  @if (label()) {
+    <span class="checkbox__label">{{ label() }}</span>
+  }
+</label>

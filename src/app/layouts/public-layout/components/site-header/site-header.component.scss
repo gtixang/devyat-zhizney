@@ -1,0 +1,134 @@
+@use 'mixins';
+
+:host {
+  display: block;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+  padding: var(--space-4) var(--space-6);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+
+  &__brand {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-weight: 800;
+    font-size: 1.0625rem;
+    color: var(--color-text-primary);
+  }
+
+  &__logo {
+    height: 28px;
+    width: auto;
+  }
+
+  &__nav {
+    display: none;
+
+    @include mixins.respond-to(desktop) {
+      display: flex;
+      gap: var(--space-6);
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  &__burger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    background: var(--color-surface-hover);
+
+    &:focus-visible {
+      @include mixins.focus-ring;
+    }
+
+    @include mixins.respond-to(desktop) {
+      display: none;
+    }
+  }
+}
+
+.nav-link {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  padding: var(--space-2) 0;
+  position: relative;
+  transition: color var(--transition-fast);
+
+  &:hover {
+    color: var(--color-text-primary);
+  }
+
+  &:focus-visible {
+    @include mixins.focus-ring;
+    border-radius: var(--radius-sm);
+  }
+
+  &--active {
+    color: var(--color-text-primary);
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -4px;
+      height: 2px;
+      background: var(--color-primary);
+      border-radius: 2px;
+    }
+  }
+}
+
+.mobile-menu {
+  position: absolute;
+  top: 100%;
+  left: var(--space-4);
+  right: var(--space-4);
+  margin-top: var(--space-3);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3);
+  display: grid;
+  gap: var(--space-1);
+  box-shadow: var(--shadow-md);
+
+  @include mixins.respond-to(desktop) {
+    display: none;
+  }
+
+  &__link {
+    padding: var(--space-4) var(--space-2);
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    border-bottom: 1px solid var(--color-border);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:focus-visible {
+      @include mixins.focus-ring;
+      border-radius: var(--radius-sm);
+    }
+  }
+}

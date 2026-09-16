@@ -1,0 +1,69 @@
+@if (animal() === undefined) {
+  <div class="animal-detail-page animal-detail-page--empty">
+    <p>Загрузка…</p>
+  </div>
+} @else if (animal(); as pet) {
+  <article class="animal-detail-page">
+    <nav class="animal-detail-page__breadcrumb" aria-label="Хлебные крошки">
+      <a routerLink="/animals">Животные</a>
+      <span aria-hidden="true">/</span>
+      <span>{{ pet.name }}</span>
+    </nav>
+
+    <div class="animal-detail-page__hero">
+      <div class="animal-detail-page__photo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M4 10c0-1 1-2 2-2s2 1 2 2M16 10c0-1 1-2 2-2s2 1 2 2M8 15c1.5 1.5 6.5 1.5 8 0" />
+        </svg>
+      </div>
+
+      <div class="animal-detail-page__info">
+        <h1 class="animal-detail-page__name">{{ pet.name }}</h1>
+        <p class="animal-detail-page__meta">{{ pet.species }} · {{ genderLabel() }} · {{ pet.age }} лет</p>
+
+        @if (pet.traits.length > 0) {
+          <ul class="animal-detail-page__traits">
+            @for (trait of pet.traits; track trait) {
+              <li><app-badge tone="neutral">{{ trait }}</app-badge></li>
+            }
+          </ul>
+        }
+
+        <app-button class="animal-detail-page__cta" variant="accent" [link]="'/animals/' + pet.id + '/adopt'">
+          Хочу познакомиться
+        </app-button>
+      </div>
+    </div>
+
+    <app-section class="animal-detail-page__section" heading="О питомце">
+      <p class="animal-detail-page__about">{{ pet.about }}</p>
+    </app-section>
+
+    <app-section class="animal-detail-page__section" heading="Здоровье">
+      <ul class="animal-detail-page__health">
+        @for (item of healthItems(); track item.label) {
+          <li class="animal-detail-page__health-item" [class.animal-detail-page__health-item--done]="item.done">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+              <path d="M20 6 9 17l-5-5" />
+            </svg>
+            {{ item.label }}
+          </li>
+        }
+      </ul>
+    </app-section>
+
+    <app-section class="animal-detail-page__section" heading="Как забрать питомца">
+      <ol class="animal-detail-page__steps">
+        <li><span aria-hidden="true">01</span>Оставьте заявку</li>
+        <li><span aria-hidden="true">02</span>Мы свяжемся с вами</li>
+        <li><span aria-hidden="true">03</span>Познакомьтесь лично</li>
+        <li><span aria-hidden="true">04</span>Заберите нового друга</li>
+      </ol>
+    </app-section>
+  </article>
+} @else {
+  <div class="animal-detail-page animal-detail-page--empty">
+    <p>Питомец не найден.</p>
+    <a routerLink="/animals">Вернуться в каталог</a>
+  </div>
+}

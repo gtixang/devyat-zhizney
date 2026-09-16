@@ -1,0 +1,10 @@
+{
+  // Не даём VS Code перехватывать localhost:4200 и открывать его
+  // во встроенном "Simple Browser" — всегда открываем во внешнем браузере
+  "remote.portsAttributes": {
+    "4200": {
+      "label": "Angular Dev Server",
+      "onAutoForward": "openBrowser"
+    }
+  }
+}

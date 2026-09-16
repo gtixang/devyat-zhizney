@@ -1,0 +1,117 @@
+<section class="home-hero">
+  <div class="home-hero__content">
+    <p class="home-hero__eyebrow">Приют «Девять жизней»</p>
+    <h1 class="home-hero__title">Каждому <em>нужен</em> дом.</h1>
+    <p class="home-hero__lede">Помогаем животным найти человека, которому они смогут доверять.</p>
+
+    <div class="home-hero__actions">
+      <app-button variant="accent" link="/animals">Найти питомца</app-button>
+      <app-button variant="secondary" link="/help">Помочь</app-button>
+    </div>
+
+    <p class="home-hero__trust">
+      <span class="home-hero__trust-avatars" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </span>
+      Семьи уже находят здесь своих питомцев
+    </p>
+  </div>
+
+  <div class="home-hero__media" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M12 21c-4-3-8-6-8-10a4 4 0 0 1 7-2.6A4 4 0 0 1 18 11c0 4-4 7-8 10Z" />
+    </svg>
+    <span class="home-hero__badge">
+      <b>{{ totalAnimalsCount() }}</b>
+      <span>ищут дом</span>
+    </span>
+  </div>
+</section>
+
+<app-section class="home-featured" eyebrow="Каталог" heading="Они ищут семью">
+  <div class="home-featured__grid">
+    @for (animal of featuredAnimals(); track animal.id) {
+      <app-animal-card [animal]="animal"></app-animal-card>
+    }
+  </div>
+  <div class="home-featured__footer">
+    <app-button variant="secondary" link="/animals">Все животные</app-button>
+  </div>
+</app-section>
+
+<app-section class="home-steps" eyebrow="Как это работает" heading="Три простых шага">
+  <ol class="home-steps__list">
+    <li class="home-steps__item">
+      <span class="home-steps__number" aria-hidden="true">01</span>
+      <h3 class="home-steps__title">Найдите животное</h3>
+    </li>
+    <li class="home-steps__item">
+      <span class="home-steps__number" aria-hidden="true">02</span>
+      <h3 class="home-steps__title">Познакомьтесь</h3>
+    </li>
+    <li class="home-steps__item">
+      <span class="home-steps__number" aria-hidden="true">03</span>
+      <h3 class="home-steps__title">Заберите домой</h3>
+    </li>
+  </ol>
+</app-section>
+
+<app-section class="home-help" eyebrow="Участвовать" heading="Как можно помочь">
+  <div class="home-help__grid">
+    <app-card [hoverable]="true" class="home-help__item">
+      <a class="home-help__link" routerLink="/animals">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M12 21c-4-3-8-6-8-10a4 4 0 0 1 7-2.6A4 4 0 0 1 18 11c0 4-4 7-8 10Z" />
+        </svg>
+        <h3 class="home-help__title">Приютить</h3>
+        <p class="home-help__desc">Забрать животное насовсем в свою семью.</p>
+      </a>
+    </app-card>
+
+    <app-card [hoverable]="true" class="home-help__item">
+      <a class="home-help__link" routerLink="/help">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M3 11l9-7 9 7M5 10v10h14V10" />
+        </svg>
+        <h3 class="home-help__title">Передержка</h3>
+        <p class="home-help__desc">Временный дом на период до пристройства.</p>
+      </a>
+    </app-card>
+
+    <app-card [hoverable]="true" class="home-help__item">
+      <a class="home-help__link" routerLink="/volunteers">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path
+            d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm10 0-2-2m0 0 2-2m-2 2h6"
+          />
+        </svg>
+        <h3 class="home-help__title">Волонтёрство</h3>
+        <p class="home-help__desc">Помощь на выгулах, съёмках, мероприятиях.</p>
+      </a>
+    </app-card>
+
+    <app-card [hoverable]="true" class="home-help__item">
+      <a class="home-help__link" routerLink="/help">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path
+            d="M12 20.5s-7-4.35-9.5-8.5C.7 9 1.9 5.5 5 4.6 7 4 9 4.8 12 8c3-3.2 5-4 7-3.4 3.1.9 4.3 4.4 2.5 7.4-2.5 4.15-9.5 8.5-9.5 8.5Z"
+          />
+        </svg>
+        <h3 class="home-help__title">Пожертвовать</h3>
+        <p class="home-help__desc">Помочь кормом, лечением и содержанием приюта.</p>
+      </a>
+    </app-card>
+  </div>
+</app-section>
+
+<section class="home-final-cta">
+  <h2 class="home-final-cta__title">Помочь может каждый</h2>
+  <p class="home-final-cta__text">
+    Забрать домой, приютить на время или просто рассказать друзьям — любой шаг приближает
+    питомца к новой семье.
+  </p>
+  <app-button variant="ghost" link="/help">Узнать, как помочь</app-button>
+</section>

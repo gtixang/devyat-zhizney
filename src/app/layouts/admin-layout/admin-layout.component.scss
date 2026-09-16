@@ -1,0 +1,31 @@
+@use 'mixins';
+
+:host {
+  display: block;
+  min-height: 100dvh;
+}
+
+.admin-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+
+  @include mixins.respond-to(desktop) {
+    flex-direction: row;
+  }
+
+  &__sidebar {
+    @include mixins.respond-to(desktop) {
+      flex: none;
+    }
+  }
+
+  &__main {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  &__content {
+    padding: var(--space-6);
+  }
+}

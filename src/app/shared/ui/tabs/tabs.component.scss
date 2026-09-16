@@ -1,0 +1,35 @@
+@use 'mixins';
+
+.tabs {
+  display: inline-flex;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  padding: 4px;
+
+  &__tab {
+    height: 38px;
+    padding: 0 var(--space-5);
+    border-radius: var(--radius-pill);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    transition:
+      background-color var(--transition-fast),
+      color var(--transition-fast);
+
+    &:hover:not(&--active) {
+      color: var(--color-text-primary);
+    }
+
+    &:focus-visible {
+      @include mixins.focus-ring;
+      border-radius: var(--radius-pill);
+    }
+
+    &--active {
+      background: var(--color-primary);
+      color: var(--color-text-primary);
+    }
+  }
+}

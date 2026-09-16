@@ -1,0 +1,28 @@
+<label class="file-upload" [class.file-upload--has-file]="fileName()">
+  <input type="file" class="file-upload__input" [accept]="accept()" (change)="onChange($event)" />
+
+  @if (!fileName()) {
+    <span class="file-upload__placeholder">
+      <svg
+        width="28"
+        height="28"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.5"
+      >
+        <path d="M12 16V4m0 0 4 4m-4-4-4 4M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" />
+      </svg>
+      <b>Перетащите файл сюда</b>
+      <span>или нажмите, чтобы выбрать ({{ hint() }})</span>
+    </span>
+  }
+
+  @if (previewUrl(); as url) {
+    <img class="file-upload__preview" [src]="url" alt="Превью выбранного файла" />
+  }
+
+  @if (fileName(); as name) {
+    <span class="file-upload__filename">{{ name }}</span>
+  }
+</label>

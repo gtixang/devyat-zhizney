@@ -1,0 +1,15 @@
+<label class="radio" [class.radio--disabled]="disabled()">
+  <input
+    type="radio"
+    class="radio__input"
+    [name]="name()"
+    [value]="value()"
+    [checked]="checked()"
+    [disabled]="disabled()"
+    (change)="onChange()"
+  />
+  <span class="radio__dot"></span>
+  @if (label()) {
+    <span class="radio__label">{{ label() }}</span>
+  }
+</label>

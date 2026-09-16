@@ -1,0 +1,21 @@
+<app-section class="login-page" eyebrow="Куратор" heading="Вход" headingLevel="h1">
+  <div class="login-form">
+    <app-input label="Email" type="email" [value]="email()" (valueChange)="email.set($event)"></app-input>
+
+    <app-input label="Пароль" type="password" [value]="password()" (valueChange)="password.set($event)"></app-input>
+
+    @if (hasError()) {
+      <p class="login-form__error">Неверный email или пароль.</p>
+    }
+
+    <app-button
+      class="login-form__submit"
+      variant="accent"
+      [fullWidth]="true"
+      [disabled]="!canSubmit() || isSubmitting()"
+      (pressed)="onSubmit()"
+    >
+      {{ isSubmitting() ? 'Входим…' : 'Войти' }}
+    </app-button>
+  </div>
+</app-section>

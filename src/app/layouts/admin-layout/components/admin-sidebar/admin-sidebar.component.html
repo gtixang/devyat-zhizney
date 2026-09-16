@@ -1,0 +1,19 @@
+<aside class="admin-sidebar">
+  <a class="admin-sidebar__brand" routerLink="/">
+    <img class="admin-sidebar__logo" src="/brand/logo-mark.png" alt="Логотип «Девять жизней»" />
+    Девять жизней
+  </a>
+
+  <nav class="admin-sidebar__nav">
+    @for (item of navItems; track item.path) {
+      <a
+        class="admin-sidebar__link"
+        [routerLink]="item.path"
+        routerLinkActive="admin-sidebar__link--active"
+        [routerLinkActiveOptions]="{ exact: item.path === '/admin' }"
+      >
+        {{ item.label }}
+      </a>
+    }
+  </nav>
+</aside>

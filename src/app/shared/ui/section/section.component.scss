@@ -1,0 +1,21 @@
+.section {
+  &__head {
+    max-width: 60ch;
+    margin-bottom: var(--space-7);
+  }
+
+  &__eyebrow {
+    font-size: var(--text-caption-size);
+    font-weight: var(--text-caption-weight);
+    letter-spacing: var(--text-caption-tracking);
+    text-transform: uppercase;
+    color: var(--color-primary);
+  }
+
+  &__heading {
+    margin-top: var(--space-2);
+    font-size: var(--text-h1-size);
+    font-weight: var(--text-h1-weight);
+    line-height: var(--text-h1-lh);
+  }
+}

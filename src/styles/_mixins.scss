@@ -1,0 +1,26 @@
+// Миксины для переиспользуемых стилей (docs/specs/styles.md).
+// Подход mobile-first: базовые стили — для мобильных, миксин добавляет правила
+// для более широких экранов внутри селектора БЭМ-элемента.
+
+$breakpoint-tablet: 768px;
+$breakpoint-desktop: 1024px;
+
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == tablet {
+    @media (min-width: $breakpoint-tablet) {
+      @content;
+    }
+  } @else if $breakpoint == desktop {
+    @media (min-width: $breakpoint-desktop) {
+      @content;
+    }
+  } @else {
+    @warn "Неизвестный breakpoint: #{$breakpoint}. Используйте tablet или desktop.";
+  }
+}
+
+// Единый visible focus-ring поверх токена --focus-ring (docs/design-direction.md §19).
+@mixin focus-ring {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}

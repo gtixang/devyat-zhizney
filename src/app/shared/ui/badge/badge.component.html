@@ -1,0 +1,10 @@
+<span
+  class="badge"
+  [class.badge--primary]="tone() === 'primary'"
+  [class.badge--accent]="tone() === 'accent'"
+  [class.badge--warning]="tone() === 'warning'"
+  [class.badge--error]="tone() === 'error'"
+  [class.badge--success]="tone() === 'success'"
+>
+  <ng-content></ng-content>
+</span>
