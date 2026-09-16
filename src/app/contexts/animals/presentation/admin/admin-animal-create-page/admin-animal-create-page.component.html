@@ -19,6 +19,14 @@
           ></app-checkbox>
         </div>
       </div>
+
+      <app-input
+        label="О животном"
+        [multiline]="true"
+        [rows]="6"
+        [value]="about()"
+        (valueChange)="about.set($event)"
+      ></app-input>
     </div>
 
     <div class="admin-form__col">
@@ -26,7 +34,14 @@
 
       <app-input label="Вид" placeholder="Собака, Кошка…" [value]="species()" (valueChange)="species.set($event)"></app-input>
 
-      <app-input label="Возраст (лет)" type="number" [value]="age()" (valueChange)="age.set($event)"></app-input>
+      <app-input
+        label="Возраст (лет)"
+        inputMode="numeric"
+        placeholder="Например, 2"
+        [value]="age()"
+        [error]="ageError()"
+        (valueChange)="age.set($event)"
+      ></app-input>
 
       <div class="admin-form__group">
         <span class="admin-form__group-label">Пол</span>
@@ -75,14 +90,6 @@
         (valueChange)="traitsInput.set($event)"
       ></app-input>
     </div>
-
-    <app-input
-      class="admin-form__about"
-      label="О животном"
-      [multiline]="true"
-      [value]="about()"
-      (valueChange)="about.set($event)"
-    ></app-input>
 
     @if (hasSubmitError()) {
       <p class="admin-form__error">Не удалось сохранить животное. Попробуйте ещё раз.</p>

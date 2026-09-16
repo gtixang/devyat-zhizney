@@ -20,7 +20,6 @@
     align-content: start;
   }
 
-  &__about,
   &__error,
   &__submit {
     @include mixins.respond-to(desktop) {

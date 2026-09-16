@@ -25,6 +25,8 @@ export class InputComponent {
   /** Рендерит <textarea> вместо <input> для многострочных полей (например, "О себе"). */
   public readonly multiline = input<boolean>(false);
   public readonly rows = input<number>(4);
+  /** Подсказка мобильной клавиатуре (например, "decimal" для дробных чисел). */
+  public readonly inputMode = input<string | undefined>(undefined);
 
   public readonly valueChange = output<string>();
 

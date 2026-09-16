@@ -15,6 +15,18 @@ import { SectionComponent } from '../../../../../shared/ui/section/section.compo
 type SubmitState = { readonly status: 'pending' | 'success' | 'error' };
 
 /**
+ * Возраст хранится в БД как целое число лет (`animals.age integer`), поэтому здесь
+ * НЕ принимаются дробные значения (2.5 и т.п.) — только целая строка цифр.
+ * Поле специально сделано текстовым (не type="number"): нативный number-инпут в
+ * ру-раскладке молча стирает ввод при нажатии запятой, из-за чего поле выглядит
+ * пустым и форма никогда не становится валидной.
+ */
+function parseAge(raw: string): number {
+  const trimmed = raw.trim();
+  return /^\d+$/.test(trimmed) ? Number.parseInt(trimmed, 10) : NaN;
+}
+
+/**
  * Добавление животного (docs/scheme/admin-panel.md). Пишет реальную строку в таблицу
  * `animals` через AnimalsFacade.create() — доступно только куратору (RLS insert-политика,
  * docs/database/schema.md), маршрут защищён authGuard.
@@ -47,8 +59,16 @@ export class AdminAnimalCreatePageComponent {
   protected readonly sterilized = signal(false);
   protected readonly dewormed = signal(false);
 
+  protected readonly ageError = computed(() => {
+    const raw = this.age().trim();
+    if (raw.length === 0) {
+      return '';
+    }
+    return Number.isFinite(parseAge(raw)) ? '' : 'Введите целое число лет, например 2';
+  });
+
   protected readonly canSubmit = computed(() => {
-    const ageValue = Number(this.age());
+    const ageValue = parseAge(this.age());
     return (
       this.name().trim().length > 0 &&
       this.species().trim().length > 0 &&
@@ -104,7 +124,7 @@ export class AdminAnimalCreatePageComponent {
       name: this.name().trim(),
       species: this.species().trim(),
       gender: this.gender(),
-      age: Number(this.age()),
+      age: parseAge(this.age()),
       status: this.status(),
       traits,
       about: this.about().trim(),
