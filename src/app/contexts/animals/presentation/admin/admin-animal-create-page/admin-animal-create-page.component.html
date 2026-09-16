@@ -3,23 +3,6 @@
     <div class="admin-form__col">
       <app-file-upload hint="JPG, PNG до 10 МБ — загрузка на сервер появится позже"></app-file-upload>
 
-      <div class="admin-form__group">
-        <span class="admin-form__group-label">Здоровье</span>
-        <div class="admin-form__checkbox-col">
-          <app-checkbox label="Привита" [checked]="vaccinated()" (checkedChange)="vaccinated.set($event)"></app-checkbox>
-          <app-checkbox
-            label="Стерилизована"
-            [checked]="sterilized()"
-            (checkedChange)="sterilized.set($event)"
-          ></app-checkbox>
-          <app-checkbox
-            label="Обработана от паразитов"
-            [checked]="dewormed()"
-            (checkedChange)="dewormed.set($event)"
-          ></app-checkbox>
-        </div>
-      </div>
-
       <app-input
         label="О животном"
         [multiline]="true"
@@ -43,6 +26,15 @@
         (valueChange)="age.set($event)"
       ></app-input>
 
+      <app-input
+        label="Черты характера"
+        hint="Через запятую, например: Спокойная, Дружелюбная"
+        [value]="traitsInput()"
+        (valueChange)="traitsInput.set($event)"
+      ></app-input>
+    </div>
+
+    <div class="admin-form__attributes">
       <div class="admin-form__group">
         <span class="admin-form__group-label">Пол</span>
         <div class="admin-form__radio-row">
@@ -83,12 +75,22 @@
         </div>
       </div>
 
-      <app-input
-        label="Черты характера"
-        hint="Через запятую, например: Спокойная, Дружелюбная"
-        [value]="traitsInput()"
-        (valueChange)="traitsInput.set($event)"
-      ></app-input>
+      <div class="admin-form__group">
+        <span class="admin-form__group-label">Здоровье</span>
+        <div class="admin-form__checkbox-col">
+          <app-checkbox label="Привита" [checked]="vaccinated()" (checkedChange)="vaccinated.set($event)"></app-checkbox>
+          <app-checkbox
+            label="Стерилизована"
+            [checked]="sterilized()"
+            (checkedChange)="sterilized.set($event)"
+          ></app-checkbox>
+          <app-checkbox
+            label="Обработана от паразитов"
+            [checked]="dewormed()"
+            (checkedChange)="dewormed.set($event)"
+          ></app-checkbox>
+        </div>
+      </div>
     </div>
 
     @if (hasSubmitError()) {
