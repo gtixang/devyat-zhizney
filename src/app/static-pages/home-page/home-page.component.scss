@@ -13,8 +13,6 @@
   gap: var(--space-8);
   align-items: center;
   padding: var(--space-8) var(--space-6);
-  max-width: 1280px;
-  margin: 0 auto;
 
   @include mixins.respond-to(desktop) {
     grid-template-columns: 1.1fr 1fr;
@@ -142,28 +140,43 @@
 }
 
 // ==========================================================================
-// Featured animals
+// Featured animals / Как это работает / Как можно помочь
+// Общий каркас секции (блочная, паддинг space-9, центрирована до 1280px) —
+// объявлен один раз на все три, чтобы не дублировать одинаковые правила.
 // ==========================================================================
-.home-featured {
+.home-hero,
+.home-featured,
+.home-steps,
+.home-help,
+.home-final-cta {
+  max-width: 1280px;
+}
+
+.home-featured,
+.home-steps,
+.home-help {
   display: block;
   padding: var(--space-9) var(--space-6);
-  max-width: 1280px;
   margin: 0 auto;
+}
 
-  &__grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-5);
+// Сетка карточек — 1 колонка / 2 (планшет) / 4 (десктоп) — одинаковая у обеих секций.
+.home-featured__grid,
+.home-help__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-5);
 
-    @include mixins.respond-to(tablet) {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    @include mixins.respond-to(desktop) {
-      grid-template-columns: repeat(4, 1fr);
-    }
+  @include mixins.respond-to(tablet) {
+    grid-template-columns: repeat(2, 1fr);
   }
 
+  @include mixins.respond-to(desktop) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.home-featured {
   &__footer {
     margin-top: var(--space-7);
     display: flex;
@@ -175,11 +188,6 @@
 // Как это работает
 // ==========================================================================
 .home-steps {
-  display: block;
-  padding: var(--space-9) var(--space-6);
-  max-width: 1280px;
-  margin: 0 auto;
-
   &__list {
     display: grid;
     grid-template-columns: 1fr;
@@ -215,25 +223,6 @@
 // Как можно помочь
 // ==========================================================================
 .home-help {
-  display: block;
-  padding: var(--space-9) var(--space-6);
-  max-width: 1280px;
-  margin: 0 auto;
-
-  &__grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-5);
-
-    @include mixins.respond-to(tablet) {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    @include mixins.respond-to(desktop) {
-      grid-template-columns: repeat(4, 1fr);
-    }
-  }
-
   &__item {
     display: block;
   }
@@ -270,9 +259,7 @@
 // Финальный CTA
 // ==========================================================================
 .home-final-cta {
-  margin: var(--space-9) var(--space-6) var(--space-11);
-  max-width: 1280px;
-  margin-inline: auto;
+  margin: var(--space-9) auto var(--space-11);
   background: var(--color-primary);
   border-radius: var(--radius-lg);
   padding: var(--space-10) var(--space-6);
