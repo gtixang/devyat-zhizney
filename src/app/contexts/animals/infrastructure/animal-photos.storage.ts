@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable, from, map } from 'rxjs';
 
-import { SupabaseClientService } from '../../../core/supabase/supabase-client.service';
+import { SupabaseClientService } from '@core/supabase/supabase-client.service';
 
 /** Публичный бакет Supabase Storage — создаётся вручную, см. docs/database/schema.md. */
 const BUCKET = 'animal-photos';

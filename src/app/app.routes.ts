@@ -13,23 +13,23 @@ import { ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@angular/ro
 export const routes: Routes = [
   {
     path: '',
-    loadComponent: () => import('./layouts/public-layout/public-layout.component').then((m) => m.PublicLayoutComponent),
+    loadComponent: () => import('@layouts/public-layout/public-layout.component').then((m) => m.PublicLayoutComponent),
     children: [
       {
         path: '',
-        loadComponent: () => import('./static-pages/home-page/home-page.component').then((m) => m.HomePageComponent)
+        loadComponent: () => import('@static-pages/home-page/home-page.component').then((m) => m.HomePageComponent)
       },
       {
         path: 'about',
-        loadComponent: () => import('./static-pages/about-page/about-page.component').then((m) => m.AboutPageComponent)
+        loadComponent: () => import('@static-pages/about-page/about-page.component').then((m) => m.AboutPageComponent)
       },
       {
         path: 'help',
-        loadComponent: () => import('./static-pages/help-page/help-page.component').then((m) => m.HelpPageComponent)
+        loadComponent: () => import('@static-pages/help-page/help-page.component').then((m) => m.HelpPageComponent)
       },
       {
         path: 'login',
-        loadComponent: () => import('./static-pages/login-page/login-page.component').then((m) => m.LoginPageComponent)
+        loadComponent: () => import('@static-pages/login-page/login-page.component').then((m) => m.LoginPageComponent)
       },
       {
         path: 'animals',
@@ -37,21 +37,21 @@ export const routes: Routes = [
           {
             path: '',
             loadComponent: () =>
-              import('./contexts/animals/presentation/public/animal-catalog-page/animal-catalog-page.component').then(
+              import('@contexts/animals/presentation/public/animal-catalog-page/animal-catalog-page.component').then(
                 (m) => m.AnimalCatalogPageComponent
               )
           },
           {
             path: ':id',
             loadComponent: () =>
-              import('./contexts/animals/presentation/public/animal-detail-page/animal-detail-page.component').then(
+              import('@contexts/animals/presentation/public/animal-detail-page/animal-detail-page.component').then(
                 (m) => m.AnimalDetailPageComponent
               )
           },
           {
             path: ':animalId/adopt',
             loadComponent: () =>
-              import('./contexts/adoption/presentation/public/adoption-application-page/adoption-application-page.component').then(
+              import('@contexts/adoption/presentation/public/adoption-application-page/adoption-application-page.component').then(
                 (m) => m.AdoptionApplicationPageComponent
               )
           }
@@ -60,14 +60,14 @@ export const routes: Routes = [
       {
         path: 'volunteers',
         loadComponent: () =>
-          import('./contexts/volunteers/presentation/public/volunteer-page/volunteer-page.component').then(
+          import('@contexts/volunteers/presentation/public/volunteer-page/volunteer-page.component').then(
             (m) => m.VolunteerPageComponent
           )
       },
       {
         path: 'news',
         loadComponent: () =>
-          import('./contexts/news/presentation/public/news-list-page/news-list-page.component').then(
+          import('@contexts/news/presentation/public/news-list-page/news-list-page.component').then(
             (m) => m.NewsListPageComponent
           )
       }
@@ -83,22 +83,22 @@ export const routes: Routes = [
     canActivate: [
       (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
         const injector = inject(EnvironmentInjector);
-        return import('./core/auth/auth.guard').then((m) =>
+        return import('@core/auth/auth.guard').then((m) =>
           runInInjectionContext(injector, () => m.authGuard(route, state))
         );
       }
     ],
-    loadComponent: () => import('./layouts/admin-layout/admin-layout.component').then((m) => m.AdminLayoutComponent),
+    loadComponent: () => import('@layouts/admin-layout/admin-layout.component').then((m) => m.AdminLayoutComponent),
     children: [
       {
         path: '',
         loadComponent: () =>
-          import('./static-pages/admin-dashboard-page/admin-dashboard-page.component').then((m) => m.AdminDashboardPageComponent)
+          import('@static-pages/admin-dashboard-page/admin-dashboard-page.component').then((m) => m.AdminDashboardPageComponent)
       },
       {
         path: 'animals',
         loadComponent: () =>
-          import('./contexts/animals/presentation/admin/admin-animal-list-page/admin-animal-list-page.component').then(
+          import('@contexts/animals/presentation/admin/admin-animal-list-page/admin-animal-list-page.component').then(
             (m) => m.AdminAnimalListPageComponent
           )
       },
@@ -106,55 +106,55 @@ export const routes: Routes = [
         path: 'animals/new',
         loadComponent: () =>
           import(
-            './contexts/animals/presentation/admin/admin-animal-create-page/admin-animal-create-page.component'
+            '@contexts/animals/presentation/admin/admin-animal-create-page/admin-animal-create-page.component'
           ).then((m) => m.AdminAnimalCreatePageComponent)
       },
       {
         path: 'applications',
         loadComponent: () =>
           import(
-            './contexts/adoption/presentation/admin/admin-application-list-page/admin-application-list-page.component'
+            '@contexts/adoption/presentation/admin/admin-application-list-page/admin-application-list-page.component'
           ).then((m) => m.AdminApplicationListPageComponent)
       },
       {
         path: 'volunteers',
         loadComponent: () =>
           import(
-            './contexts/volunteers/presentation/admin/admin-volunteer-list-page/admin-volunteer-list-page.component'
+            '@contexts/volunteers/presentation/admin/admin-volunteer-list-page/admin-volunteer-list-page.component'
           ).then((m) => m.AdminVolunteerListPageComponent)
       },
       {
         path: 'foster',
         loadComponent: () =>
-          import('./contexts/foster/presentation/admin/admin-foster-list-page/admin-foster-list-page.component').then(
+          import('@contexts/foster/presentation/admin/admin-foster-list-page/admin-foster-list-page.component').then(
             (m) => m.AdminFosterListPageComponent
           )
       },
       {
         path: 'donations',
         loadComponent: () =>
-          import('./contexts/donations/presentation/admin/admin-donation-list-page/admin-donation-list-page.component').then(
+          import('@contexts/donations/presentation/admin/admin-donation-list-page/admin-donation-list-page.component').then(
             (m) => m.AdminDonationListPageComponent
           )
       },
       {
         path: 'news',
         loadComponent: () =>
-          import('./contexts/news/presentation/admin/admin-news-list-page/admin-news-list-page.component').then(
+          import('@contexts/news/presentation/admin/admin-news-list-page/admin-news-list-page.component').then(
             (m) => m.AdminNewsListPageComponent
           )
       },
       {
         path: 'events',
         loadComponent: () =>
-          import('./contexts/events/presentation/admin/admin-event-list-page/admin-event-list-page.component').then(
+          import('@contexts/events/presentation/admin/admin-event-list-page/admin-event-list-page.component').then(
             (m) => m.AdminEventListPageComponent
           )
       },
       {
         path: 'settings',
         loadComponent: () =>
-          import('./static-pages/admin-settings-page/admin-settings-page.component').then((m) => m.AdminSettingsPageComponent)
+          import('@static-pages/admin-settings-page/admin-settings-page.component').then((m) => m.AdminSettingsPageComponent)
       }
     ]
   }

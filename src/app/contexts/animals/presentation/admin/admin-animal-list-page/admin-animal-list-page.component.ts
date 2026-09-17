@@ -2,11 +2,11 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { catchError, of } from 'rxjs';
 
-import { AnimalsFacade } from '../../../application/animals.facade';
-import { Animal, AnimalStatus } from '../../../domain/animal.model';
-import { BadgeComponent, BadgeTone } from '../../../../../shared/ui/badge/badge.component';
-import { ButtonComponent } from '../../../../../shared/ui/button/button.component';
-import { SectionComponent } from '../../../../../shared/ui/section/section.component';
+import { AnimalsFacade } from '@contexts/animals/application/animals.facade';
+import { Animal, AnimalStatus } from '@contexts/animals/domain/animal.model';
+import { BadgeComponent, BadgeTone } from '@shared/ui/badge/badge.component';
+import { ButtonComponent } from '@shared/ui/button/button.component';
+import { SectionComponent } from '@shared/ui/section/section.component';
 
 const STATUS_LABEL: Record<AnimalStatus, string> = {
   in_shelter: 'В приюте',

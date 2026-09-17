@@ -105,6 +105,40 @@
 templateUrl: './admin-sidebar.component.html'
 styleUrl: './admin-sidebar.component.scss'
 import { AdminSidebarComponent } from './admin-sidebar.component';
----
+```
 
+### 3. Импорты — алиасы вместо глубоких относительных путей
+
+В `tsconfig.json` настроены алиасы на верхнеуровневые папки `src/app`:
+
+- `@core/*` → `src/app/core/*`
+- `@shared/*` → `src/app/shared/*`
+- `@contexts/*` → `src/app/contexts/*`
+- `@layouts/*` → `src/app/layouts/*`
+- `@static-pages/*` → `src/app/static-pages/*`
+- `@environments/*` → `src/environments/*`
+
+Любой импорт с двумя и более `../` (в том числе внутри одного контекста, например из
+`presentation/public/...` в `application/` или `domain/`) должен использовать алиас, а не
+относительный путь. Работает и в статических `import`, и в ленивых `import()` (например,
+в `app.routes.ts`) — Angular CLI (esbuild) корректно разбивает такие маршруты на отдельные
+чанки, проверено сборкой.
+
+Соседние файлы в одной папке (`./component.html`) и файлы на один уровень выше в том же
+контексте (`../domain/animal.model` из `infrastructure/`) остаются относительными —
+алиас для них ничего не сокращает.
+
+Правильно:
+
+```ts
+import { ButtonComponent } from '@shared/ui/button/button.component';
+import { AnimalsFacade } from '@contexts/animals/application/animals.facade';
+loadComponent: () => import('@layouts/admin-layout/admin-layout.component').then((m) => m.AdminLayoutComponent);
+```
+
+Неправильно:
+
+```ts
+import { ButtonComponent } from '../../../../../shared/ui/button/button.component';
+import { AnimalsFacade } from '../../../application/animals.facade';
 ```

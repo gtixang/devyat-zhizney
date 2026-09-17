@@ -2,12 +2,12 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { toSignal } from '@angular/core/rxjs-interop';
 import { catchError, of } from 'rxjs';
 
-import { AdoptionFacade } from '../../../application/adoption.facade';
-import { AdoptionApplication, AdoptionApplicationStatus } from '../../../domain/adoption-application.model';
-import { AnimalsFacade } from '../../../../animals/application/animals.facade';
-import { Animal } from '../../../../animals/domain/animal.model';
-import { BadgeComponent, BadgeTone } from '../../../../../shared/ui/badge/badge.component';
-import { SectionComponent } from '../../../../../shared/ui/section/section.component';
+import { AdoptionFacade } from '@contexts/adoption/application/adoption.facade';
+import { AdoptionApplication, AdoptionApplicationStatus } from '@contexts/adoption/domain/adoption-application.model';
+import { AnimalsFacade } from '@contexts/animals/application/animals.facade';
+import { Animal } from '@contexts/animals/domain/animal.model';
+import { BadgeComponent, BadgeTone } from '@shared/ui/badge/badge.component';
+import { SectionComponent } from '@shared/ui/section/section.component';
 
 const STATUS_LABEL: Record<AdoptionApplicationStatus, string> = {
   new: 'Новая',

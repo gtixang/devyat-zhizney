@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { SectionComponent } from '../../../../../shared/ui/section/section.component';
+import { SectionComponent } from '@shared/ui/section/section.component';
 
 /**
  * Placeholder админ-раздела "Донаты" (docs/scheme/admin-panel.txt).

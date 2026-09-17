@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { BadgeComponent, BadgeTone } from '../../../../../shared/ui/badge/badge.component';
-import { Animal, AnimalStatus } from '../../../domain/animal.model';
+import { BadgeComponent, BadgeTone } from '@shared/ui/badge/badge.component';
+import { Animal, AnimalStatus } from '@contexts/animals/domain/animal.model';
 
 const STATUS_LABEL: Record<AnimalStatus, string> = {
   in_shelter: 'В приюте',

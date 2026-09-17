@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { SectionComponent } from '../../shared/ui/section/section.component';
+import { SectionComponent } from '@shared/ui/section/section.component';
 
 /**
  * Placeholder страницы "О нас" (пункт навигации в docs/scheme/main-page.txt).

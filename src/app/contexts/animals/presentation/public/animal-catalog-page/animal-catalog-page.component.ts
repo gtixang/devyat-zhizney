@@ -2,11 +2,11 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { toSignal } from '@angular/core/rxjs-interop';
 import { catchError, of } from 'rxjs';
 
-import { SectionComponent } from '../../../../../shared/ui/section/section.component';
-import { TabItem, TabsComponent } from '../../../../../shared/ui/tabs/tabs.component';
-import { AnimalsFacade } from '../../../application/animals.facade';
-import { Animal } from '../../../domain/animal.model';
-import { AnimalCardComponent } from '../../components/animal-card/animal-card.component';
+import { SectionComponent } from '@shared/ui/section/section.component';
+import { TabItem, TabsComponent } from '@shared/ui/tabs/tabs.component';
+import { AnimalsFacade } from '@contexts/animals/application/animals.facade';
+import { Animal } from '@contexts/animals/domain/animal.model';
+import { AnimalCardComponent } from '@contexts/animals/presentation/components/animal-card/animal-card.component';
 
 const ALL_SPECIES_ID = 'all';
 

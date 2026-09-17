@@ -3,10 +3,10 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { Subject, catchError, from, map, of, startWith, switchMap } from 'rxjs';
 
-import { AuthService } from '../../core/auth/auth.service';
-import { ButtonComponent } from '../../shared/ui/button/button.component';
-import { InputComponent } from '../../shared/ui/input/input.component';
-import { SectionComponent } from '../../shared/ui/section/section.component';
+import { AuthService } from '@core/auth/auth.service';
+import { ButtonComponent } from '@shared/ui/button/button.component';
+import { InputComponent } from '@shared/ui/input/input.component';
+import { SectionComponent } from '@shared/ui/section/section.component';
 
 interface LoginCredentials {
   readonly email: string;

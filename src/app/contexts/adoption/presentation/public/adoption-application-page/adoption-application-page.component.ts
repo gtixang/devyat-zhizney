@@ -3,12 +3,12 @@ import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { Subject, catchError, map, of, startWith, switchMap } from 'rxjs';
 
-import { AdoptionFacade } from '../../../application/adoption.facade';
-import { AdoptionApplication } from '../../../domain/adoption-application.model';
-import { AnimalsFacade } from '../../../../animals/application/animals.facade';
-import { ButtonComponent } from '../../../../../shared/ui/button/button.component';
-import { InputComponent } from '../../../../../shared/ui/input/input.component';
-import { SectionComponent } from '../../../../../shared/ui/section/section.component';
+import { AdoptionFacade } from '@contexts/adoption/application/adoption.facade';
+import { AdoptionApplication } from '@contexts/adoption/domain/adoption-application.model';
+import { AnimalsFacade } from '@contexts/animals/application/animals.facade';
+import { ButtonComponent } from '@shared/ui/button/button.component';
+import { InputComponent } from '@shared/ui/input/input.component';
+import { SectionComponent } from '@shared/ui/section/section.component';
 
 type SubmitPayload = Omit<AdoptionApplication, 'id' | 'status' | 'createdAt'>;
 type SubmitState = { readonly status: 'pending' | 'success' | 'error' };

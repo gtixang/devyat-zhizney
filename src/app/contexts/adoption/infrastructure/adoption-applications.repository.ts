@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable, from, map } from 'rxjs';
 
-import { SupabaseClientService } from '../../../core/supabase/supabase-client.service';
+import { SupabaseClientService } from '@core/supabase/supabase-client.service';
 import { AdoptionApplication, AdoptionApplicationStatus } from '../domain/adoption-application.model';
 
 /** Строка таблицы `adoption_applications` (docs/database/schema.md) — snake_case. */

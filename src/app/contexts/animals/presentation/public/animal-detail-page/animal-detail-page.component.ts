@@ -3,10 +3,10 @@ import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { catchError, of, switchMap } from 'rxjs';
 
-import { AnimalsFacade } from '../../../application/animals.facade';
-import { BadgeComponent } from '../../../../../shared/ui/badge/badge.component';
-import { ButtonComponent } from '../../../../../shared/ui/button/button.component';
-import { SectionComponent } from '../../../../../shared/ui/section/section.component';
+import { AnimalsFacade } from '@contexts/animals/application/animals.facade';
+import { BadgeComponent } from '@shared/ui/badge/badge.component';
+import { ButtonComponent } from '@shared/ui/button/button.component';
+import { SectionComponent } from '@shared/ui/section/section.component';
 
 interface HealthChecklistItem {
   readonly label: string;
