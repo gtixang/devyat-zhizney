@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { catchError, of, switchMap } from 'rxjs';
@@ -42,6 +42,13 @@ export class AnimalDetailPageComponent {
   );
 
   protected readonly genderLabel = computed(() => (this.animal()?.gender === 'female' ? 'девочка' : 'мальчик'));
+
+  /** См. animal-card.component.ts — тот же откат на плейсхолдер при сбое загрузки фото. */
+  protected readonly photoFailed = signal(false);
+
+  protected onPhotoError(): void {
+    this.photoFailed.set(true);
+  }
 
   protected readonly healthItems = computed<readonly HealthChecklistItem[]>(() => {
     const animal = this.animal();

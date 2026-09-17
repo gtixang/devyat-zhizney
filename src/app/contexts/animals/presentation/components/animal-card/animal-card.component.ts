@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { BadgeComponent, BadgeTone } from '@shared/ui/badge';
@@ -32,4 +32,15 @@ export class AnimalCardComponent {
 
   protected readonly statusLabel = computed(() => STATUS_LABEL[this.animal().status]);
   protected readonly statusTone = computed(() => STATUS_TONE[this.animal().status]);
+
+  /**
+   * Фото хостится на внешнем CDN (Unsplash/Supabase Storage) — если оно не загрузилось
+   * (заблокировано мобильной сетью, оператором, недоступен CDN и т.п.), <img> сам по себе
+   * просто останется пустым/сломанным. Явно откатываемся на плейсхолдер по событию error.
+   */
+  protected readonly photoFailed = signal(false);
+
+  protected onPhotoError(): void {
+    this.photoFailed.set(true);
+  }
 }

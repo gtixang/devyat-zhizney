@@ -11,8 +11,13 @@
     </nav>
 
     <div class="animal-detail-page__hero">
-      @if (pet.photoUrl) {
-        <img class="animal-detail-page__photo" [src]="pet.photoUrl" [alt]="'Фото ' + pet.name" />
+      @if (pet.photoUrl && !photoFailed()) {
+        <img
+          class="animal-detail-page__photo"
+          [src]="pet.photoUrl"
+          [alt]="'Фото ' + pet.name"
+          (error)="onPhotoError()"
+        />
       } @else {
         <div class="animal-detail-page__photo animal-detail-page__photo--placeholder" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">

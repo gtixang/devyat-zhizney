@@ -4,8 +4,14 @@
     [routerLink]="['/animals', animal().id]"
     [attr.aria-label]="'Открыть анкету: ' + animal().name"
   >
-    @if (animal().photoUrl) {
-      <img class="animal-card__photo" [src]="animal().photoUrl" [alt]="'Фото ' + animal().name" loading="lazy" />
+    @if (animal().photoUrl && !photoFailed()) {
+      <img
+        class="animal-card__photo"
+        [src]="animal().photoUrl"
+        [alt]="'Фото ' + animal().name"
+        loading="lazy"
+        (error)="onPhotoError()"
+      />
     } @else {
       <div class="animal-card__photo animal-card__photo--placeholder" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">

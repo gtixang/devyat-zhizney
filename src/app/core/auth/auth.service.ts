@@ -3,6 +3,9 @@ import type { User } from '@supabase/supabase-js';
 
 import { SupabaseClientService } from '../supabase';
 
+/** См. waitUntilReady() — не даём проверке сессии зависнуть навсегда на плохой сети. */
+const SESSION_CHECK_TIMEOUT_MS = 8_000;
+
 /**
  * Состояние аутентификации на базе Supabase Auth.
  *
@@ -28,17 +31,33 @@ export class AuthService {
   private readonly initialSessionLoaded: Promise<void>;
 
   constructor() {
-    this.initialSessionLoaded = this.supabase.auth.getSession().then(({ data }) => {
-      this.currentUserSignal.set(data.session?.user ?? null);
-    });
+    this.initialSessionLoaded = this.supabase.auth
+      .getSession()
+      .then(({ data }) => {
+        this.currentUserSignal.set(data.session?.user ?? null);
+      })
+      .catch(() => {
+        // Не удалось прочитать сессию (сеть, заблокированный localStorage и т.п.) —
+        // считаем гостем, а не оставляем guard висеть на отклонённом промисе.
+        this.currentUserSignal.set(null);
+      });
 
     this.supabase.auth.onAuthStateChange((_event, session) => {
       this.currentUserSignal.set(session?.user ?? null);
     });
   }
 
+  /**
+   * `authGuard` дожидается этого перед проверкой isAuthenticated(). На плохой мобильной
+   * сети сам запрос к Supabase может зависнуть без ответа (см. отчёт о зависшем входе
+   * с телефона) — через SESSION_CHECK_TIMEOUT_MS перестаём ждать и пускаем дальше с тем,
+   * что успело определиться (по умолчанию — гость, редирект на /login).
+   */
   async waitUntilReady(): Promise<void> {
-    await this.initialSessionLoaded;
+    await Promise.race([
+      this.initialSessionLoaded,
+      new Promise<void>((resolve) => setTimeout(resolve, SESSION_CHECK_TIMEOUT_MS))
+    ]);
   }
 
   async signInWithPassword(email: string, password: string): Promise<void> {

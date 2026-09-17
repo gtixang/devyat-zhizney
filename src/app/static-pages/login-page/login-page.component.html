@@ -6,6 +6,8 @@
 
     @if (hasError()) {
       <p class="login-form__error">Неверный email или пароль.</p>
+    } @else if (hasTimedOut()) {
+      <p class="login-form__error">Не удалось связаться с сервером. Проверьте интернет-соединение и попробуйте ещё раз.</p>
     }
 
     <app-button
