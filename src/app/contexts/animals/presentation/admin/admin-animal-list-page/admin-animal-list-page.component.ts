@@ -3,19 +3,16 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { catchError, of } from 'rxjs';
 
 import { AnimalsFacade } from '@contexts/animals/application';
-import { Animal, AnimalStatus } from '@contexts/animals/domain';
+import { ANIMAL_STATUS_LABELS, Animal, AnimalStatus } from '@contexts/animals/domain';
 import { BadgeComponent, BadgeTone } from '@shared/ui/badge';
 import { ButtonComponent } from '@shared/ui/button';
 import { SectionComponent } from '@shared/ui/section';
 
-const STATUS_LABEL: Record<AnimalStatus, string> = {
-  in_shelter: 'В приюте',
-  in_foster: 'На передержке'
-};
-
 const STATUS_TONE: Record<AnimalStatus, BadgeTone> = {
+  needs_placement: 'warning',
   in_shelter: 'neutral',
-  in_foster: 'primary'
+  in_foster: 'primary',
+  adopted: 'success'
 };
 
 /**
@@ -40,7 +37,7 @@ export class AdminAnimalListPageComponent {
   });
 
   protected statusLabel(status: AnimalStatus): string {
-    return STATUS_LABEL[status];
+    return ANIMAL_STATUS_LABELS[status];
   }
 
   protected statusTone(status: AnimalStatus): BadgeTone {

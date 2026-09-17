@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Observable, Subject, catchError, map, of, startWith, switchMap } from 'rxjs';
 
 import { AnimalsFacade } from '@contexts/animals/application';
-import { Animal, AnimalGender, AnimalStatus } from '@contexts/animals/domain';
+import { ANIMAL_STATUS_LABELS, Animal, AnimalGender, AnimalStatus } from '@contexts/animals/domain';
 import { ButtonComponent } from '@shared/ui/button';
 import { CheckboxComponent } from '@shared/ui/checkbox';
 import { FileUploadComponent } from '@shared/ui/file-upload';
@@ -26,6 +26,14 @@ function parseAge(raw: string): number {
   const trimmed = raw.trim();
   return /^\d+$/.test(trimmed) ? Number.parseInt(trimmed, 10) : NaN;
 }
+
+/** Порядок важен — так радиокнопки статуса идут от самого срочного к финальному. */
+const STATUS_OPTIONS: readonly { readonly id: AnimalStatus; readonly label: string }[] = [
+  { id: 'needs_placement', label: ANIMAL_STATUS_LABELS.needs_placement },
+  { id: 'in_shelter', label: ANIMAL_STATUS_LABELS.in_shelter },
+  { id: 'in_foster', label: ANIMAL_STATUS_LABELS.in_foster },
+  { id: 'adopted', label: ANIMAL_STATUS_LABELS.adopted }
+];
 
 /**
  * Добавление и редактирование животного одной формой (docs/scheme/admin-panel.md).
@@ -53,6 +61,8 @@ export class AdminAnimalFormPageComponent {
   private readonly animalsFacade = inject(AnimalsFacade);
   private readonly router = inject(Router);
 
+  protected readonly statusOptions = STATUS_OPTIONS;
+
   public readonly id = input<string | undefined>(undefined);
 
   protected readonly isEditMode = computed(() => this.id() !== undefined);
@@ -76,6 +86,8 @@ export class AdminAnimalFormPageComponent {
   protected readonly vaccinated = signal(false);
   protected readonly sterilized = signal(false);
   protected readonly dewormed = signal(false);
+  protected readonly needsTreatment = signal(false);
+  protected readonly specialNeeds = signal(false);
   protected readonly existingPhotoUrl = signal('');
 
   protected readonly ageError = computed(() => {
@@ -162,6 +174,8 @@ export class AdminAnimalFormPageComponent {
       this.vaccinated.set(animal.health.vaccinated);
       this.sterilized.set(animal.health.sterilized);
       this.dewormed.set(animal.health.dewormed);
+      this.needsTreatment.set(animal.health.needsTreatment);
+      this.specialNeeds.set(animal.health.specialNeeds);
       this.existingPhotoUrl.set(animal.photoUrl);
     });
 
@@ -205,7 +219,9 @@ export class AdminAnimalFormPageComponent {
       health: {
         vaccinated: this.vaccinated(),
         sterilized: this.sterilized(),
-        dewormed: this.dewormed()
+        dewormed: this.dewormed(),
+        needsTreatment: this.needsTreatment(),
+        specialNeeds: this.specialNeeds()
       },
       photoUrl: this.photoUrl()
     });

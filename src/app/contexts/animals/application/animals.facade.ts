@@ -15,8 +15,14 @@ export class AnimalsFacade {
   private readonly repository = inject(AnimalsRepository);
   private readonly photosStorage = inject(AnimalPhotosStorage);
 
+  /** Для админки — вообще все животные, включая пристроенных (для истории куратора). */
   loadAll(): Observable<Animal[]> {
     return this.repository.findAll();
+  }
+
+  /** Для публичного каталога — без пристроенных (docs/scheme/main-page.txt). */
+  loadAvailable(): Observable<Animal[]> {
+    return this.repository.findAvailable();
   }
 
   loadById(id: string): Observable<Animal | null> {

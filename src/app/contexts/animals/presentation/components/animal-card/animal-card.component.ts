@@ -2,16 +2,13 @@ import { ChangeDetectionStrategy, Component, computed, input, signal } from '@an
 import { RouterLink } from '@angular/router';
 
 import { BadgeComponent, BadgeTone } from '@shared/ui/badge';
-import { Animal, AnimalStatus } from '@contexts/animals/domain';
-
-const STATUS_LABEL: Record<AnimalStatus, string> = {
-  in_shelter: 'В приюте',
-  in_foster: 'На передержке'
-};
+import { ANIMAL_STATUS_LABELS, Animal, AnimalStatus } from '@contexts/animals/domain';
 
 const STATUS_TONE: Record<AnimalStatus, BadgeTone> = {
+  needs_placement: 'warning',
   in_shelter: 'neutral',
-  in_foster: 'primary'
+  in_foster: 'primary',
+  adopted: 'success'
 };
 
 /**
@@ -30,7 +27,7 @@ const STATUS_TONE: Record<AnimalStatus, BadgeTone> = {
 export class AnimalCardComponent {
   public readonly animal = input.required<Animal>();
 
-  protected readonly statusLabel = computed(() => STATUS_LABEL[this.animal().status]);
+  protected readonly statusLabel = computed(() => ANIMAL_STATUS_LABELS[this.animal().status]);
   protected readonly statusTone = computed(() => STATUS_TONE[this.animal().status]);
 
   /**

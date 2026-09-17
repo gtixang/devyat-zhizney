@@ -87,7 +87,12 @@
     }
   }
 
+  &__status {
+    display: inline-flex;
+  }
+
   &__name {
+    margin-top: var(--space-3);
     font-size: var(--text-h1-size);
     font-weight: var(--text-h1-weight);
     line-height: var(--text-h1-lh);

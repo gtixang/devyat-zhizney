@@ -27,13 +27,18 @@
       }
 
       <div class="animal-detail-page__info">
+        <app-badge class="animal-detail-page__status" [tone]="statusTone()">{{ statusLabel() }}</app-badge>
+
         <h1 class="animal-detail-page__name">{{ pet.name }}</h1>
         <p class="animal-detail-page__meta">{{ pet.species }} · {{ genderLabel() }} · {{ pet.age }} лет</p>
 
-        @if (pet.traits.length > 0) {
+        @if (pet.traits.length > 0 || healthWarnings().length > 0) {
           <ul class="animal-detail-page__traits">
             @for (trait of pet.traits; track trait) {
               <li><app-badge tone="neutral">{{ trait }}</app-badge></li>
+            }
+            @for (warning of healthWarnings(); track warning) {
+              <li><app-badge tone="warning">{{ warning }}</app-badge></li>
             }
           </ul>
         }

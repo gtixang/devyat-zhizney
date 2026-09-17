@@ -30,12 +30,15 @@ create table if not exists public.animals (
   species text not null,
   gender text not null check (gender in ('male', 'female')),
   age integer not null check (age >= 0),
-  status text not null default 'in_shelter' check (status in ('in_shelter', 'in_foster')),
+  status text not null default 'in_shelter'
+    check (status in ('needs_placement', 'in_shelter', 'in_foster', 'adopted')),
   traits text[] not null default '{}',
   about text not null default '',
   vaccinated boolean not null default false,
   sterilized boolean not null default false,
   dewormed boolean not null default false,
+  needs_treatment boolean not null default false,
+  special_needs boolean not null default false,
   photo_url text not null default '',
   created_at timestamptz not null default now()
 );
@@ -195,3 +198,31 @@ create policy "Куратор удаляет фото животных"
 Логика та же, что и у таблицы `animals`: читать фото может кто угодно (бакет публичный,
 чтобы фото открывались в `<img>` без токена), а загружать/менять/удалять — только
 авторизованный куратор.
+
+## Миграция: расширенные статус и здоровье
+
+По итогам разговора с куратором (в чате) статус животного и блок здоровья расширены:
+
+- `status` — добавлены `needs_placement` ("Нужен приют" — животное известно куратору,
+  но ещё не в приюте и не на передержке, например живёт на улице) и `adopted`
+  ("Пристроен" — нашло дом; такие животные не удаляются из базы, а просто перестают
+  показываться в публичном каталоге, `AnimalsFacade.loadAvailable()`).
+- Здоровье — добавлены `needs_treatment` ("Требуется лечение") и `special_needs`
+  ("Особые потребности"), оба `boolean not null default false`.
+
+В базе, созданной ДО этой правки, CHECK-ограничение на `status` ещё старое (разрешает
+только `in_shelter`/`in_foster`) и новых колонок здоровья ещё нет. Выполнить в Supabase
+Dashboard → **SQL Editor** → New query → Run:
+
+```sql
+alter table public.animals drop constraint if exists animals_status_check;
+alter table public.animals add constraint animals_status_check
+  check (status in ('needs_placement', 'in_shelter', 'in_foster', 'adopted'));
+
+alter table public.animals add column if not exists needs_treatment boolean not null default false;
+alter table public.animals add column if not exists special_needs boolean not null default false;
+```
+
+Существующие животные ничего не потеряют — у них просто появятся `needs_treatment` и
+`special_needs` со значением `false` по умолчанию, статус останется прежним (он и так
+входит в новый разрешённый список).

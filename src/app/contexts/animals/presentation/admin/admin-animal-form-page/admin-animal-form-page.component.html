@@ -76,20 +76,15 @@
         <div class="admin-form__group">
           <span class="admin-form__group-label">Статус</span>
           <div class="admin-form__radio-row">
-            <app-radio
-              name="status"
-              value="in_shelter"
-              label="В приюте"
-              [checked]="status() === 'in_shelter'"
-              (checkedChange)="onStatusChange($event)"
-            ></app-radio>
-            <app-radio
-              name="status"
-              value="in_foster"
-              label="На передержке"
-              [checked]="status() === 'in_foster'"
-              (checkedChange)="onStatusChange($event)"
-            ></app-radio>
+            @for (option of statusOptions; track option.id) {
+              <app-radio
+                name="status"
+                [value]="option.id"
+                [label]="option.label"
+                [checked]="status() === option.id"
+                (checkedChange)="onStatusChange($event)"
+              ></app-radio>
+            }
           </div>
         </div>
 
@@ -106,6 +101,16 @@
               label="Обработана от паразитов"
               [checked]="dewormed()"
               (checkedChange)="dewormed.set($event)"
+            ></app-checkbox>
+            <app-checkbox
+              label="Требуется лечение"
+              [checked]="needsTreatment()"
+              (checkedChange)="needsTreatment.set($event)"
+            ></app-checkbox>
+            <app-checkbox
+              label="Особые потребности"
+              [checked]="specialNeeds()"
+              (checkedChange)="specialNeeds.set($event)"
             ></app-checkbox>
           </div>
         </div>

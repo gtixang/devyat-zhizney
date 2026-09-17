@@ -17,6 +17,8 @@ interface AnimalRow {
   readonly vaccinated: boolean;
   readonly sterilized: boolean;
   readonly dewormed: boolean;
+  readonly needs_treatment: boolean;
+  readonly special_needs: boolean;
   readonly photo_url: string;
 }
 
@@ -33,7 +35,9 @@ function mapRowToAnimal(row: AnimalRow): Animal {
     health: {
       vaccinated: row.vaccinated,
       sterilized: row.sterilized,
-      dewormed: row.dewormed
+      dewormed: row.dewormed,
+      needsTreatment: row.needs_treatment,
+      specialNeeds: row.special_needs
     },
     photoUrl: row.photo_url
   };
@@ -52,6 +56,8 @@ function mapAnimalToRow(animal: Animal): AnimalRow {
     vaccinated: animal.health.vaccinated,
     sterilized: animal.health.sterilized,
     dewormed: animal.health.dewormed,
+    needs_treatment: animal.health.needsTreatment,
+    special_needs: animal.health.specialNeeds,
     photo_url: animal.photoUrl
   };
 }
@@ -72,6 +78,18 @@ export class AnimalsRepository {
 
   findAll(): Observable<Animal[]> {
     return from(this.supabaseClientService.client.from('animals').select('*')).pipe(
+      map(({ data, error }) => {
+        if (error) {
+          throw error;
+        }
+        return ((data ?? []) as AnimalRow[]).map(mapRowToAnimal);
+      })
+    );
+  }
+
+  /** Как findAll(), но без пристроенных — для публичного каталога (docs/scheme/main-page.txt). */
+  findAvailable(): Observable<Animal[]> {
+    return from(this.supabaseClientService.client.from('animals').select('*').neq('status', 'adopted')).pipe(
       map(({ data, error }) => {
         if (error) {
           throw error;

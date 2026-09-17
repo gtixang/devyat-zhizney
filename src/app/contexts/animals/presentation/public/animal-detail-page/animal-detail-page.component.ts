@@ -4,9 +4,17 @@ import { RouterLink } from '@angular/router';
 import { catchError, of, switchMap } from 'rxjs';
 
 import { AnimalsFacade } from '@contexts/animals/application';
-import { BadgeComponent } from '@shared/ui/badge';
+import { ANIMAL_STATUS_LABELS, AnimalStatus } from '@contexts/animals/domain';
+import { BadgeComponent, BadgeTone } from '@shared/ui/badge';
 import { ButtonComponent } from '@shared/ui/button';
 import { SectionComponent } from '@shared/ui/section';
+
+const STATUS_TONE: Record<AnimalStatus, BadgeTone> = {
+  needs_placement: 'warning',
+  in_shelter: 'neutral',
+  in_foster: 'primary',
+  adopted: 'success'
+};
 
 interface HealthChecklistItem {
   readonly label: string;
@@ -42,6 +50,36 @@ export class AnimalDetailPageComponent {
   );
 
   protected readonly genderLabel = computed(() => (this.animal()?.gender === 'female' ? 'девочка' : 'мальчик'));
+
+  protected readonly statusLabel = computed(() => {
+    const status = this.animal()?.status;
+    return status ? ANIMAL_STATUS_LABELS[status] : '';
+  });
+
+  protected readonly statusTone = computed<BadgeTone>(() => {
+    const status = this.animal()?.status;
+    return status ? STATUS_TONE[status] : 'neutral';
+  });
+
+  /**
+   * needsTreatment/specialNeeds — не "выполненный пункт заботы", как vaccinated/
+   * sterilized/dewormed, а предупреждение, поэтому вынесены из healthItems() в
+   * отдельные бейджи (см. AnimalHealth в animal.model.ts).
+   */
+  protected readonly healthWarnings = computed<readonly string[]>(() => {
+    const health = this.animal()?.health;
+    if (!health) {
+      return [];
+    }
+    const warnings: string[] = [];
+    if (health.needsTreatment) {
+      warnings.push('Требуется лечение');
+    }
+    if (health.specialNeeds) {
+      warnings.push('Особые потребности');
+    }
+    return warnings;
+  });
 
   /** См. animal-card.component.ts — тот же откат на плейсхолдер при сбое загрузки фото. */
   protected readonly photoFailed = signal(false);

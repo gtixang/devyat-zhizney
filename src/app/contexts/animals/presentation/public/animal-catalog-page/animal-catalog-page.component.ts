@@ -36,14 +36,16 @@ const AGE_BUCKETS: readonly AgeBucket[] = [
  * Каталог животных (docs/scheme/main-page.txt, раздел "Ищет семью").
  *
  * Данные — реальная таблица `animals` в Supabase (docs/database/schema.md) через
- * AnimalsFacade.loadAll(). При ошибке загрузки каталог просто остаётся пустым
- * (переиспользуется тот же @empty-стейт сетки), без падения страницы.
+ * AnimalsFacade.loadAvailable() — без животных со статусом "Пристроен" (они не
+ * пропадают из базы, просто не показываются посетителям сайта). При ошибке загрузки
+ * каталог просто остаётся пустым (переиспользуется тот же @empty-стейт сетки), без
+ * падения страницы.
  *
  * Три независимых фильтра: вид (эксклюзивный выбор — табы, единственный критерий,
  * подтверждённый docs/scheme иконками 🐕/🐈), возраст и пол (оба — множественный
- * выбор чекбоксами, уточняющие и необязательные). Поле `status` ("В приюте"/"На
- * передержке") — учётная метка куратора из admin-panel.txt, а не критерий отбора
- * для посетителя сайта, поэтому фильтром не сделано.
+ * выбор чекбоксами, уточняющие и необязательные). Поле `status` целиком (кроме
+ * фильтрации пристроенных выше) — учётная метка куратора из admin-panel.txt, а не
+ * критерий отбора для посетителя сайта, поэтому фильтром по нему не сделано.
  */
 @Component({
   selector: 'app-animal-catalog-page',
@@ -58,7 +60,7 @@ export class AnimalCatalogPageComponent {
 
   protected readonly ageBuckets = AGE_BUCKETS;
 
-  private readonly animals = toSignal(this.animalsFacade.loadAll().pipe(catchError(() => of([] as Animal[]))), {
+  private readonly animals = toSignal(this.animalsFacade.loadAvailable().pipe(catchError(() => of([] as Animal[]))), {
     initialValue: [] as Animal[]
   });
   private readonly selectedSpeciesId = signal<string>(ALL_SPECIES_ID);
