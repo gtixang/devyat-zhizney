@@ -1,8 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { AdoptionApplication } from '../domain/adoption-application.model';
-import { AdoptionApplicationsRepository } from '../infrastructure/adoption-applications.repository';
+import { AdoptionApplication } from '../domain';
+import { AdoptionApplicationsRepository } from '../infrastructure';
 
 /**
  * Use-case слой контекста "Заявки на усыновление".

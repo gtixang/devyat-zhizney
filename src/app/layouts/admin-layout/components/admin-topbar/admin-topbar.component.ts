@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { AuthService } from '@core/auth/auth.service';
+import { AuthService } from '@core/auth';
 import { ButtonComponent } from '@shared/ui/button';
 
 /**

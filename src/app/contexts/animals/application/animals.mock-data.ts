@@ -1,4 +1,4 @@
-import { Animal } from '../domain/animal.model';
+import { Animal } from '../domain';
 
 /**
  * Локальный mock-набор для главной страницы (тизер "Ищет семью") — Supabase здесь

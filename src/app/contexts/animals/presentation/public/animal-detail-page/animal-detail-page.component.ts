@@ -3,7 +3,7 @@ import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { catchError, of, switchMap } from 'rxjs';
 
-import { AnimalsFacade } from '@contexts/animals/application/animals.facade';
+import { AnimalsFacade } from '@contexts/animals/application';
 import { BadgeComponent } from '@shared/ui/badge';
 import { ButtonComponent } from '@shared/ui/button';
 import { SectionComponent } from '@shared/ui/section';

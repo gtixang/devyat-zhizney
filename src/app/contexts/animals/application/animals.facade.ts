@@ -1,9 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
 
-import { Animal } from '../domain/animal.model';
-import { AnimalPhotosStorage } from '../infrastructure/animal-photos.storage';
-import { AnimalsRepository } from '../infrastructure/animals.repository';
+import { Animal } from '../domain';
+import { AnimalPhotosStorage, AnimalsRepository } from '../infrastructure';
 import { MOCK_ANIMALS } from './animals.mock-data';
 
 /**

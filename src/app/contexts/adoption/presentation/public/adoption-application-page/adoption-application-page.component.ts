@@ -3,9 +3,9 @@ import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { Subject, catchError, map, of, startWith, switchMap } from 'rxjs';
 
-import { AdoptionFacade } from '@contexts/adoption/application/adoption.facade';
-import { AdoptionApplication } from '@contexts/adoption/domain/adoption-application.model';
-import { AnimalsFacade } from '@contexts/animals/application/animals.facade';
+import { AdoptionFacade } from '@contexts/adoption/application';
+import { AdoptionApplication } from '@contexts/adoption/domain';
+import { AnimalsFacade } from '@contexts/animals/application';
 import { ButtonComponent } from '@shared/ui/button';
 import { InputComponent } from '@shared/ui/input';
 import { SectionComponent } from '@shared/ui/section';

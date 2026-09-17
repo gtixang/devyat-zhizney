@@ -2,10 +2,10 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { toSignal } from '@angular/core/rxjs-interop';
 import { catchError, of } from 'rxjs';
 
-import { AdoptionFacade } from '@contexts/adoption/application/adoption.facade';
-import { AdoptionApplication, AdoptionApplicationStatus } from '@contexts/adoption/domain/adoption-application.model';
-import { AnimalsFacade } from '@contexts/animals/application/animals.facade';
-import { Animal } from '@contexts/animals/domain/animal.model';
+import { AdoptionFacade } from '@contexts/adoption/application';
+import { AdoptionApplication, AdoptionApplicationStatus } from '@contexts/adoption/domain';
+import { AnimalsFacade } from '@contexts/animals/application';
+import { Animal } from '@contexts/animals/domain';
 import { BadgeComponent, BadgeTone } from '@shared/ui/badge';
 import { SectionComponent } from '@shared/ui/section';
 

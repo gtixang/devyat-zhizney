@@ -10,11 +10,14 @@ import { ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@angular/ro
  * перенаправляется на /login. Публичной регистрации нет: аккаунты кураторов заводятся
  * вручную в Supabase Dashboard.
  *
- * Ленивые `import()` страниц из `static-pages` намеренно указывают на файл компонента
- * напрямую (`@static-pages/home-page/home-page.component`), а не на barrel `index.ts`
- * (`@static-pages/home-page`) — импорт через index даёт чанку в сборке безликое имя
- * "index" вместо "home-page-component" (Angular называет lazy-чанк по последнему
- * сегменту пути импорта), что затрудняет чтение отчёта сборки и профилирование в DevTools.
+ * Все ленивые `import()` в этом файле (static-pages, layouts, страницы контекстов,
+ * authGuard) намеренно указывают на файл компонента напрямую
+ * (`@static-pages/home-page/home-page.component`), а не на barrel `index.ts`
+ * (`@static-pages/home-page`), хотя barrel для каждой из этих папок существует —
+ * импорт через index даёт чанку в сборке безликое имя "index" вместо, например,
+ * "home-page-component" (Angular называет lazy-чанк по последнему сегменту пути
+ * импорта), что затрудняет чтение отчёта сборки и профилирование в DevTools.
+ * Проверено сборкой в обе стороны (см. CLAUDE.md, раздел "Импорты").
  */
 export const routes: Routes = [
   {

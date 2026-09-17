@@ -3,7 +3,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { Subject, catchError, from, map, of, startWith, switchMap } from 'rxjs';
 
-import { AuthService } from '@core/auth/auth.service';
+import { AuthService } from '@core/auth';
 import { ButtonComponent } from '@shared/ui/button';
 import { InputComponent } from '@shared/ui/input';
 import { SectionComponent } from '@shared/ui/section';

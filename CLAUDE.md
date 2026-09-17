@@ -107,7 +107,7 @@ styleUrl: './admin-sidebar.component.scss'
 import { AdminSidebarComponent } from './admin-sidebar.component';
 ```
 
-### 3. Импорты — алиасы вместо глубоких относительных путей
+### 3. Импорты — алиасы и barrel-файлы (index.ts) вместо глубоких путей
 
 В `tsconfig.json` настроены алиасы на верхнеуровневые папки `src/app`:
 
@@ -118,35 +118,55 @@ import { AdminSidebarComponent } from './admin-sidebar.component';
 - `@static-pages/*` → `src/app/static-pages/*`
 - `@environments/*` → `src/environments/*`
 
-Любой импорт с двумя и более `../` (в том числе внутри одного контекста, например из
-`presentation/public/...` в `application/` или `domain/`) должен использовать алиас, а не
-относительный путь. Работает и в статических `import`, и в ленивых `import()` (например,
-в `app.routes.ts`) — Angular CLI (esbuild) корректно разбивает такие маршруты на отдельные
-чанки, проверено сборкой.
+Любой импорт с двумя и более `../` должен использовать алиас, а не относительный путь.
+Работает и в статических `import`, и в ленивых `import()` (например, в `app.routes.ts`) —
+Angular CLI (esbuild) корректно разбивает такие маршруты на отдельные чанки.
 
-Соседние файлы в одной папке (`./component.html`) и файлы на один уровень выше в том же
-контексте (`../domain/animal.model` из `infrastructure/`) остаются относительными —
-алиас для них ничего не сокращает.
+**Barrel-файлы.** Каждая папка, которая напрямую содержит файл с `export` (компонент,
+facade, репозиторий, модель, guard, сервис и т.д.), должна содержать `index.ts` вида:
 
-Каждая папка `src/app/shared/ui/<name>/` и `src/app/static-pages/<name>/` содержит
-`index.ts` вида `export * from './<name>.component';` — импортировать компонент нужно
-из папки, а не из файла напрямую, плюс есть общий `index.ts` на весь `shared/ui` и на
-весь `static-pages`, реэкспортирующий всё сразу. При добавлении нового компонента в
-`shared/ui/` или новой страницы в `static-pages/` обязательно создавать его `index.ts`
-и добавлять реэкспорт в общий барель.
+```ts
+export * from './animals.facade';
+export * from './animals.mock-data'; // если файлов в папке несколько — реэкспортировать все
+```
 
-Исключение — ленивые `import()` в `app.routes.ts`: там `static-pages` импортируются
-напрямую из файла компонента (`@static-pages/home-page/home-page.component`), а не
-через barrel. Импорт лениво загружаемого модуля через `index.ts` даёт chunk'у в сборке
-безликое имя "index" вместо "home-page-component" (Angular называет lazy-чанк по
-последнему сегменту пути импорта) — это не ломает работу приложения, но затрудняет
-чтение отчёта сборки и профилирование в DevTools. См. комментарий в самом файле.
+Импортировать нужно из папки (`@contexts/animals/application`), а не из файла напрямую
+(`@contexts/animals/application/animals.facade`). Это касается всех слоёв `contexts/<name>/
+{domain,application,infrastructure}`, каждой отдельной страницы/компонента в `presentation/`,
+`shared/ui/<name>/`, `static-pages/<name>/`, `core/auth/`, `core/supabase/`, `layouts/*` и их
+вложенных `components/<name>/`. При создании нового файла с экспортом — сразу создавать
+рядом `index.ts`.
+
+Для `shared/ui` и `static-pages` есть ещё и общий `index.ts` на весь каталог
+(`shared/ui/index.ts`, `static-pages/index.ts`), реэкспортирующий все дочерние барели —
+потому что там много мелких сиблингов, которые часто импортируют группами. Для
+`contexts/<name>/` в целом (объединяющий domain+application+infrastructure+presentation
+одним файлом) такой общий барель **намеренно не создан** — он заставил бы сборщик
+подтягивать вообще все lazy-loaded страницы контекста туда, где нужен только facade или
+модель, и сломал бы разбиение на отдельные чанки (см. ниже).
+
+**Что остаётся как есть (не трогать, не заворачивать в алиас/barrel):**
+
+- Соседние файлы одной папки (`./component.html`, `./auth.service'` из `auth.guard.ts`
+  в той же папке `core/auth/`).
+- Ленивые `import()` в `app.routes.ts` (и вообще везде, где `loadComponent`/`loadChildren`
+  указывает на конкретный маршрут) — всегда напрямую на файл компонента
+  (`@contexts/animals/presentation/admin/admin-animal-create-page/admin-animal-create-page.component`,
+  `@layouts/admin-layout/admin-layout.component`, `@core/auth/auth.guard`), а не через
+  `index.ts`, даже если barrel для этой папки существует. Причина: Angular называет
+  lazy-чанк по последнему сегменту пути импорта — импорт через `index.ts` даёт чанку в
+  сборке безликое имя "index" вместо "admin-animal-create-page-component", что не ломает
+  работу приложения, но затрудняет чтение отчёта сборки и профилирование в DevTools.
+  Проверено сборкой в обе стороны (имена чанков возвращаются к читаемым при прямом импорте
+  файла). Barrel-файл при этом всё равно создаётся в самой папке — просто этот один
+  конкретный вызов `import()` его не использует. См. комментарий в `app.routes.ts`.
 
 Правильно:
 
 ```ts
 import { ButtonComponent } from '@shared/ui/button';
-import { AnimalsFacade } from '@contexts/animals/application/animals.facade';
+import { AnimalsFacade } from '@contexts/animals/application';
+import { Animal } from '@contexts/animals/domain';
 loadComponent: () => import('@layouts/admin-layout/admin-layout.component').then((m) => m.AdminLayoutComponent);
 ```
 
@@ -154,11 +174,6 @@ loadComponent: () => import('@layouts/admin-layout/admin-layout.component').then
 
 ```ts
 import { ButtonComponent } from '@shared/ui/button/button.component';
-```
-
-Неправильно:
-
-```ts
+import { AnimalsFacade } from '@contexts/animals/application/animals.facade';
 import { ButtonComponent } from '../../../../../shared/ui/button/button.component';
-import { AnimalsFacade } from '../../../application/animals.facade';
 ```

@@ -4,9 +4,9 @@ import { catchError, of } from 'rxjs';
 
 import { SectionComponent } from '@shared/ui/section';
 import { TabItem, TabsComponent } from '@shared/ui/tabs';
-import { AnimalsFacade } from '@contexts/animals/application/animals.facade';
-import { Animal } from '@contexts/animals/domain/animal.model';
-import { AnimalCardComponent } from '@contexts/animals/presentation/components/animal-card/animal-card.component';
+import { AnimalsFacade } from '@contexts/animals/application';
+import { Animal } from '@contexts/animals/domain';
+import { AnimalCardComponent } from '@contexts/animals/presentation/components/animal-card';
 
 const ALL_SPECIES_ID = 'all';
 

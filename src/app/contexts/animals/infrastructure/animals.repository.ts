@@ -1,8 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable, from, map } from 'rxjs';
 
-import { SupabaseClientService } from '@core/supabase/supabase-client.service';
-import { Animal, AnimalGender, AnimalStatus } from '../domain/animal.model';
+import { SupabaseClientService } from '@core/supabase';
+import { Animal, AnimalGender, AnimalStatus } from '../domain';
 
 /** Строка таблицы `animals` (docs/database/schema.md) — snake_case, как принято в Postgres. */
 interface AnimalRow {

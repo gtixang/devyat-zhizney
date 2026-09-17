@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
-import { AdminSidebarComponent } from './components/admin-sidebar/admin-sidebar.component';
-import { AdminTopbarComponent } from './components/admin-topbar/admin-topbar.component';
+import { AdminSidebarComponent } from './components/admin-sidebar';
+import { AdminTopbarComponent } from './components/admin-topbar';
 
 /**
  * Оболочка админ-панели куратора: Sidebar + Topbar + основной контент маршрута

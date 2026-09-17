@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { AnimalsFacade } from '@contexts/animals/application/animals.facade';
-import { AnimalCardComponent } from '@contexts/animals/presentation/components/animal-card/animal-card.component';
+import { AnimalsFacade } from '@contexts/animals/application';
+import { AnimalCardComponent } from '@contexts/animals/presentation/components/animal-card';
 import { ButtonComponent } from '@shared/ui/button';
 import { CardComponent } from '@shared/ui/card';
 import { SectionComponent } from '@shared/ui/section';

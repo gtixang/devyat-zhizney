@@ -1,7 +1,7 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import type { User } from '@supabase/supabase-js';
 
-import { SupabaseClientService } from '../supabase/supabase-client.service';
+import { SupabaseClientService } from '../supabase';
 
 /**
  * Состояние аутентификации на базе Supabase Auth.

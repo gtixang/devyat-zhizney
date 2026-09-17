@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
-import { SiteFooterComponent } from './components/site-footer/site-footer.component';
-import { SiteHeaderComponent } from './components/site-header/site-header.component';
+import { SiteFooterComponent } from './components/site-footer';
+import { SiteHeaderComponent } from './components/site-header';
 
 /**
  * Оболочка публичного сайта: Header + основной контент маршрута + Footer

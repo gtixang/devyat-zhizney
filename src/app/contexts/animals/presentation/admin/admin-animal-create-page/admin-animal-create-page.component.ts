@@ -3,8 +3,8 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { Subject, catchError, map, of, startWith, switchMap } from 'rxjs';
 
-import { AnimalsFacade } from '@contexts/animals/application/animals.facade';
-import { Animal, AnimalGender, AnimalStatus } from '@contexts/animals/domain/animal.model';
+import { AnimalsFacade } from '@contexts/animals/application';
+import { Animal, AnimalGender, AnimalStatus } from '@contexts/animals/domain';
 import { ButtonComponent } from '@shared/ui/button';
 import { CheckboxComponent } from '@shared/ui/checkbox';
 import { FileUploadComponent } from '@shared/ui/file-upload';
