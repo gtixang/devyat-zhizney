@@ -39,7 +39,10 @@ function mapRowToAnimal(row: AnimalRow): Animal {
       needsTreatment: row.needs_treatment,
       specialNeeds: row.special_needs
     },
-    photoUrls: row.photo_urls
+    // `?? []` — граница системы (docs/specs/ts.md): пока не выполнена миграция
+    // photo_url → photo_urls (docs/database/schema.md), колонки может не быть вовсе,
+    // и Supabase просто не вернёт это поле, а не отдаст null/[] — не должно ронять страницу.
+    photoUrls: row.photo_urls ?? []
   };
 }
 
