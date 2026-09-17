@@ -1,14 +1,16 @@
 import { EnvironmentInjector, inject, runInInjectionContext } from '@angular/core';
-import { ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@angular/router';
+import { Route, Routes, UrlSegment } from '@angular/router';
 
 /**
  * Структура маршрутов основана на docs/scheme (general-schema.txt, main-page.txt,
  * admin-panel.txt). Публичные и админ-маршруты разделены через два layout-компонента,
  * каждый feature-маршрут — отдельный lazy-loaded чанк (loadComponent).
  *
- * `/admin` защищён authGuard (core/auth/auth.guard.ts) — неавторизованный посетитель
- * перенаправляется на /login. Публичной регистрации нет: аккаунты кураторов заводятся
- * вручную в Supabase Dashboard.
+ * `/admin` защищён authGuard (core/auth/auth.guard.ts) через `canMatch`, а не
+ * `canActivate`, — намеренно: неавторизованному посетителю маршрут не подставляет
+ * редирект на /login (не палит существование формы входа), а падает на wildcard 404,
+ * будто /admin вообще не существует (см. комментарий в auth.guard.ts). Публичной
+ * регистрации нет: аккаунты кураторов заводятся вручную в Supabase Dashboard.
  *
  * Все ленивые `import()` в этом файле (static-pages, layouts, страницы контекстов,
  * authGuard) намеренно указывают на файл компонента напрямую
@@ -89,11 +91,11 @@ export const routes: Routes = [
     // EnvironmentInjector захватывается синхронно (внутри guard-контекста Angular),
     // а runInInjectionContext восстанавливает контекст для inject() внутри authGuard(),
     // который выполнится уже после асинхронной динамической загрузки модуля.
-    canActivate: [
-      (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+    canMatch: [
+      (route: Route, segments: UrlSegment[]) => {
         const injector = inject(EnvironmentInjector);
         return import('@core/auth/auth.guard').then((m) =>
-          runInInjectionContext(injector, () => m.authGuard(route, state))
+          runInInjectionContext(injector, () => m.authGuard(route, segments))
         );
       }
     ],
@@ -114,23 +116,23 @@ export const routes: Routes = [
       {
         path: 'animals/new',
         loadComponent: () =>
-          import(
-            '@contexts/animals/presentation/admin/admin-animal-create-page/admin-animal-create-page.component'
-          ).then((m) => m.AdminAnimalCreatePageComponent)
+          import('@contexts/animals/presentation/admin/admin-animal-create-page/admin-animal-create-page.component').then(
+            (m) => m.AdminAnimalCreatePageComponent
+          )
       },
       {
         path: 'applications',
         loadComponent: () =>
-          import(
-            '@contexts/adoption/presentation/admin/admin-application-list-page/admin-application-list-page.component'
-          ).then((m) => m.AdminApplicationListPageComponent)
+          import('@contexts/adoption/presentation/admin/admin-application-list-page/admin-application-list-page.component').then(
+            (m) => m.AdminApplicationListPageComponent
+          )
       },
       {
         path: 'volunteers',
         loadComponent: () =>
-          import(
-            '@contexts/volunteers/presentation/admin/admin-volunteer-list-page/admin-volunteer-list-page.component'
-          ).then((m) => m.AdminVolunteerListPageComponent)
+          import('@contexts/volunteers/presentation/admin/admin-volunteer-list-page/admin-volunteer-list-page.component').then(
+            (m) => m.AdminVolunteerListPageComponent
+          )
       },
       {
         path: 'foster',
@@ -172,7 +174,8 @@ export const routes: Routes = [
     // маршрута '' (у публичного layout): '' сам ничего не проверяет и передаёт весь URL
     // своим children, поэтому wildcard там перехватил бы и несуществующие /admin/* пути
     // раньше, чем роутер вообще попробует маршрут 'admin'. На верхнем уровне он сработает,
-    // только когда не подошёл ни один из маршрутов выше — включая admin.
+    // только когда не подошёл ни один из маршрутов выше — включая admin (в том числе когда
+    // canMatch у admin отклонил неавторизованного посетителя).
     //
     // Обёрнут в тот же PublicLayoutComponent (header/footer), что и остальные публичные
     // страницы: '**' сам поглощает весь оставшийся URL, а дочернему '' достаётся уже
