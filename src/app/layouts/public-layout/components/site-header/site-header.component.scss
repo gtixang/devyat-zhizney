@@ -26,8 +26,12 @@
   }
 
   &__logo {
-    height: 28px;
+    height: 36px;
     width: auto;
+
+    @include mixins.respond-to(desktop) {
+      height: 44px;
+    }
   }
 
   &__nav {
