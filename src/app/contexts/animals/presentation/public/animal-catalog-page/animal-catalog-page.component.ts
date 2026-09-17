@@ -4,11 +4,33 @@ import { catchError, of } from 'rxjs';
 
 import { SectionComponent } from '@shared/ui/section';
 import { TabItem, TabsComponent } from '@shared/ui/tabs';
+import { CheckboxComponent } from '@shared/ui/checkbox';
 import { AnimalsFacade } from '@contexts/animals/application';
-import { Animal } from '@contexts/animals/domain';
+import { Animal, AnimalGender } from '@contexts/animals/domain';
 import { AnimalCardComponent } from '@contexts/animals/presentation/components/animal-card';
 
 const ALL_SPECIES_ID = 'all';
+
+type AgeBucketId = 'baby' | 'young' | 'adult' | 'senior';
+
+interface AgeBucket {
+  readonly id: AgeBucketId;
+  readonly label: string;
+  readonly matches: (age: number) => boolean;
+}
+
+/**
+ * Возраст фильтруется категориями жизненного этапа, а не диапазоном (input range):
+ * на реальных сайтах усыновления (Petfinder и подобные) так и делают — люди ищут
+ * "котёнка", а не "животное 0.7–1.3 года", тем более возраст в БД хранится целыми
+ * годами (docs/database/schema.md). См. обсуждение в чате.
+ */
+const AGE_BUCKETS: readonly AgeBucket[] = [
+  { id: 'baby', label: 'Котёнок/щенок (до 1 года)', matches: (age) => age < 1 },
+  { id: 'young', label: 'Молодой (1–3 года)', matches: (age) => age >= 1 && age < 3 },
+  { id: 'adult', label: 'Взрослый (3–7 лет)', matches: (age) => age >= 3 && age < 7 },
+  { id: 'senior', label: 'Пожилой (7+ лет)', matches: (age) => age >= 7 }
+];
 
 /**
  * Каталог животных (docs/scheme/main-page.txt, раздел "Ищет семью").
@@ -17,16 +39,16 @@ const ALL_SPECIES_ID = 'all';
  * AnimalsFacade.loadAll(). При ошибке загрузки каталог просто остаётся пустым
  * (переиспользуется тот же @empty-стейт сетки), без падения страницы.
  *
- * Фильтр — только по виду животного (species): это единственное поле Animal,
- * для которого docs/scheme даёт реальное подтверждение как пользовательской
- * категории (иконки 🐕/🐈 в main-page.txt). Поле `status` ("В приюте"/"На
- * передержке") — учётная метка куратора из admin-panel.txt, а не критерий
- * отбора для посетителя сайта, поэтому фильтром не сделано.
+ * Три независимых фильтра: вид (эксклюзивный выбор — табы, единственный критерий,
+ * подтверждённый docs/scheme иконками 🐕/🐈), возраст и пол (оба — множественный
+ * выбор чекбоксами, уточняющие и необязательные). Поле `status` ("В приюте"/"На
+ * передержке") — учётная метка куратора из admin-panel.txt, а не критерий отбора
+ * для посетителя сайта, поэтому фильтром не сделано.
  */
 @Component({
   selector: 'app-animal-catalog-page',
   standalone: true,
-  imports: [SectionComponent, TabsComponent, AnimalCardComponent],
+  imports: [SectionComponent, TabsComponent, CheckboxComponent, AnimalCardComponent],
   templateUrl: './animal-catalog-page.component.html',
   styleUrl: './animal-catalog-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -34,10 +56,14 @@ const ALL_SPECIES_ID = 'all';
 export class AnimalCatalogPageComponent {
   private readonly animalsFacade = inject(AnimalsFacade);
 
+  protected readonly ageBuckets = AGE_BUCKETS;
+
   private readonly animals = toSignal(this.animalsFacade.loadAll().pipe(catchError(() => of([] as Animal[]))), {
     initialValue: [] as Animal[]
   });
   private readonly selectedSpeciesId = signal<string>(ALL_SPECIES_ID);
+  private readonly selectedAgeBuckets = signal<ReadonlySet<AgeBucketId>>(new Set());
+  private readonly selectedGenders = signal<ReadonlySet<AnimalGender>>(new Set());
 
   protected readonly speciesFilters = computed<readonly TabItem[]>(() => {
     const uniqueSpecies = Array.from(new Set(this.animals().map((animal) => animal.species)));
@@ -46,16 +72,55 @@ export class AnimalCatalogPageComponent {
 
   protected readonly filteredAnimals = computed(() => {
     const speciesId = this.selectedSpeciesId();
-    if (speciesId === ALL_SPECIES_ID) {
-      return this.animals();
-    }
-    return this.animals().filter((animal) => animal.species === speciesId);
+    const ageBucketIds = this.selectedAgeBuckets();
+    const genders = this.selectedGenders();
+
+    return this.animals().filter((animal) => {
+      if (speciesId !== ALL_SPECIES_ID && animal.species !== speciesId) {
+        return false;
+      }
+      if (ageBucketIds.size > 0 && !AGE_BUCKETS.some((bucket) => ageBucketIds.has(bucket.id) && bucket.matches(animal.age))) {
+        return false;
+      }
+      if (genders.size > 0 && !genders.has(animal.gender)) {
+        return false;
+      }
+      return true;
+    });
   });
 
   protected readonly resultsCountLabel = computed(() => formatAnimalsCount(this.filteredAnimals().length));
 
   protected onSpeciesFilterChange(speciesId: string): void {
     this.selectedSpeciesId.set(speciesId);
+  }
+
+  protected isAgeBucketSelected(bucketId: AgeBucketId): boolean {
+    return this.selectedAgeBuckets().has(bucketId);
+  }
+
+  protected onAgeBucketToggle(bucketId: AgeBucketId, checked: boolean): void {
+    const next = new Set(this.selectedAgeBuckets());
+    if (checked) {
+      next.add(bucketId);
+    } else {
+      next.delete(bucketId);
+    }
+    this.selectedAgeBuckets.set(next);
+  }
+
+  protected isGenderSelected(gender: AnimalGender): boolean {
+    return this.selectedGenders().has(gender);
+  }
+
+  protected onGenderToggle(gender: AnimalGender, checked: boolean): void {
+    const next = new Set(this.selectedGenders());
+    if (checked) {
+      next.add(gender);
+    } else {
+      next.delete(gender);
+    }
+    this.selectedGenders.set(next);
   }
 }
 

@@ -12,6 +12,37 @@
     <p class="animal-catalog-page__count" aria-live="polite">{{ resultsCountLabel() }}</p>
   </div>
 
+  <div class="animal-catalog-page__filters">
+    <div class="animal-catalog-page__filter-group">
+      <span class="animal-catalog-page__filter-label">Возраст</span>
+      <div class="animal-catalog-page__filter-options">
+        @for (bucket of ageBuckets; track bucket.id) {
+          <app-checkbox
+            [label]="bucket.label"
+            [checked]="isAgeBucketSelected(bucket.id)"
+            (checkedChange)="onAgeBucketToggle(bucket.id, $event)"
+          ></app-checkbox>
+        }
+      </div>
+    </div>
+
+    <div class="animal-catalog-page__filter-group">
+      <span class="animal-catalog-page__filter-label">Пол</span>
+      <div class="animal-catalog-page__filter-options">
+        <app-checkbox
+          label="Мальчик"
+          [checked]="isGenderSelected('male')"
+          (checkedChange)="onGenderToggle('male', $event)"
+        ></app-checkbox>
+        <app-checkbox
+          label="Девочка"
+          [checked]="isGenderSelected('female')"
+          (checkedChange)="onGenderToggle('female', $event)"
+        ></app-checkbox>
+      </div>
+    </div>
+  </div>
+
   <div class="animal-catalog-page__grid">
     @for (animal of filteredAnimals(); track animal.id) {
       <app-animal-card [animal]="animal"></app-animal-card>
