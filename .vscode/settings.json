@@ -6,5 +6,11 @@
       "label": "Angular Dev Server",
       "onAutoForward": "openBrowser"
     }
-  }
+  },
+  // Заставляет VS Code использовать TypeScript из node_modules проекта (5.9.x),
+  // а не свою встроенную версию. Без этого редактор может подсвечивать ложные
+  // ошибки/deprecation-предупреждения (например, про "baseUrl"), которых реальный
+  // компилятор проекта (npx tsc, ng build/serve) не видит вовсе — см. обсуждение в чате.
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true
 }
