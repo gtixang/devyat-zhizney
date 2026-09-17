@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AuthService } from '@core/auth/auth.service';
-import { ButtonComponent } from '@shared/ui/button/button.component';
+import { ButtonComponent } from '@shared/ui/button';
 
 /**
  * Верхняя панель админ-панели (docs/scheme/admin-panel.txt: "Добрый день, Анна").

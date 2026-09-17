@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
-import { ButtonComponent } from '@shared/ui/button/button.component';
+import { ButtonComponent } from '@shared/ui/button';
 
 /**
  * Публичная шапка сайта (docs/scheme/main-page.txt): лого, навигация,

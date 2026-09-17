@@ -128,12 +128,24 @@ import { AdminSidebarComponent } from './admin-sidebar.component';
 контексте (`../domain/animal.model` из `infrastructure/`) остаются относительными —
 алиас для них ничего не сокращает.
 
+Каждая папка `src/app/shared/ui/<name>/` содержит `index.ts` вида `export * from
+'./<name>.component';` — импортировать компонент нужно из папки, а не из файла напрямую,
+плюс есть общий `src/app/shared/ui/index.ts`, реэкспортирующий все компоненты сразу.
+При добавлении нового компонента в `shared/ui/` обязательно создавать его `index.ts` и
+добавлять реэкспорт в общий `shared/ui/index.ts`.
+
 Правильно:
 
 ```ts
-import { ButtonComponent } from '@shared/ui/button/button.component';
+import { ButtonComponent } from '@shared/ui/button';
 import { AnimalsFacade } from '@contexts/animals/application/animals.facade';
 loadComponent: () => import('@layouts/admin-layout/admin-layout.component').then((m) => m.AdminLayoutComponent);
+```
+
+Неправильно:
+
+```ts
+import { ButtonComponent } from '@shared/ui/button/button.component';
 ```
 
 Неправильно:

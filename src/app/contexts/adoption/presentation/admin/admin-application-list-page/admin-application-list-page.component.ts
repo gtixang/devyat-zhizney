@@ -6,8 +6,8 @@ import { AdoptionFacade } from '@contexts/adoption/application/adoption.facade';
 import { AdoptionApplication, AdoptionApplicationStatus } from '@contexts/adoption/domain/adoption-application.model';
 import { AnimalsFacade } from '@contexts/animals/application/animals.facade';
 import { Animal } from '@contexts/animals/domain/animal.model';
-import { BadgeComponent, BadgeTone } from '@shared/ui/badge/badge.component';
-import { SectionComponent } from '@shared/ui/section/section.component';
+import { BadgeComponent, BadgeTone } from '@shared/ui/badge';
+import { SectionComponent } from '@shared/ui/section';
 
 const STATUS_LABEL: Record<AdoptionApplicationStatus, string> = {
   new: 'Новая',

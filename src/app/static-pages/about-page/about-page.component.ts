@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { SectionComponent } from '@shared/ui/section/section.component';
+import { SectionComponent } from '@shared/ui/section';
 
 /**
  * Placeholder страницы "О нас" (пункт навигации в docs/scheme/main-page.txt).
@@ -12,6 +12,6 @@ import { SectionComponent } from '@shared/ui/section/section.component';
   imports: [SectionComponent],
   templateUrl: './about-page.component.html',
   styleUrl: './about-page.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AboutPageComponent {}

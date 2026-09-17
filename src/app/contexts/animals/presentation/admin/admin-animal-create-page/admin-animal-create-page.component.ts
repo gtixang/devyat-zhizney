@@ -5,12 +5,12 @@ import { Subject, catchError, map, of, startWith, switchMap } from 'rxjs';
 
 import { AnimalsFacade } from '@contexts/animals/application/animals.facade';
 import { Animal, AnimalGender, AnimalStatus } from '@contexts/animals/domain/animal.model';
-import { ButtonComponent } from '@shared/ui/button/button.component';
-import { CheckboxComponent } from '@shared/ui/checkbox/checkbox.component';
-import { FileUploadComponent } from '@shared/ui/file-upload/file-upload.component';
-import { InputComponent } from '@shared/ui/input/input.component';
-import { RadioComponent } from '@shared/ui/radio/radio.component';
-import { SectionComponent } from '@shared/ui/section/section.component';
+import { ButtonComponent } from '@shared/ui/button';
+import { CheckboxComponent } from '@shared/ui/checkbox';
+import { FileUploadComponent } from '@shared/ui/file-upload';
+import { InputComponent } from '@shared/ui/input';
+import { RadioComponent } from '@shared/ui/radio';
+import { SectionComponent } from '@shared/ui/section';
 
 type SubmitState = { readonly status: 'pending' | 'success' | 'error' };
 type PhotoUploadState = { readonly status: 'idle' | 'uploading' | 'success' | 'error'; readonly url: string };
