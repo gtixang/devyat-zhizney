@@ -35,6 +35,10 @@ export class AnimalsFacade {
     return this.repository.create(animal).pipe(map(() => animal));
   }
 
+  update(animal: Animal): Observable<void> {
+    return this.repository.update(animal);
+  }
+
   /** Загружает фото в Supabase Storage и возвращает публичный URL (для photoUrl). */
   uploadPhoto(file: File): Observable<string> {
     return this.photosStorage.upload(file);

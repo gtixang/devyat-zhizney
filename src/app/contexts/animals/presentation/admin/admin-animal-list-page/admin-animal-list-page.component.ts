@@ -20,9 +20,9 @@ const STATUS_TONE: Record<AnimalStatus, BadgeTone> = {
 
 /**
  * Админ-раздел "Животные" (docs/scheme/admin-panel.md). Данные — реальная таблица
- * `animals` в Supabase через AnimalsFacade.loadAll(). Добавление животного —
- * admin-animal-create-page. Редактирование/удаление уже существующих из админки
- * пока не реализовано.
+ * `animals` в Supabase через AnimalsFacade.loadAll(). Добавление и редактирование —
+ * одна и та же форма, admin-animal-form-page (см. её комментарий). Удаление уже
+ * существующих животных из админки пока не реализовано.
  */
 @Component({
   selector: 'app-admin-animal-list-page',

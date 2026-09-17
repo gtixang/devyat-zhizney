@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal } from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
-import { Subject, catchError, map, of, startWith, switchMap } from 'rxjs';
+import { Observable, Subject, catchError, map, of, startWith, switchMap } from 'rxjs';
 
 import { AnimalsFacade } from '@contexts/animals/application';
 import { Animal, AnimalGender, AnimalStatus } from '@contexts/animals/domain';
@@ -28,26 +28,43 @@ function parseAge(raw: string): number {
 }
 
 /**
- * Добавление животного (docs/scheme/admin-panel.md). Пишет реальную строку в таблицу
- * `animals` через AnimalsFacade.create() — доступно только куратору (RLS insert-политика,
- * docs/database/schema.md), маршрут защищён authGuard.
+ * Добавление и редактирование животного одной формой (docs/scheme/admin-panel.md).
+ * Режим определяется наличием route-параметра `id` (`withComponentInputBinding()`,
+ * app.config.ts): `/admin/animals/new` — создание, `/admin/animals/:id/edit` —
+ * редактирование. Один компонент вместо двух, потому что поля и вся валидация
+ * идентичны — отличается только то, что в edit-режиме форма сперва подгружает
+ * существующее животное и вызывает AnimalsFacade.update() вместо create().
  *
  * Фото загружается в Supabase Storage сразу при выборе файла (не при отправке формы) —
  * так проще: пока идёт загрузка, кнопка отправки просто ждёт готового URL, а не нужно
  * тащить File через весь submit-поток. Бакет `animal-photos` и его RLS-политики созданы
- * вручную в Supabase (см. docs/database/schema.md, куда я не могу писать сам).
+ * вручную в Supabase (см. docs/database/schema.md, куда я не могу писать сам). В edit-режиме,
+ * пока куратор не выбрал новый файл, используется уже сохранённый photoUrl животного.
  */
 @Component({
-  selector: 'app-admin-animal-create-page',
+  selector: 'app-admin-animal-form-page',
   standalone: true,
   imports: [ButtonComponent, CheckboxComponent, FileUploadComponent, InputComponent, RadioComponent, SectionComponent],
-  templateUrl: './admin-animal-create-page.component.html',
-  styleUrl: './admin-animal-create-page.component.scss',
+  templateUrl: './admin-animal-form-page.component.html',
+  styleUrl: './admin-animal-form-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AdminAnimalCreatePageComponent {
+export class AdminAnimalFormPageComponent {
   private readonly animalsFacade = inject(AnimalsFacade);
   private readonly router = inject(Router);
+
+  public readonly id = input<string | undefined>(undefined);
+
+  protected readonly isEditMode = computed(() => this.id() !== undefined);
+
+  private readonly existingAnimal = toSignal(
+    toObservable(this.id).pipe(
+      switchMap((id) => (id ? this.animalsFacade.loadById(id).pipe(catchError(() => of(null))) : of(null)))
+    )
+  );
+
+  protected readonly isLoadingExisting = computed(() => this.isEditMode() && this.existingAnimal() === undefined);
+  protected readonly notFound = computed(() => this.isEditMode() && this.existingAnimal() === null);
 
   protected readonly name = signal('');
   protected readonly species = signal('');
@@ -59,6 +76,7 @@ export class AdminAnimalCreatePageComponent {
   protected readonly vaccinated = signal(false);
   protected readonly sterilized = signal(false);
   protected readonly dewormed = signal(false);
+  protected readonly existingPhotoUrl = signal('');
 
   protected readonly ageError = computed(() => {
     const raw = this.age().trim();
@@ -87,10 +105,15 @@ export class AdminAnimalCreatePageComponent {
 
   protected readonly isUploadingPhoto = computed(() => this.photoUploadResult().status === 'uploading');
   protected readonly hasPhotoUploadError = computed(() => this.photoUploadResult().status === 'error');
+  protected readonly hasNewPhoto = computed(() => this.photoUploadResult().url.length > 0);
+  /** Новое загруженное фото приоритетнее старого — иначе (в edit-режиме) остаётся прежнее. */
+  protected readonly photoUrl = computed(() => this.photoUploadResult().url || this.existingPhotoUrl());
 
   protected readonly canSubmit = computed(() => {
     const ageValue = parseAge(this.age());
     return (
+      !this.isLoadingExisting() &&
+      !this.notFound() &&
       this.name().trim().length > 0 &&
       this.species().trim().length > 0 &&
       this.age().trim().length > 0 &&
@@ -103,13 +126,17 @@ export class AdminAnimalCreatePageComponent {
   private readonly submitTrigger = new Subject<Omit<Animal, 'id'>>();
   private readonly submitResult = toSignal(
     this.submitTrigger.pipe(
-      switchMap((payload) =>
-        this.animalsFacade.create(payload).pipe(
+      switchMap((payload) => {
+        const existingId = this.id();
+        const save$: Observable<void> = existingId
+          ? this.animalsFacade.update({ ...payload, id: existingId })
+          : this.animalsFacade.create(payload).pipe(map(() => undefined));
+        return save$.pipe(
           map((): SubmitState => ({ status: 'success' })),
           catchError(() => of<SubmitState>({ status: 'error' })),
           startWith<SubmitState>({ status: 'pending' })
-        )
-      )
+        );
+      })
     )
   );
 
@@ -117,6 +144,27 @@ export class AdminAnimalCreatePageComponent {
   protected readonly hasSubmitError = computed(() => this.submitResult()?.status === 'error');
 
   constructor() {
+    // Подставляем поля формы из загруженного животного один раз, когда оно приедет —
+    // дальше куратор свободно их редактирует, повторной перезаписи не происходит,
+    // потому что existingAnimal() не меняется, пока не поменяется id() (см. switchMap выше).
+    effect(() => {
+      const animal = this.existingAnimal();
+      if (!animal) {
+        return;
+      }
+      this.name.set(animal.name);
+      this.species.set(animal.species);
+      this.gender.set(animal.gender);
+      this.age.set(String(animal.age));
+      this.status.set(animal.status);
+      this.traitsInput.set(animal.traits.join(', '));
+      this.about.set(animal.about);
+      this.vaccinated.set(animal.health.vaccinated);
+      this.sterilized.set(animal.health.sterilized);
+      this.dewormed.set(animal.health.dewormed);
+      this.existingPhotoUrl.set(animal.photoUrl);
+    });
+
     effect(() => {
       if (this.submitResult()?.status === 'success') {
         void this.router.navigate(['/admin/animals']);
@@ -159,7 +207,7 @@ export class AdminAnimalCreatePageComponent {
         sterilized: this.sterilized(),
         dewormed: this.dewormed()
       },
-      photoUrl: this.photoUploadResult().url
+      photoUrl: this.photoUrl()
     });
   }
 }

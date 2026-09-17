@@ -107,4 +107,16 @@ export class AnimalsRepository {
       })
     );
   }
+
+  update(animal: Animal): Observable<void> {
+    return from(
+      this.supabaseClientService.client.from('animals').update(mapAnimalToRow(animal)).eq('id', animal.id)
+    ).pipe(
+      map(({ error }) => {
+        if (error) {
+          throw error;
+        }
+      })
+    );
+  }
 }

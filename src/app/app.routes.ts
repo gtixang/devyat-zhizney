@@ -122,8 +122,15 @@ export const routes: Routes = [
       {
         path: 'animals/new',
         loadComponent: () =>
-          import('@contexts/animals/presentation/admin/admin-animal-create-page/admin-animal-create-page.component').then(
-            (m) => m.AdminAnimalCreatePageComponent
+          import('@contexts/animals/presentation/admin/admin-animal-form-page/admin-animal-form-page.component').then(
+            (m) => m.AdminAnimalFormPageComponent
+          )
+      },
+      {
+        path: 'animals/:id/edit',
+        loadComponent: () =>
+          import('@contexts/animals/presentation/admin/admin-animal-form-page/admin-animal-form-page.component').then(
+            (m) => m.AdminAnimalFormPageComponent
           )
       },
       {

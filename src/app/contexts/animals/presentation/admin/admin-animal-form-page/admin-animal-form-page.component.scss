@@ -2,12 +2,30 @@
 
 .admin-page {
   display: block;
+
+  &__note {
+    color: var(--color-text-secondary);
+  }
 }
 
 .admin-form {
   display: grid;
   gap: var(--space-5);
   max-width: 840px;
+
+  &__current-photo {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+
+    img {
+      max-width: 240px;
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--color-border);
+    }
+  }
 
   &__fields {
     display: grid;

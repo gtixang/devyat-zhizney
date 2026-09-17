@@ -11,6 +11,7 @@
           <th scope="col">Вид</th>
           <th scope="col">Возраст</th>
           <th scope="col">Статус</th>
+          <th scope="col"></th>
         </tr>
       </thead>
       <tbody>
@@ -20,10 +21,13 @@
             <td>{{ animal.species }}</td>
             <td>{{ animal.age }}</td>
             <td><app-badge [tone]="statusTone(animal.status)">{{ statusLabel(animal.status) }}</app-badge></td>
+            <td>
+              <app-button variant="text" size="sm" [link]="'/admin/animals/' + animal.id + '/edit'">Редактировать</app-button>
+            </td>
           </tr>
         } @empty {
           <tr>
-            <td colspan="4" class="admin-table__empty">Животных пока нет.</td>
+            <td colspan="5" class="admin-table__empty">Животных пока нет.</td>
           </tr>
         }
       </tbody>

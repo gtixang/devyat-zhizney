@@ -1,0 +1,137 @@
+<app-section
+  class="admin-page"
+  eyebrow="Админ-панель"
+  [heading]="isEditMode() ? 'Редактировать животное' : 'Добавить животное'"
+>
+  @if (isLoadingExisting()) {
+    <p class="admin-page__note">Загрузка…</p>
+  } @else if (notFound()) {
+    <p class="admin-page__note">Животное не найдено.</p>
+  } @else {
+    <div class="admin-form">
+      @if (existingPhotoUrl() && !hasNewPhoto()) {
+        <div class="admin-form__current-photo">
+          <span class="admin-form__group-label">Текущее фото</span>
+          <img [src]="existingPhotoUrl()" alt="Текущее фото животного" />
+        </div>
+      }
+
+      <app-file-upload
+        class="admin-form__upload"
+        hint="JPG, PNG до 10 МБ"
+        (fileSelected)="onPhotoSelected($event)"
+      ></app-file-upload>
+
+      @if (isUploadingPhoto()) {
+        <p class="admin-form__photo-status">Загрузка фото…</p>
+      } @else if (hasPhotoUploadError()) {
+        <p class="admin-form__photo-status admin-form__photo-status--error">
+          Не удалось загрузить фото. Попробуйте выбрать файл ещё раз.
+        </p>
+      }
+
+      <div class="admin-form__fields">
+        <app-input label="Кличка" [value]="name()" (valueChange)="name.set($event)"></app-input>
+
+        <app-input label="Вид" placeholder="Собака, Кошка…" [value]="species()" (valueChange)="species.set($event)"></app-input>
+
+        <app-input
+          label="Возраст (лет)"
+          inputMode="numeric"
+          placeholder="Например, 2"
+          [value]="age()"
+          [error]="ageError()"
+          (valueChange)="age.set($event)"
+        ></app-input>
+
+        <app-input
+          label="Черты характера"
+          hint="Через запятую, например: Спокойная, Дружелюбная"
+          [value]="traitsInput()"
+          (valueChange)="traitsInput.set($event)"
+        ></app-input>
+      </div>
+
+      <div class="admin-form__attributes">
+        <div class="admin-form__group">
+          <span class="admin-form__group-label">Пол</span>
+          <div class="admin-form__radio-row">
+            <app-radio
+              name="gender"
+              value="female"
+              label="Девочка"
+              [checked]="gender() === 'female'"
+              (checkedChange)="onGenderChange($event)"
+            ></app-radio>
+            <app-radio
+              name="gender"
+              value="male"
+              label="Мальчик"
+              [checked]="gender() === 'male'"
+              (checkedChange)="onGenderChange($event)"
+            ></app-radio>
+          </div>
+        </div>
+
+        <div class="admin-form__group">
+          <span class="admin-form__group-label">Статус</span>
+          <div class="admin-form__radio-row">
+            <app-radio
+              name="status"
+              value="in_shelter"
+              label="В приюте"
+              [checked]="status() === 'in_shelter'"
+              (checkedChange)="onStatusChange($event)"
+            ></app-radio>
+            <app-radio
+              name="status"
+              value="in_foster"
+              label="На передержке"
+              [checked]="status() === 'in_foster'"
+              (checkedChange)="onStatusChange($event)"
+            ></app-radio>
+          </div>
+        </div>
+
+        <div class="admin-form__group">
+          <span class="admin-form__group-label">Здоровье</span>
+          <div class="admin-form__checkbox-col">
+            <app-checkbox label="Привита" [checked]="vaccinated()" (checkedChange)="vaccinated.set($event)"></app-checkbox>
+            <app-checkbox
+              label="Стерилизована"
+              [checked]="sterilized()"
+              (checkedChange)="sterilized.set($event)"
+            ></app-checkbox>
+            <app-checkbox
+              label="Обработана от паразитов"
+              [checked]="dewormed()"
+              (checkedChange)="dewormed.set($event)"
+            ></app-checkbox>
+          </div>
+        </div>
+      </div>
+
+      <app-input
+        label="О животном"
+        [multiline]="true"
+        [rows]="5"
+        [value]="about()"
+        (valueChange)="about.set($event)"
+      ></app-input>
+
+      @if (hasSubmitError()) {
+        <p class="admin-form__error">Не удалось сохранить животное. Попробуйте ещё раз.</p>
+      }
+
+      <app-button
+        class="admin-form__submit"
+        variant="accent"
+        [fullWidth]="true"
+        [disabled]="!canSubmit() || isSubmitting()"
+        (pressed)="onSubmit()"
+      >
+        {{ isSubmitting() ? 'Сохранение…' : isUploadingPhoto() ? 'Загрузка фото…' : isEditMode() ? 'Сохранить изменения' : 'Добавить животное' }}
+      </app-button>
+    </div>
+  }
+</app-section>
