@@ -1,0 +1,63 @@
+<div class="photo-gallery">
+  <div class="photo-gallery__viewer">
+    @if (currentPhoto(); as src) {
+      <img
+        class="photo-gallery__image"
+        [src]="src"
+        [alt]="alt()"
+        (error)="onImageError(activeIndex())"
+      />
+    } @else {
+      <div class="photo-gallery__image photo-gallery__image--placeholder" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M4 10c0-1 1-2 2-2s2 1 2 2M16 10c0-1 1-2 2-2s2 1 2 2M8 15c1.5 1.5 6.5 1.5 8 0" />
+        </svg>
+      </div>
+    }
+
+    @if (canGoPrevious()) {
+      <button
+        type="button"
+        class="photo-gallery__nav photo-gallery__nav--prev"
+        aria-label="Предыдущее фото"
+        (click)="previous()"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
+    }
+
+    @if (canGoNext()) {
+      <button
+        type="button"
+        class="photo-gallery__nav photo-gallery__nav--next"
+        aria-label="Следующее фото"
+        (click)="next()"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
+    }
+  </div>
+
+  @if (hasMultiplePhotos()) {
+    <div class="photo-gallery__thumbs" role="tablist" aria-label="Выбор фото">
+      @for (photo of photos(); track photo + '' + $index; let i = $index) {
+        <button
+          type="button"
+          class="photo-gallery__thumb"
+          role="tab"
+          [attr.aria-selected]="i === activeIndex()"
+          [class.photo-gallery__thumb--active]="i === activeIndex()"
+          (click)="selectIndex(i)"
+        >
+          @if (!isFailed(i)) {
+            <img [src]="photo" [alt]="alt() + ' — фото ' + (i + 1)" (error)="onImageError(i)" />
+          }
+        </button>
+      }
+    </div>
+  }
+</div>

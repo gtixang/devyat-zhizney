@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { catchError, of, switchMap } from 'rxjs';
@@ -7,6 +7,7 @@ import { AnimalsFacade } from '@contexts/animals/application';
 import { ANIMAL_STATUS_LABELS, AnimalStatus } from '@contexts/animals/domain';
 import { BadgeComponent, BadgeTone } from '@shared/ui/badge';
 import { ButtonComponent } from '@shared/ui/button';
+import { PhotoGalleryComponent } from '@shared/ui/photo-gallery';
 import { SectionComponent } from '@shared/ui/section';
 
 const STATUS_TONE: Record<AnimalStatus, BadgeTone> = {
@@ -35,7 +36,7 @@ interface HealthChecklistItem {
 @Component({
   selector: 'app-animal-detail-page',
   standalone: true,
-  imports: [RouterLink, BadgeComponent, ButtonComponent, SectionComponent],
+  imports: [RouterLink, BadgeComponent, ButtonComponent, PhotoGalleryComponent, SectionComponent],
   templateUrl: './animal-detail-page.component.html',
   styleUrl: './animal-detail-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -80,13 +81,6 @@ export class AnimalDetailPageComponent {
     }
     return warnings;
   });
-
-  /** См. animal-card.component.ts — тот же откат на плейсхолдер при сбое загрузки фото. */
-  protected readonly photoFailed = signal(false);
-
-  protected onPhotoError(): void {
-    this.photoFailed.set(true);
-  }
 
   protected readonly healthItems = computed<readonly HealthChecklistItem[]>(() => {
     const animal = this.animal();

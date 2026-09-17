@@ -4,6 +4,7 @@ export * from './card';
 export * from './checkbox';
 export * from './file-upload';
 export * from './input';
+export * from './photo-gallery';
 export * from './radio';
 export * from './section';
 export * from './tabs';

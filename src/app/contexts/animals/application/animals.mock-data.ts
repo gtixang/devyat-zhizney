@@ -5,13 +5,15 @@ import { Animal } from '../domain';
  * не используется, см. историю обсуждения в чате.
  *
  * У первых 4 животных (luna/murka/bruno/snezhok, они же показаны на главной и
- * реально существуют в Supabase — docs/database/schema.md) `photoUrl` указывает
+ * реально существуют в Supabase — docs/database/schema.md) `photoUrls` указывает
  * на свободно лицензированные фото с Unsplash (Unsplash License — можно использовать
- * без атрибуции), подставлены только для демонстрации живого вида каталога.
- * Это НЕ фото реальных животных приюта «Девять жизней» — как только появятся
- * настоящие фото, их нужно будет заменить (см. обсуждение про Supabase Storage).
+ * без атрибуции), подставлены только для демонстрации живого вида каталога. У Луны
+ * их три — чтобы сразу было видно работу галереи (shared/ui/photo-gallery) не на
+ * одном фото. Это НЕ фото реальных животных приюта «Девять жизней» — как только
+ * появятся настоящие фото, их нужно будет заменить (см. обсуждение про Supabase Storage).
  * У остальных 4 (baron/ryzhik/ten/dymka, не используются ни на одной текущей
- * странице) `photoUrl` оставлен пустым — так же, как раньше показывает placeholder.
+ * странице) `photoUrls` оставлен пустым массивом — так же, как раньше показывает
+ * placeholder (shared/ui/photo-gallery).
  *
  * Имена Луна/Мурка/Бруно/Снежок и черты характера/health Луны — взяты дословно из
  * docs/scheme/main-page.txt и docs/scheme/pet-card.txt.
@@ -27,7 +29,11 @@ export const MOCK_ANIMALS: readonly Animal[] = [
     traits: ['Спокойная', 'Дружелюбная', 'Приучена к выгулу'],
     about: 'Луна очень ласковая и любит людей, легко находит общий язык с детьми и другими животными.',
     health: { vaccinated: true, sterilized: true, dewormed: true, needsTreatment: false, specialNeeds: false },
-    photoUrl: 'https://images.unsplash.com/photo-1668036268050-ca69ef2f0ca0?w=1200&auto=format&fit=crop&q=80'
+    photoUrls: [
+      'https://images.unsplash.com/photo-1668036268050-ca69ef2f0ca0?w=1200&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1627149400180-77f426f296cf?w=1200&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1544800086-912aa3f623ee?w=1200&auto=format&fit=crop&q=80'
+    ]
   },
   {
     id: 'murka',
@@ -39,7 +45,7 @@ export const MOCK_ANIMALS: readonly Animal[] = [
     traits: ['Ласковая', 'Любит спать на руках'],
     about: 'Мурка обожает нежиться на солнышке и совсем не боится других животных.',
     health: { vaccinated: true, sterilized: false, dewormed: true, needsTreatment: false, specialNeeds: false },
-    photoUrl: 'https://images.unsplash.com/photo-1668194273694-89a5046f0181?w=1200&auto=format&fit=crop&q=80'
+    photoUrls: ['https://images.unsplash.com/photo-1668194273694-89a5046f0181?w=1200&auto=format&fit=crop&q=80']
   },
   {
     id: 'bruno',
@@ -51,7 +57,7 @@ export const MOCK_ANIMALS: readonly Animal[] = [
     traits: ['Активный', 'Любит детей'],
     about: 'Бруно ищет активную семью, готов на долгие прогулки и игры.',
     health: { vaccinated: true, sterilized: true, dewormed: true, needsTreatment: false, specialNeeds: false },
-    photoUrl: 'https://images.unsplash.com/photo-1559861985-8c8c4c0fcbb4?w=1200&auto=format&fit=crop&q=80'
+    photoUrls: ['https://images.unsplash.com/photo-1559861985-8c8c4c0fcbb4?w=1200&auto=format&fit=crop&q=80']
   },
   {
     id: 'snezhok',
@@ -63,7 +69,7 @@ export const MOCK_ANIMALS: readonly Animal[] = [
     traits: ['Спокойный', 'Аккуратный'],
     about: 'Снежок — рассудительный кот, который ценит тишину и уют.',
     health: { vaccinated: true, sterilized: true, dewormed: false, needsTreatment: false, specialNeeds: false },
-    photoUrl: 'https://images.unsplash.com/photo-1653176070897-da3de9bbdc3c?w=1200&auto=format&fit=crop&q=80'
+    photoUrls: ['https://images.unsplash.com/photo-1653176070897-da3de9bbdc3c?w=1200&auto=format&fit=crop&q=80']
   },
   {
     id: 'baron',
@@ -75,7 +81,7 @@ export const MOCK_ANIMALS: readonly Animal[] = [
     traits: ['Охраняет территорию', 'Верный'],
     about: 'Барон — надёжный компаньон для опытного хозяина.',
     health: { vaccinated: true, sterilized: false, dewormed: true, needsTreatment: false, specialNeeds: false },
-    photoUrl: ''
+    photoUrls: []
   },
   {
     id: 'ryzhik',
@@ -87,7 +93,7 @@ export const MOCK_ANIMALS: readonly Animal[] = [
     traits: ['Игривый', 'Общительный'],
     about: 'Рыжик обожает игрушки и всегда рад новым знакомствам.',
     health: { vaccinated: false, sterilized: false, dewormed: true, needsTreatment: false, specialNeeds: false },
-    photoUrl: ''
+    photoUrls: []
   },
   {
     id: 'ten',
@@ -99,7 +105,7 @@ export const MOCK_ANIMALS: readonly Animal[] = [
     traits: ['Пугливая', 'Нуждается в терпении'],
     about: 'Тень постепенно раскрывается и учится доверять людям.',
     health: { vaccinated: true, sterilized: false, dewormed: false, needsTreatment: false, specialNeeds: false },
-    photoUrl: ''
+    photoUrls: []
   },
   {
     id: 'dymka',
@@ -111,6 +117,6 @@ export const MOCK_ANIMALS: readonly Animal[] = [
     traits: ['Спокойная', 'Домоседка'],
     about: 'Дымка любит спокойную обстановку и станет отличным компаньоном.',
     health: { vaccinated: true, sterilized: true, dewormed: true, needsTreatment: false, specialNeeds: false },
-    photoUrl: ''
+    photoUrls: []
   }
 ];

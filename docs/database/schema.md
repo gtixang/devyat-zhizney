@@ -39,7 +39,7 @@ create table if not exists public.animals (
   dewormed boolean not null default false,
   needs_treatment boolean not null default false,
   special_needs boolean not null default false,
-  photo_url text not null default '',
+  photo_urls text[] not null default '{}',
   created_at timestamptz not null default now()
 );
 
@@ -150,11 +150,18 @@ on conflict (id) do nothing;
 (см. обсуждение про Supabase Storage в чате).
 
 ```sql
-update public.animals set photo_url = 'https://images.unsplash.com/photo-1668036268050-ca69ef2f0ca0?w=1200&auto=format&fit=crop&q=80' where id = 'luna';
-update public.animals set photo_url = 'https://images.unsplash.com/photo-1668194273694-89a5046f0181?w=1200&auto=format&fit=crop&q=80' where id = 'murka';
-update public.animals set photo_url = 'https://images.unsplash.com/photo-1559861985-8c8c4c0fcbb4?w=1200&auto=format&fit=crop&q=80' where id = 'bruno';
-update public.animals set photo_url = 'https://images.unsplash.com/photo-1653176070897-da3de9bbdc3c?w=1200&auto=format&fit=crop&q=80' where id = 'snezhok';
+update public.animals set photo_urls = array[
+  'https://images.unsplash.com/photo-1668036268050-ca69ef2f0ca0?w=1200&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1627149400180-77f426f296cf?w=1200&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1544800086-912aa3f623ee?w=1200&auto=format&fit=crop&q=80'
+] where id = 'luna';
+update public.animals set photo_urls = array['https://images.unsplash.com/photo-1668194273694-89a5046f0181?w=1200&auto=format&fit=crop&q=80'] where id = 'murka';
+update public.animals set photo_urls = array['https://images.unsplash.com/photo-1559861985-8c8c4c0fcbb4?w=1200&auto=format&fit=crop&q=80'] where id = 'bruno';
+update public.animals set photo_urls = array['https://images.unsplash.com/photo-1653176070897-da3de9bbdc3c?w=1200&auto=format&fit=crop&q=80'] where id = 'snezhok';
 ```
+
+У Луны три фото вместо одного — чтобы сразу увидеть новую галерею (shared/ui/photo-gallery)
+в деле, а не на единственной картинке.
 
 ## Storage: бакет для настоящих фото животных
 
@@ -226,3 +233,24 @@ alter table public.animals add column if not exists special_needs boolean not nu
 Существующие животные ничего не потеряют — у них просто появятся `needs_treatment` и
 `special_needs` со значением `false` по умолчанию, статус останется прежним (он и так
 входит в новый разрешённый список).
+
+## Миграция: галерея фото (photo_url → photo_urls)
+
+Страница животного теперь показывает галерею из нескольких фото (shared/ui/photo-gallery),
+а не одну картинку — колонка `photo_url text` заменена на `photo_urls text[]`. На базе,
+созданной ДО этой правки, нужно перенести данные из старой колонки в новую и удалить
+старую. Выполнить **один раз** в Supabase Dashboard → **SQL Editor** → New query → Run:
+
+```sql
+alter table public.animals add column if not exists photo_urls text[] not null default '{}';
+
+update public.animals
+set photo_urls = array[photo_url]
+where photo_url is not null and photo_url <> '' and photo_urls = '{}';
+
+alter table public.animals drop column if exists photo_url;
+```
+
+Существующее фото каждого животного станет первым (и единственным) в его галерее —
+куратор сможет добавить остальные, когда в форме появится загрузка нескольких фото
+(этого пока нет, форма управляет только одним фото на животное).

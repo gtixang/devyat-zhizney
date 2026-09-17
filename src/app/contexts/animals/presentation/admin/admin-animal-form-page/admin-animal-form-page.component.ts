@@ -47,7 +47,11 @@ const STATUS_OPTIONS: readonly { readonly id: AnimalStatus; readonly label: stri
  * так проще: пока идёт загрузка, кнопка отправки просто ждёт готового URL, а не нужно
  * тащить File через весь submit-поток. Бакет `animal-photos` и его RLS-политики созданы
  * вручную в Supabase (см. docs/database/schema.md, куда я не могу писать сам). В edit-режиме,
- * пока куратор не выбрал новый файл, используется уже сохранённый photoUrl животного.
+ * пока куратор не выбрал новый файл, используется уже сохранённое первое фото животного.
+ *
+ * Форма пока управляет только ОДНИМ фото (загружает/заменяет), хотя домен уже поддерживает
+ * галерею (Animal.photoUrls) — сохраняется как массив из одного элемента (или пустой).
+ * Полноценная загрузка нескольких фото — отдельная задача на будущее.
  */
 @Component({
   selector: 'app-admin-animal-form-page',
@@ -176,7 +180,7 @@ export class AdminAnimalFormPageComponent {
       this.dewormed.set(animal.health.dewormed);
       this.needsTreatment.set(animal.health.needsTreatment);
       this.specialNeeds.set(animal.health.specialNeeds);
-      this.existingPhotoUrl.set(animal.photoUrl);
+      this.existingPhotoUrl.set(animal.photoUrls[0] ?? '');
     });
 
     effect(() => {
@@ -223,7 +227,7 @@ export class AdminAnimalFormPageComponent {
         needsTreatment: this.needsTreatment(),
         specialNeeds: this.specialNeeds()
       },
-      photoUrl: this.photoUrl()
+      photoUrls: this.photoUrl() ? [this.photoUrl()] : []
     });
   }
 }

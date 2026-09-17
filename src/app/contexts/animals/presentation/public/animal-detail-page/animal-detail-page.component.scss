@@ -61,30 +61,8 @@
     }
   }
 
-  &__photo {
-    width: 100%;
-    aspect-ratio: 4 / 5;
-    border-radius: var(--radius-lg);
-    object-fit: cover;
-    background: var(--color-background);
-  }
-
-  &__photo--placeholder {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--color-text-secondary);
-    background: linear-gradient(
-      160deg,
-      color-mix(in srgb, var(--color-primary) 18%, var(--color-surface) 82%),
-      var(--color-surface) 60%
-    );
-
-    svg {
-      width: 32%;
-      height: 32%;
-      opacity: 0.35;
-    }
+  &__gallery {
+    display: block;
   }
 
   &__status {

@@ -4,10 +4,10 @@
     [routerLink]="['/animals', animal().id]"
     [attr.aria-label]="'Открыть анкету: ' + animal().name"
   >
-    @if (animal().photoUrl && !photoFailed()) {
+    @if (showCoverPhoto()) {
       <img
         class="animal-card__photo"
-        [src]="animal().photoUrl"
+        [src]="coverPhotoUrl()"
         [alt]="'Фото ' + animal().name"
         loading="lazy"
         (error)="onPhotoError()"

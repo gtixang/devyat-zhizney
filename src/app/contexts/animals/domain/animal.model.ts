@@ -48,5 +48,7 @@ export interface Animal {
   readonly traits: readonly string[];
   readonly about: string;
   readonly health: AnimalHealth;
-  readonly photoUrl: string;
+  /** Галерея фото на странице животного (shared/ui/photo-gallery); может быть пустой —
+   *  тогда показывается плейсхолдер. Первое фото — обложка в карточке каталога. */
+  readonly photoUrls: readonly string[];
 }

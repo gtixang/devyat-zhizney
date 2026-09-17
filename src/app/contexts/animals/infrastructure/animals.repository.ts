@@ -19,7 +19,7 @@ interface AnimalRow {
   readonly dewormed: boolean;
   readonly needs_treatment: boolean;
   readonly special_needs: boolean;
-  readonly photo_url: string;
+  readonly photo_urls: readonly string[];
 }
 
 function mapRowToAnimal(row: AnimalRow): Animal {
@@ -39,7 +39,7 @@ function mapRowToAnimal(row: AnimalRow): Animal {
       needsTreatment: row.needs_treatment,
       specialNeeds: row.special_needs
     },
-    photoUrl: row.photo_url
+    photoUrls: row.photo_urls
   };
 }
 
@@ -58,7 +58,7 @@ function mapAnimalToRow(animal: Animal): AnimalRow {
     dewormed: animal.health.dewormed,
     needs_treatment: animal.health.needsTreatment,
     special_needs: animal.health.specialNeeds,
-    photo_url: animal.photoUrl
+    photo_urls: animal.photoUrls
   };
 }
 
