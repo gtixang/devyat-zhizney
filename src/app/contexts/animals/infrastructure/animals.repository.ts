@@ -1,8 +1,17 @@
 import { Injectable, inject } from '@angular/core';
-import { Observable, from, map } from 'rxjs';
+import { Observable, from, map, timeout } from 'rxjs';
 
 import { SupabaseClientService } from '@core/supabase';
 import { Animal, AnimalGender, AnimalStatus } from '../domain';
+
+/**
+ * На нестабильной мобильной сети (заблокированный/зафильтрованный на уровне
+ * провайдера IP, слабый сигнал) запрос к Supabase может не завершиться вообще —
+ * ни данными, ни ошибкой — из-за чего страница вечно висит на "Загрузка…".
+ * Таймаут превращает такое зависание в обычную ошибку, которую уже ловит
+ * catchError у каждого вызывающего (см. animal-catalog-page, animal-detail-page).
+ */
+const REQUEST_TIMEOUT_MS = 12_000;
 
 /** Строка таблицы `animals` (docs/database/schema.md) — snake_case, как принято в Postgres. */
 interface AnimalRow {
@@ -81,6 +90,7 @@ export class AnimalsRepository {
 
   findAll(): Observable<Animal[]> {
     return from(this.supabaseClientService.client.from('animals').select('*')).pipe(
+      timeout(REQUEST_TIMEOUT_MS),
       map(({ data, error }) => {
         if (error) {
           throw error;
@@ -93,6 +103,7 @@ export class AnimalsRepository {
   /** Как findAll(), но без пристроенных — для публичного каталога (docs/scheme/main-page.txt). */
   findAvailable(): Observable<Animal[]> {
     return from(this.supabaseClientService.client.from('animals').select('*').neq('status', 'adopted')).pipe(
+      timeout(REQUEST_TIMEOUT_MS),
       map(({ data, error }) => {
         if (error) {
           throw error;
@@ -104,6 +115,7 @@ export class AnimalsRepository {
 
   findById(id: string): Observable<Animal | null> {
     return from(this.supabaseClientService.client.from('animals').select('*').eq('id', id).maybeSingle()).pipe(
+      timeout(REQUEST_TIMEOUT_MS),
       map(({ data, error }) => {
         if (error) {
           throw error;
@@ -121,6 +133,7 @@ export class AnimalsRepository {
    */
   create(animal: Animal): Observable<void> {
     return from(this.supabaseClientService.client.from('animals').insert(mapAnimalToRow(animal))).pipe(
+      timeout(REQUEST_TIMEOUT_MS),
       map(({ error }) => {
         if (error) {
           throw error;
@@ -133,6 +146,7 @@ export class AnimalsRepository {
     return from(
       this.supabaseClientService.client.from('animals').update(mapAnimalToRow(animal)).eq('id', animal.id)
     ).pipe(
+      timeout(REQUEST_TIMEOUT_MS),
       map(({ error }) => {
         if (error) {
           throw error;

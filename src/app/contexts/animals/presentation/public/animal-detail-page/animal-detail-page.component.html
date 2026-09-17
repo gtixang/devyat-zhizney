@@ -2,6 +2,10 @@
   <div class="animal-detail-page animal-detail-page--empty">
     <p>Загрузка…</p>
   </div>
+} @else if (loadFailed()) {
+  <div class="animal-detail-page animal-detail-page--empty">
+    <p>Не удалось загрузить данные о питомце. Проверьте соединение с интернетом и обновите страницу.</p>
+  </div>
 } @else if (animal(); as pet) {
   <article class="animal-detail-page">
     <nav class="animal-detail-page__breadcrumb" aria-label="Хлебные крошки">

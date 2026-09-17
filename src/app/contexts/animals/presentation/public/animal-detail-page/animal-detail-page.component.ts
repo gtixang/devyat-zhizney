@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { catchError, of, switchMap } from 'rxjs';
@@ -27,7 +27,9 @@ interface HealthChecklistItem {
  * в Supabase (docs/database/schema.md) через AnimalsFacade.loadById().
  *
  * `animal()` различает три состояния: `undefined` — идёт загрузка, `null` — животное
- * не найдено (или ошибка загрузки), `Animal` — данные получены.
+ * не найдено, `Animal` — данные получены. Отдельно `loadFailed` — настоящая ошибка
+ * загрузки (например, зависший на нестабильной мобильной сети запрос, см.
+ * REQUEST_TIMEOUT_MS в AnimalsRepository) — это не то же самое, что "не найдено".
  *
  * Имя животного нигде не подставляется в падежные формы ("о Луне", "забрать Луну") —
  * русское склонение произвольных имён нельзя корректно автоматизировать без отдельной
@@ -46,8 +48,20 @@ export class AnimalDetailPageComponent {
 
   private readonly animalsFacade = inject(AnimalsFacade);
 
+  protected readonly loadFailed = signal(false);
+
   protected readonly animal = toSignal(
-    toObservable(this.id).pipe(switchMap((id) => this.animalsFacade.loadById(id).pipe(catchError(() => of(null)))))
+    toObservable(this.id).pipe(
+      switchMap((id) => {
+        this.loadFailed.set(false);
+        return this.animalsFacade.loadById(id).pipe(
+          catchError(() => {
+            this.loadFailed.set(true);
+            return of(null);
+          })
+        );
+      })
+    )
   );
 
   protected readonly genderLabel = computed(() => (this.animal()?.gender === 'female' ? 'девочка' : 'мальчик'));
