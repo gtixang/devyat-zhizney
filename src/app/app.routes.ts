@@ -9,6 +9,12 @@ import { ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@angular/ro
  * `/admin` защищён authGuard (core/auth/auth.guard.ts) — неавторизованный посетитель
  * перенаправляется на /login. Публичной регистрации нет: аккаунты кураторов заводятся
  * вручную в Supabase Dashboard.
+ *
+ * Ленивые `import()` страниц из `static-pages` намеренно указывают на файл компонента
+ * напрямую (`@static-pages/home-page/home-page.component`), а не на barrel `index.ts`
+ * (`@static-pages/home-page`) — импорт через index даёт чанку в сборке безликое имя
+ * "index" вместо "home-page-component" (Angular называет lazy-чанк по последнему
+ * сегменту пути импорта), что затрудняет чтение отчёта сборки и профилирование в DevTools.
  */
 export const routes: Routes = [
   {

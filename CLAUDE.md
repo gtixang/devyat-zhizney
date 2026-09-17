@@ -128,11 +128,19 @@ import { AdminSidebarComponent } from './admin-sidebar.component';
 контексте (`../domain/animal.model` из `infrastructure/`) остаются относительными —
 алиас для них ничего не сокращает.
 
-Каждая папка `src/app/shared/ui/<name>/` содержит `index.ts` вида `export * from
-'./<name>.component';` — импортировать компонент нужно из папки, а не из файла напрямую,
-плюс есть общий `src/app/shared/ui/index.ts`, реэкспортирующий все компоненты сразу.
-При добавлении нового компонента в `shared/ui/` обязательно создавать его `index.ts` и
-добавлять реэкспорт в общий `shared/ui/index.ts`.
+Каждая папка `src/app/shared/ui/<name>/` и `src/app/static-pages/<name>/` содержит
+`index.ts` вида `export * from './<name>.component';` — импортировать компонент нужно
+из папки, а не из файла напрямую, плюс есть общий `index.ts` на весь `shared/ui` и на
+весь `static-pages`, реэкспортирующий всё сразу. При добавлении нового компонента в
+`shared/ui/` или новой страницы в `static-pages/` обязательно создавать его `index.ts`
+и добавлять реэкспорт в общий барель.
+
+Исключение — ленивые `import()` в `app.routes.ts`: там `static-pages` импортируются
+напрямую из файла компонента (`@static-pages/home-page/home-page.component`), а не
+через barrel. Импорт лениво загружаемого модуля через `index.ts` даёт chunk'у в сборке
+безликое имя "index" вместо "home-page-component" (Angular называет lazy-чанк по
+последнему сегменту пути импорта) — это не ломает работу приложения, но затрудняет
+чтение отчёта сборки и профилирование в DevTools. См. комментарий в самом файле.
 
 Правильно:
 
