@@ -43,11 +43,17 @@
     </div>
   </div>
 
-  <div class="animal-catalog-page__grid">
-    @for (animal of filteredAnimals(); track animal.id) {
-      <app-animal-card [animal]="animal"></app-animal-card>
-    } @empty {
-      <p class="animal-catalog-page__empty-text">По вашему запросу пушистиков не найдено.</p>
-    }
-  </div>
+  @if (loadFailed()) {
+    <p class="animal-catalog-page__empty-text">
+      Не удалось загрузить список животных. Проверьте соединение с интернетом и обновите страницу.
+    </p>
+  } @else {
+    <div class="animal-catalog-page__grid">
+      @for (animal of filteredAnimals(); track animal.id) {
+        <app-animal-card [animal]="animal"></app-animal-card>
+      } @empty {
+        <p class="animal-catalog-page__empty-text">По вашему запросу пушистиков не найдено.</p>
+      }
+    </div>
+  }
 </app-section>

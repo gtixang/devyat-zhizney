@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { catchError, of } from 'rxjs';
+import { catchError, map, of } from 'rxjs';
 
 import { SectionComponent } from '@shared/ui/section';
 import { TabItem, TabsComponent } from '@shared/ui/tabs';
@@ -38,8 +38,9 @@ const AGE_BUCKETS: readonly AgeBucket[] = [
  * Данные — реальная таблица `animals` в Supabase (docs/database/schema.md) через
  * AnimalsFacade.loadAvailable() — без животных со статусом "Пристроен" (они не
  * пропадают из базы, просто не показываются посетителям сайта). При ошибке загрузки
- * каталог просто остаётся пустым (переиспользуется тот же @empty-стейт сетки), без
- * падения страницы.
+ * (например, сеть недоступна) показывается отдельное сообщение `loadFailed` —
+ * не то же самое, что "по фильтрам ничего не нашлось", иначе реальный сбой загрузки
+ * неотличим от честно пустого каталога (так уже путал реальных посетителей на мобильных).
  *
  * Три независимых фильтра: вид (эксклюзивный выбор — табы, единственный критерий,
  * подтверждённый docs/scheme иконками 🐕/🐈), возраст и пол (оба — множественный
@@ -60,9 +61,15 @@ export class AnimalCatalogPageComponent {
 
   protected readonly ageBuckets = AGE_BUCKETS;
 
-  private readonly animals = toSignal(this.animalsFacade.loadAvailable().pipe(catchError(() => of([] as Animal[]))), {
-    initialValue: [] as Animal[]
-  });
+  private readonly loadResult = toSignal(
+    this.animalsFacade.loadAvailable().pipe(
+      map((animals) => ({ animals, failed: false })),
+      catchError(() => of({ animals: [] as Animal[], failed: true }))
+    ),
+    { initialValue: { animals: [] as Animal[], failed: false } }
+  );
+  private readonly animals = computed(() => this.loadResult().animals);
+  protected readonly loadFailed = computed(() => this.loadResult().failed);
   private readonly selectedSpeciesId = signal<string>(ALL_SPECIES_ID);
   private readonly selectedAgeBuckets = signal<ReadonlySet<AgeBucketId>>(new Set());
   private readonly selectedGenders = signal<ReadonlySet<AnimalGender>>(new Set());
