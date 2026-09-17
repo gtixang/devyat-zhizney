@@ -166,5 +166,25 @@ export const routes: Routes = [
           import('@static-pages/admin-settings-page/admin-settings-page.component').then((m) => m.AdminSettingsPageComponent)
       }
     ]
+  },
+  {
+    // Catch-all — обязательно последним в корневом массиве routes, а не внутри children
+    // маршрута '' (у публичного layout): '' сам ничего не проверяет и передаёт весь URL
+    // своим children, поэтому wildcard там перехватил бы и несуществующие /admin/* пути
+    // раньше, чем роутер вообще попробует маршрут 'admin'. На верхнем уровне он сработает,
+    // только когда не подошёл ни один из маршрутов выше — включая admin.
+    //
+    // Обёрнут в тот же PublicLayoutComponent (header/footer), что и остальные публичные
+    // страницы: '**' сам поглощает весь оставшийся URL, а дочернему '' достаётся уже
+    // пустой остаток — такая вложенность специально проверена тестом роутера.
+    path: '**',
+    loadComponent: () => import('@layouts/public-layout/public-layout.component').then((m) => m.PublicLayoutComponent),
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('@static-pages/not-found-page/not-found-page.component').then((m) => m.NotFoundPageComponent)
+      }
+    ]
   }
 ];
