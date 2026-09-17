@@ -39,7 +39,13 @@ export const routes: Routes = [
         loadComponent: () => import('@static-pages/help-page/help-page.component').then((m) => m.HelpPageComponent)
       },
       {
-        path: 'login',
+        // Путь намеренно не '/login' — см. обсуждение в чате про приватность /admin:
+        // осмысленное слово в адресе облегчает случайное обнаружение и автосканирование
+        // ботами (которые перебирают типовые /login, /admin, /wp-admin и т.п.). Реальная
+        // защита данных — пароль куратора и RLS в Supabase, это лишь доп. слой обфускации,
+        // не шифрование: путь всё равно виден в скомпилированном JS всем, кто откроет
+        // DevTools. Куратору нужно знать/иметь в закладках эту ссылку напрямую.
+        path: 'curator-ed40',
         loadComponent: () => import('@static-pages/login-page/login-page.component').then((m) => m.LoginPageComponent)
       },
       {
