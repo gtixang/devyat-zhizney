@@ -13,6 +13,7 @@ import { RadioComponent } from '../../../../../shared/ui/radio/radio.component';
 import { SectionComponent } from '../../../../../shared/ui/section/section.component';
 
 type SubmitState = { readonly status: 'pending' | 'success' | 'error' };
+type PhotoUploadState = { readonly status: 'idle' | 'uploading' | 'success' | 'error'; readonly url: string };
 
 /**
  * Возраст хранится в БД как целое число лет (`animals.age integer`), поэтому здесь
@@ -31,10 +32,10 @@ function parseAge(raw: string): number {
  * `animals` через AnimalsFacade.create() — доступно только куратору (RLS insert-политика,
  * docs/database/schema.md), маршрут защищён authGuard.
  *
- * Фото не загружается на сервер на этом этапе (осознанное решение — см. обсуждение в чате):
- * FileUploadComponent показан для превью выбранного файла, но реальная загрузка требует
- * отдельной настройки Supabase Storage. `photoUrl` сохраняется пустым, как и у остальных
- * животных — каталог уже умеет показывать плейсхолдер вместо фото.
+ * Фото загружается в Supabase Storage сразу при выборе файла (не при отправке формы) —
+ * так проще: пока идёт загрузка, кнопка отправки просто ждёт готового URL, а не нужно
+ * тащить File через весь submit-поток. Бакет `animal-photos` и его RLS-политики созданы
+ * вручную в Supabase (см. docs/database/schema.md, куда я не могу писать сам).
  */
 @Component({
   selector: 'app-admin-animal-create-page',
@@ -67,6 +68,26 @@ export class AdminAnimalCreatePageComponent {
     return Number.isFinite(parseAge(raw)) ? '' : 'Введите целое число лет, например 2';
   });
 
+  private readonly photoSelected = new Subject<File | null>();
+  private readonly photoUploadResult = toSignal(
+    this.photoSelected.pipe(
+      switchMap((file) => {
+        if (!file) {
+          return of<PhotoUploadState>({ status: 'idle', url: '' });
+        }
+        return this.animalsFacade.uploadPhoto(file).pipe(
+          map((url): PhotoUploadState => ({ status: 'success', url })),
+          catchError(() => of<PhotoUploadState>({ status: 'error', url: '' })),
+          startWith<PhotoUploadState>({ status: 'uploading', url: '' })
+        );
+      })
+    ),
+    { initialValue: { status: 'idle', url: '' } as PhotoUploadState }
+  );
+
+  protected readonly isUploadingPhoto = computed(() => this.photoUploadResult().status === 'uploading');
+  protected readonly hasPhotoUploadError = computed(() => this.photoUploadResult().status === 'error');
+
   protected readonly canSubmit = computed(() => {
     const ageValue = parseAge(this.age());
     return (
@@ -74,7 +95,8 @@ export class AdminAnimalCreatePageComponent {
       this.species().trim().length > 0 &&
       this.age().trim().length > 0 &&
       Number.isFinite(ageValue) &&
-      ageValue >= 0
+      ageValue >= 0 &&
+      !this.isUploadingPhoto()
     );
   });
 
@@ -100,6 +122,10 @@ export class AdminAnimalCreatePageComponent {
         void this.router.navigate(['/admin/animals']);
       }
     });
+  }
+
+  protected onPhotoSelected(file: File | null): void {
+    this.photoSelected.next(file);
   }
 
   protected onGenderChange(value: string): void {
@@ -133,7 +159,7 @@ export class AdminAnimalCreatePageComponent {
         sterilized: this.sterilized(),
         dewormed: this.dewormed()
       },
-      photoUrl: ''
+      photoUrl: this.photoUploadResult().url
     });
   }
 }

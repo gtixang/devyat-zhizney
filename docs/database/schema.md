@@ -152,3 +152,46 @@ update public.animals set photo_url = 'https://images.unsplash.com/photo-1668194
 update public.animals set photo_url = 'https://images.unsplash.com/photo-1559861985-8c8c4c0fcbb4?w=1200&auto=format&fit=crop&q=80' where id = 'bruno';
 update public.animals set photo_url = 'https://images.unsplash.com/photo-1653176070897-da3de9bbdc3c?w=1200&auto=format&fit=crop&q=80' where id = 'snezhok';
 ```
+
+## Storage: бакет для настоящих фото животных
+
+Форма добавления животного (`/admin/animals/new`) теперь загружает фото в Supabase
+Storage по-настоящему (не только превью) — но сам бакет и его RLS-политики нужно
+создать вручную, я не могу сделать это анонимным ключом.
+
+Выполнить в Supabase Dashboard → **SQL Editor** → New query → Run:
+
+```sql
+insert into storage.buckets (id, name, public)
+values ('animal-photos', 'animal-photos', true)
+on conflict (id) do nothing;
+
+drop policy if exists "Публичное чтение фото животных" on storage.objects;
+create policy "Публичное чтение фото животных"
+  on storage.objects for select
+  to anon, authenticated
+  using (bucket_id = 'animal-photos');
+
+drop policy if exists "Куратор загружает фото животных" on storage.objects;
+create policy "Куратор загружает фото животных"
+  on storage.objects for insert
+  to authenticated
+  with check (bucket_id = 'animal-photos');
+
+drop policy if exists "Куратор заменяет фото животных" on storage.objects;
+create policy "Куратор заменяет фото животных"
+  on storage.objects for update
+  to authenticated
+  using (bucket_id = 'animal-photos')
+  with check (bucket_id = 'animal-photos');
+
+drop policy if exists "Куратор удаляет фото животных" on storage.objects;
+create policy "Куратор удаляет фото животных"
+  on storage.objects for delete
+  to authenticated
+  using (bucket_id = 'animal-photos');
+```
+
+Логика та же, что и у таблицы `animals`: читать фото может кто угодно (бакет публичный,
+чтобы фото открывались в `<img>` без токена), а загружать/менять/удалять — только
+авторизованный куратор.

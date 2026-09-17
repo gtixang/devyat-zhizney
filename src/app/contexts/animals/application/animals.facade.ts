@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
 
 import { Animal } from '../domain/animal.model';
+import { AnimalPhotosStorage } from '../infrastructure/animal-photos.storage';
 import { AnimalsRepository } from '../infrastructure/animals.repository';
 import { MOCK_ANIMALS } from './animals.mock-data';
 
@@ -13,6 +14,7 @@ import { MOCK_ANIMALS } from './animals.mock-data';
 @Injectable({ providedIn: 'root' })
 export class AnimalsFacade {
   private readonly repository = inject(AnimalsRepository);
+  private readonly photosStorage = inject(AnimalPhotosStorage);
 
   loadAll(): Observable<Animal[]> {
     return this.repository.findAll();
@@ -32,6 +34,11 @@ export class AnimalsFacade {
   create(input: Omit<Animal, 'id'>): Observable<Animal> {
     const animal: Animal = { ...input, id: crypto.randomUUID() };
     return this.repository.create(animal).pipe(map(() => animal));
+  }
+
+  /** Загружает фото в Supabase Storage и возвращает публичный URL (для photoUrl). */
+  uploadPhoto(file: File): Observable<string> {
+    return this.photosStorage.upload(file);
   }
 
   /**

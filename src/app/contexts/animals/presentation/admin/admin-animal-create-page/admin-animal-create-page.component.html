@@ -1,6 +1,18 @@
 <app-section class="admin-page" eyebrow="Админ-панель" heading="Добавить животное">
   <div class="admin-form">
-    <app-file-upload class="admin-form__upload" hint="JPG, PNG до 10 МБ — загрузка на сервер появится позже"></app-file-upload>
+    <app-file-upload
+      class="admin-form__upload"
+      hint="JPG, PNG до 10 МБ"
+      (fileSelected)="onPhotoSelected($event)"
+    ></app-file-upload>
+
+    @if (isUploadingPhoto()) {
+      <p class="admin-form__photo-status">Загрузка фото…</p>
+    } @else if (hasPhotoUploadError()) {
+      <p class="admin-form__photo-status admin-form__photo-status--error">
+        Не удалось загрузить фото. Попробуйте выбрать файл ещё раз.
+      </p>
+    }
 
     <div class="admin-form__fields">
       <app-input label="Кличка" [value]="name()" (valueChange)="name.set($event)"></app-input>
@@ -102,7 +114,7 @@
       [disabled]="!canSubmit() || isSubmitting()"
       (pressed)="onSubmit()"
     >
-      {{ isSubmitting() ? 'Сохранение…' : 'Добавить животное' }}
+      {{ isSubmitting() ? 'Сохранение…' : isUploadingPhoto() ? 'Загрузка фото…' : 'Добавить животное' }}
     </app-button>
   </div>
 </app-section>
