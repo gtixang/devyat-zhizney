@@ -7,6 +7,7 @@
           <th scope="col">Питомец</th>
           <th scope="col">Телефон</th>
           <th scope="col">Статус</th>
+          <th scope="col"></th>
         </tr>
       </thead>
       <tbody>
@@ -18,10 +19,25 @@
             <td>
               <app-badge [tone]="statusTone(row.application.status)">{{ statusLabel(row.application.status) }}</app-badge>
             </td>
+            <td class="admin-application-list-page__actions">
+              @if (canAdvanceStatus(row.application.status)) {
+                <app-button
+                  size="sm"
+                  variant="secondary"
+                  [disabled]="isUpdatingStatus(row.application.id)"
+                  (pressed)="onAdvanceStatus(row.application.id, row.application.status)"
+                >
+                  {{ nextStatusActionLabel(row.application.status) }}
+                </app-button>
+              }
+              @if (hasStatusChangeError(row.application.id)) {
+                <p class="admin-application-list-page__error">Не получилось, попробуйте ещё раз.</p>
+              }
+            </td>
           </tr>
         } @empty {
           <tr>
-            <td colspan="4" class="admin-table__empty">Заявок пока нет.</td>
+            <td colspan="5" class="admin-table__empty">Заявок пока нет.</td>
           </tr>
         }
       </tbody>

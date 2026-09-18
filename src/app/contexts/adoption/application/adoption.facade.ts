@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { AdoptionApplication } from '../domain';
+import { AdoptionApplication, AdoptionApplicationStatus } from '../domain';
 import { AdoptionApplicationsRepository } from '../infrastructure';
 
 /**
@@ -17,5 +17,9 @@ export class AdoptionFacade {
 
   submit(application: Omit<AdoptionApplication, 'id' | 'status' | 'createdAt'>): Observable<void> {
     return this.repository.create(application);
+  }
+
+  updateStatus(id: string, status: AdoptionApplicationStatus): Observable<void> {
+    return this.repository.updateStatus(id, status);
   }
 }

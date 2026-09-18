@@ -57,3 +57,17 @@
     padding: var(--space-7);
   }
 }
+
+.admin-application-list-page {
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+
+  &__error {
+    color: var(--color-error);
+    font-size: var(--text-caption-size);
+  }
+}

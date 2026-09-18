@@ -90,4 +90,15 @@ export class AdoptionApplicationsRepository {
       })
     );
   }
+
+  /** Смена статуса заявки куратором (docs/database/schema.md, политика "Куратор меняет статус заявки"). */
+  updateStatus(id: string, status: AdoptionApplicationStatus): Observable<void> {
+    return from(this.supabaseClientService.client.from('adoption_applications').update({ status }).eq('id', id)).pipe(
+      map(({ error }) => {
+        if (error) {
+          throw error;
+        }
+      })
+    );
+  }
 }
