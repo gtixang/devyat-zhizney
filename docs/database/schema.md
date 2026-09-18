@@ -254,3 +254,25 @@ alter table public.animals drop column if exists photo_url;
 Существующее фото каждого животного станет первым (и единственным) в его галерее —
 куратор сможет добавить остальные, когда в форме появится загрузка нескольких фото
 (этого пока нет, форма управляет только одним фото на животное).
+
+## Миграция: прокси-домен для фото (SUPABASE_PROXY_PATH)
+
+С части мобильных сетей в России браузер не мог достучаться напрямую до
+`*.supabase.co` (см. `src/app/core/supabase/supabase-client.service.ts`) — запросы
+к базе и к Storage теперь идут через собственный домен сайта (`/supabase-proxy`),
+который прозрачно проксируется на реальный Supabase (`vercel.json`).
+
+Это меняет URL только для НОВЫХ фото, загруженных ПОСЛЕ этой правки — они уже
+получают публичный адрес вида `/supabase-proxy/storage/v1/object/public/...`.
+Уже загруженные ранее фото по-прежнему хранятся в базе как полный адрес
+`https://felkaknjzpagffpsuytk.supabase.co/storage/v1/object/public/...` и всё
+ещё уязвимы к той же блокировке. Чтобы разово переписать их на прокси-путь,
+выполнить в Supabase Dashboard → **SQL Editor** → New query → Run:
+
+```sql
+update public.animals
+set photo_urls = array(
+  select replace(url, 'https://felkaknjzpagffpsuytk.supabase.co', '/supabase-proxy')
+  from unnest(photo_urls) as url
+);
+```
