@@ -3,7 +3,6 @@ import { Observable, map } from 'rxjs';
 
 import { Animal } from '../domain';
 import { AnimalPhotosStorage, AnimalsRepository } from '../infrastructure';
-import { MOCK_ANIMALS } from './animals.mock-data';
 
 /**
  * Use-case слой контекста "Животные": единственная точка входа для presentation-слоя.
@@ -53,13 +52,5 @@ export class AnimalsFacade {
   /** Загружает фото в Supabase Storage и возвращает публичный URL (для photoUrls). */
   uploadPhoto(file: File): Observable<string> {
     return this.photosStorage.upload(file);
-  }
-
-  /**
-   * Тизер на главной странице (docs/scheme/main-page.txt) всё ещё использует
-   * этот локальный mock-набор, а не loadAll() — см. историю обсуждения в чате.
-   */
-  loadMockCatalog(): readonly Animal[] {
-    return MOCK_ANIMALS;
   }
 }
