@@ -4,6 +4,21 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { environment } from '@environments/environment';
 
 /**
+ * Браузер обращается не напрямую к `environment.supabaseUrl`, а к своему же домену
+ * по этому пути — а уже дальше запрос прозрачно проксируется на реальный Supabase
+ * (см. rewrite в vercel.json — в проде, и proxy.conf.json — на локальном ng serve).
+ *
+ * Причина — реальный случай: у части посетителей с мобильного интернета в России
+ * (не Wi-Fi) браузер вообще не мог достучаться до `*.supabase.co` — запрос зависал
+ * без ответа и без ошибки. Скорее всего, провайдер блокирует общий с другими
+ * проектами IP-диапазон Supabase. Когда все запросы идут на наш собственный домен
+ * (уже точно не заблокирован, раз сам сайт открывается), а Supabase дальше
+ * запрашивает уже сервер Vercel, а не телефон посетителя — это должно обходить
+ * блокировку именно на этом last-mile участке сети.
+ */
+const SUPABASE_PROXY_PATH = '/supabase-proxy';
+
+/**
  * Часть посетителей открывает сайт из встроенного браузера ВКонтакте/Telegram
  * (у приюта основная аудитория именно там) или из режима приватного просмотра —
  * в таких окружениях обращение к `window.localStorage` может бросить исключение
@@ -45,7 +60,7 @@ export class SupabaseClientService {
 
   get client(): SupabaseClient {
     if (!this.cachedClient) {
-      this.cachedClient = createClient(environment.supabaseUrl, environment.supabaseAnonKey, {
+      this.cachedClient = createClient(`${window.location.origin}${SUPABASE_PROXY_PATH}`, environment.supabaseAnonKey, {
         auth: { storage: createSafeAuthStorage() }
       });
     }

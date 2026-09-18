@@ -1,5 +1,8 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist/devyat-zhizney/browser",
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  "rewrites": [
+    { "source": "/supabase-proxy/:path*", "destination": "https://felkaknjzpagffpsuytk.supabase.co/:path*" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
 }

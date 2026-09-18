@@ -1,0 +1,8 @@
+{
+  "/supabase-proxy": {
+    "target": "https://felkaknjzpagffpsuytk.supabase.co",
+    "changeOrigin": true,
+    "secure": true,
+    "pathRewrite": { "^/supabase-proxy": "" }
+  }
+}
