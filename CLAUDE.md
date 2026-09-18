@@ -102,8 +102,8 @@
 `templateUrl`:
 
 ```ts
-templateUrl: './admin-sidebar.component.html'
-styleUrl: './admin-sidebar.component.scss'
+templateUrl: './admin-sidebar.component.html';
+styleUrl: './admin-sidebar.component.scss';
 import { AdminSidebarComponent } from './admin-sidebar.component';
 ```
 
@@ -167,7 +167,8 @@ export * from './animals.mock-data'; // если файлов в папке не
 import { ButtonComponent } from '@shared/ui/button';
 import { AnimalsFacade } from '@contexts/animals/application';
 import { Animal } from '@contexts/animals/domain';
-loadComponent: () => import('@layouts/admin-layout/admin-layout.component').then((m) => m.AdminLayoutComponent);
+loadComponent: () =>
+  import('@layouts/admin-layout/admin-layout.component').then((m) => m.AdminLayoutComponent);
 ```
 
 Неправильно:
@@ -177,3 +178,12 @@ import { ButtonComponent } from '@shared/ui/button/button.component';
 import { AnimalsFacade } from '@contexts/animals/application/animals.facade';
 import { ButtonComponent } from '../../../../../shared/ui/button/button.component';
 ```
+
+### Данные, константы и типы
+
+- Mock-данные, значимые константы и переиспользуемые типы не хранить внутри Angular-компонентов.
+- Размещать их рядом с функциональностью, которой они принадлежат.
+- Domain-типы размещать в `domain` соответствующего context.
+- Не создавать глобальные директории `constants/`, `mock-data/` или `types/` без необходимости.
+- Не дублировать существующие типы, константы и mock-данные.
+- Подробные правила: `docs/code-style.md`.

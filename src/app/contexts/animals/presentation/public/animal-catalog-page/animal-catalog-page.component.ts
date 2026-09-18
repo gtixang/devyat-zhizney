@@ -8,29 +8,9 @@ import { CheckboxComponent } from '@shared/ui/checkbox';
 import { AnimalsFacade } from '@contexts/animals/application';
 import { Animal, AnimalGender } from '@contexts/animals/domain';
 import { AnimalCardComponent } from '@contexts/animals/presentation/components/animal-card';
+import { AGE_BUCKETS, AgeBucketId } from './animal-catalog-page.age-buckets';
 
 const ALL_SPECIES_ID = 'all';
-
-type AgeBucketId = 'baby' | 'young' | 'adult' | 'senior';
-
-interface AgeBucket {
-  readonly id: AgeBucketId;
-  readonly label: string;
-  readonly matches: (age: number) => boolean;
-}
-
-/**
- * Возраст фильтруется категориями жизненного этапа, а не диапазоном (input range):
- * на реальных сайтах усыновления (Petfinder и подобные) так и делают — люди ищут
- * "котёнка", а не "животное 0.7–1.3 года", тем более возраст в БД хранится целыми
- * годами (docs/database/schema.md). См. обсуждение в чате.
- */
-const AGE_BUCKETS: readonly AgeBucket[] = [
-  { id: 'baby', label: 'Котёнок/щенок (до 1 года)', matches: (age) => age < 1 },
-  { id: 'young', label: 'Молодой (1–3 года)', matches: (age) => age >= 1 && age < 3 },
-  { id: 'adult', label: 'Взрослый (3–7 лет)', matches: (age) => age >= 3 && age < 7 },
-  { id: 'senior', label: 'Пожилой (7+ лет)', matches: (age) => age >= 7 }
-];
 
 /**
  * Каталог животных (docs/scheme/main-page.txt, раздел "Ищет семью").

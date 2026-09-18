@@ -1,20 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { BadgeComponent, BadgeTone } from '@shared/ui/badge';
-import { ANIMAL_STATUS_LABELS, Animal, AnimalStatus } from '@contexts/animals/domain';
-
-const STATUS_TONE: Record<AnimalStatus, BadgeTone> = {
-  needs_placement: 'warning',
-  in_shelter: 'neutral',
-  in_foster: 'primary',
-  adopted: 'success'
-};
+import { BadgeComponent } from '@shared/ui/badge';
+import { ANIMAL_STATUS_LABELS, Animal } from '@contexts/animals/domain';
+import { ANIMAL_STATUS_TONE } from '@contexts/animals/presentation';
 
 /**
  * Карточка животного для сетки каталога (docs/scheme/main-page.txt, раздел "Ищет семью").
- * Маппинг доменного статуса в тон бейджа делается здесь, а не в shared/ui —
- * BadgeComponent остаётся независимым от домена (docs/design-system/_description.json).
  */
 @Component({
   selector: 'app-animal-card',
@@ -28,7 +20,7 @@ export class AnimalCardComponent {
   public readonly animal = input.required<Animal>();
 
   protected readonly statusLabel = computed(() => ANIMAL_STATUS_LABELS[this.animal().status]);
-  protected readonly statusTone = computed(() => STATUS_TONE[this.animal().status]);
+  protected readonly statusTone = computed(() => ANIMAL_STATUS_TONE[this.animal().status]);
 
   /** Обложка карточки — первое фото из галереи (остальные видны только на странице животного). */
   protected readonly coverPhotoUrl = computed(() => this.animal().photoUrls[0]);

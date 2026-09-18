@@ -8,23 +8,7 @@ import { AnimalsFacade } from '@contexts/animals/application';
 import { Animal } from '@contexts/animals/domain';
 import { BadgeComponent, BadgeTone } from '@shared/ui/badge';
 import { SectionComponent } from '@shared/ui/section';
-
-const STATUS_LABEL: Record<AdoptionApplicationStatus, string> = {
-  new: 'Новая',
-  in_progress: 'В работе',
-  approved: 'Одобрена'
-};
-
-const STATUS_TONE: Record<AdoptionApplicationStatus, BadgeTone> = {
-  new: 'accent',
-  in_progress: 'primary',
-  approved: 'neutral'
-};
-
-interface ApplicationRow {
-  readonly application: AdoptionApplication;
-  readonly animalName: string;
-}
+import { ApplicationRow, STATUS_LABEL, STATUS_TONE } from './admin-application-list-page.types';
 
 /**
  * Админ-раздел "Заявки" (docs/scheme/admin-panel.md). Данные — реальная таблица

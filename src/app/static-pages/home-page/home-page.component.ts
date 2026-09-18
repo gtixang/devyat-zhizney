@@ -6,9 +6,7 @@ import { AnimalCardComponent } from '@contexts/animals/presentation/components/a
 import { ButtonComponent } from '@shared/ui/button';
 import { CardComponent } from '@shared/ui/card';
 import { SectionComponent } from '@shared/ui/section';
-
-/** Порядок и состав тизера повторяют docs/scheme/main-page.txt, раздел "ИЩЕТ СЕМЬЮ". */
-const FEATURED_ANIMAL_IDS = ['bruno', 'murka', 'luna', 'snezhok'] as const;
+import { FEATURED_ANIMAL_IDS } from './home-page.constants';
 
 /**
  * Главная страница (docs/scheme/main-page.txt). Композирует контент из нескольких

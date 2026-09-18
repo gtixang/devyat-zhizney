@@ -4,16 +4,10 @@ import { catchError, of } from 'rxjs';
 
 import { AnimalsFacade } from '@contexts/animals/application';
 import { ANIMAL_STATUS_LABELS, Animal, AnimalStatus } from '@contexts/animals/domain';
+import { ANIMAL_STATUS_TONE } from '@contexts/animals/presentation';
 import { BadgeComponent, BadgeTone } from '@shared/ui/badge';
 import { ButtonComponent } from '@shared/ui/button';
 import { SectionComponent } from '@shared/ui/section';
-
-const STATUS_TONE: Record<AnimalStatus, BadgeTone> = {
-  needs_placement: 'warning',
-  in_shelter: 'neutral',
-  in_foster: 'primary',
-  adopted: 'success'
-};
 
 /**
  * Админ-раздел "Животные" (docs/scheme/admin-panel.md). Данные — реальная таблица
@@ -41,6 +35,6 @@ export class AdminAnimalListPageComponent {
   }
 
   protected statusTone(status: AnimalStatus): BadgeTone {
-    return STATUS_TONE[status];
+    return ANIMAL_STATUS_TONE[status];
   }
 }

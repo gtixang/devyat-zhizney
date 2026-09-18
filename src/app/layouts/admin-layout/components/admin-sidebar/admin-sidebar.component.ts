@@ -1,10 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-
-interface AdminNavItem {
-  readonly label: string;
-  readonly path: string;
-}
+import { AdminNavItem } from './admin-sidebar.types';
 
 /**
  * Навигация админ-панели куратора (docs/scheme/admin-panel.txt).

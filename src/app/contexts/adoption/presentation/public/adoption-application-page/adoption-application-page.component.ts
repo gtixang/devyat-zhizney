@@ -4,14 +4,11 @@ import { RouterLink } from '@angular/router';
 import { Subject, catchError, map, of, startWith, switchMap } from 'rxjs';
 
 import { AdoptionFacade } from '@contexts/adoption/application';
-import { AdoptionApplication } from '@contexts/adoption/domain';
 import { AnimalsFacade } from '@contexts/animals/application';
 import { ButtonComponent } from '@shared/ui/button';
 import { InputComponent } from '@shared/ui/input';
 import { SectionComponent } from '@shared/ui/section';
-
-type SubmitPayload = Omit<AdoptionApplication, 'id' | 'status' | 'createdAt'>;
-type SubmitState = { readonly status: 'pending' | 'success' | 'error' };
+import { SubmitPayload, SubmitState } from './adoption-application-page.types';
 
 /**
  * Анкета "Хочу познакомиться" (docs/scheme/adoption-application.md).

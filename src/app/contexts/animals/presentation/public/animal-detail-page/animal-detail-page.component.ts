@@ -5,22 +5,12 @@ import { catchError, of, switchMap } from 'rxjs';
 
 import { AnimalsFacade } from '@contexts/animals/application';
 import { ANIMAL_STATUS_LABELS, AnimalStatus } from '@contexts/animals/domain';
+import { ANIMAL_STATUS_TONE } from '@contexts/animals/presentation';
 import { BadgeComponent, BadgeTone } from '@shared/ui/badge';
 import { ButtonComponent } from '@shared/ui/button';
 import { PhotoGalleryComponent } from '@shared/ui/photo-gallery';
 import { SectionComponent } from '@shared/ui/section';
-
-const STATUS_TONE: Record<AnimalStatus, BadgeTone> = {
-  needs_placement: 'warning',
-  in_shelter: 'neutral',
-  in_foster: 'primary',
-  adopted: 'success'
-};
-
-interface HealthChecklistItem {
-  readonly label: string;
-  readonly done: boolean;
-}
+import { HealthChecklistItem } from './animal-detail-page.types';
 
 /**
  * Карточка животного (docs/scheme/pet-card.md). Данные — реальная таблица `animals`
@@ -73,7 +63,7 @@ export class AnimalDetailPageComponent {
 
   protected readonly statusTone = computed<BadgeTone>(() => {
     const status = this.animal()?.status;
-    return status ? STATUS_TONE[status] : 'neutral';
+    return status ? ANIMAL_STATUS_TONE[status] : 'neutral';
   });
 
   /**

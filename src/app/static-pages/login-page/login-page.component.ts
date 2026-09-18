@@ -7,13 +7,7 @@ import { AuthService } from '@core/auth';
 import { ButtonComponent } from '@shared/ui/button';
 import { InputComponent } from '@shared/ui/input';
 import { SectionComponent } from '@shared/ui/section';
-
-interface LoginCredentials {
-  readonly email: string;
-  readonly password: string;
-}
-
-type LoginState = { readonly status: 'pending' | 'success' | 'error' | 'timeout' };
+import { LoginCredentials, LoginState } from './login-page.types';
 
 /** Supabase-запросы не имеют встроенного таймаута — на плохой мобильной сети запрос
  * может зависнуть навсегда, а кнопка "Входим…" — так и не вернуться в исходное

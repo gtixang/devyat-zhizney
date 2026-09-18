@@ -4,16 +4,14 @@ import { Router } from '@angular/router';
 import { Observable, Subject, catchError, map, of, startWith, switchMap } from 'rxjs';
 
 import { AnimalsFacade } from '@contexts/animals/application';
-import { ANIMAL_STATUS_LABELS, Animal, AnimalGender, AnimalStatus } from '@contexts/animals/domain';
+import { Animal, AnimalGender, AnimalStatus } from '@contexts/animals/domain';
 import { ButtonComponent } from '@shared/ui/button';
 import { CheckboxComponent } from '@shared/ui/checkbox';
 import { FileUploadComponent } from '@shared/ui/file-upload';
 import { InputComponent } from '@shared/ui/input';
 import { RadioComponent } from '@shared/ui/radio';
 import { SectionComponent } from '@shared/ui/section';
-
-type SubmitState = { readonly status: 'pending' | 'success' | 'error' };
-type PhotoUploadState = { readonly status: 'idle' | 'uploading' | 'success' | 'error'; readonly url: string };
+import { PhotoUploadState, STATUS_OPTIONS, SubmitState } from './admin-animal-form-page.types';
 
 /**
  * Возраст хранится в БД как целое число лет (`animals.age integer`), поэтому здесь
@@ -26,14 +24,6 @@ function parseAge(raw: string): number {
   const trimmed = raw.trim();
   return /^\d+$/.test(trimmed) ? Number.parseInt(trimmed, 10) : NaN;
 }
-
-/** Порядок важен — так радиокнопки статуса идут от самого срочного к финальному. */
-const STATUS_OPTIONS: readonly { readonly id: AnimalStatus; readonly label: string }[] = [
-  { id: 'needs_placement', label: ANIMAL_STATUS_LABELS.needs_placement },
-  { id: 'in_shelter', label: ANIMAL_STATUS_LABELS.in_shelter },
-  { id: 'in_foster', label: ANIMAL_STATUS_LABELS.in_foster },
-  { id: 'adopted', label: ANIMAL_STATUS_LABELS.adopted }
-];
 
 /**
  * Добавление и редактирование животного одной формой (docs/scheme/admin-panel.md).
