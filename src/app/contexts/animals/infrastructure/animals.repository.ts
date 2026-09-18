@@ -29,6 +29,7 @@ interface AnimalRow {
   readonly needs_treatment: boolean;
   readonly special_needs: boolean;
   readonly photo_urls: readonly string[];
+  readonly reserved: boolean;
 }
 
 function mapRowToAnimal(row: AnimalRow): Animal {
@@ -51,7 +52,11 @@ function mapRowToAnimal(row: AnimalRow): Animal {
     // `?? []` — граница системы (docs/specs/ts.md): пока не выполнена миграция
     // photo_url → photo_urls (docs/database/schema.md), колонки может не быть вовсе,
     // и Supabase просто не вернёт это поле, а не отдаст null/[] — не должно ронять страницу.
-    photoUrls: row.photo_urls ?? []
+    photoUrls: row.photo_urls ?? [],
+    // `?? false` — та же граница системы: пока не выполнена миграция под reserved
+    // (docs/database/schema.md), колонки нет вовсе, и ни одно животное не должно
+    // считаться зарезервированным просто потому, что поле не пришло.
+    reserved: row.reserved ?? false
   };
 }
 
@@ -70,7 +75,8 @@ function mapAnimalToRow(animal: Animal): AnimalRow {
     dewormed: animal.health.dewormed,
     needs_treatment: animal.health.needsTreatment,
     special_needs: animal.health.specialNeeds,
-    photo_urls: animal.photoUrls
+    photo_urls: animal.photoUrls,
+    reserved: animal.reserved
   };
 }
 
@@ -100,9 +106,14 @@ export class AnimalsRepository {
     );
   }
 
-  /** Как findAll(), но без пристроенных — для публичного каталога (docs/scheme/main-page.txt). */
+  /**
+   * Как findAll(), но без пристроенных и без временно зарезервированных заявкой
+   * (docs/scheme/main-page.txt) — для публичного каталога.
+   */
   findAvailable(): Observable<Animal[]> {
-    return from(this.supabaseClientService.client.from('animals').select('*').neq('status', 'adopted')).pipe(
+    return from(
+      this.supabaseClientService.client.from('animals').select('*').neq('status', 'adopted').eq('reserved', false)
+    ).pipe(
       timeout(REQUEST_TIMEOUT_MS),
       map(({ data, error }) => {
         if (error) {
@@ -146,6 +157,21 @@ export class AnimalsRepository {
     return from(
       this.supabaseClientService.client.from('animals').update(mapAnimalToRow(animal)).eq('id', animal.id)
     ).pipe(
+      timeout(REQUEST_TIMEOUT_MS),
+      map(({ error }) => {
+        if (error) {
+          throw error;
+        }
+      })
+    );
+  }
+
+  /**
+   * Точечное включение/выключение резерва — вызывается из AdminApplicationListPageComponent
+   * при смене статуса заявки, а не из формы животного (куратор не трогает это поле вручную).
+   */
+  updateReserved(id: string, reserved: boolean): Observable<void> {
+    return from(this.supabaseClientService.client.from('animals').update({ reserved }).eq('id', id)).pipe(
       timeout(REQUEST_TIMEOUT_MS),
       map(({ error }) => {
         if (error) {

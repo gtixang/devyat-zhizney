@@ -45,6 +45,11 @@ export class AnimalsFacade {
     return this.repository.update(animal);
   }
 
+  /** Резерв животного за обрабатываемой заявкой (docs/database/schema.md, поле `reserved`). */
+  updateReserved(id: string, reserved: boolean): Observable<void> {
+    return this.repository.updateReserved(id, reserved);
+  }
+
   /** Загружает фото в Supabase Storage и возвращает публичный URL (для photoUrls). */
   uploadPhoto(file: File): Observable<string> {
     return this.photosStorage.upload(file);

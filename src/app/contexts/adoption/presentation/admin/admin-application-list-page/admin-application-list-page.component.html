@@ -25,9 +25,19 @@
                   size="sm"
                   variant="secondary"
                   [disabled]="isUpdatingStatus(row.application.id)"
-                  (pressed)="onAdvanceStatus(row.application.id, row.application.status)"
+                  (pressed)="onAdvanceStatus(row.application.id, row.application.animalId, row.application.status)"
                 >
                   {{ nextStatusActionLabel(row.application.status) }}
+                </app-button>
+              }
+              @if (canReject(row.application.status)) {
+                <app-button
+                  size="sm"
+                  variant="ghost"
+                  [disabled]="isUpdatingStatus(row.application.id)"
+                  (pressed)="onRejectApplication(row.application.id, row.application.animalId)"
+                >
+                  Отклонить
                 </app-button>
               }
               @if (hasStatusChangeError(row.application.id)) {

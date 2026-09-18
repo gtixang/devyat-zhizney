@@ -276,3 +276,24 @@ set photo_urls = array(
   from unnest(photo_urls) as url
 );
 ```
+
+## Миграция: резерв животного и отклонение заявки (Animal.reserved, rejected)
+
+Куратор теперь может отклонить заявку на усыновление, а перевод заявки в статус
+"В работе" временно скрывает животное из публичного каталога (чтобы другие
+посетители не подавали заявку на уже рассматриваемое животное) — реализовано в
+`AdminApplicationListPageComponent`. Выполнить **один раз** в Supabase Dashboard →
+**SQL Editor** → New query → Run:
+
+```sql
+alter table public.animals add column if not exists reserved boolean not null default false;
+
+alter table public.adoption_applications drop constraint if exists adoption_applications_status_check;
+alter table public.adoption_applications add constraint adoption_applications_status_check
+  check (status in ('new', 'in_progress', 'approved', 'rejected'));
+```
+
+Дополнительных изменений RLS не требуется — обе политики `UPDATE` (`"Куратор
+редактирует животных"` на `animals` и `"Куратор меняет статус заявки"` на
+`adoption_applications`) уже разрешают `authenticated` любые значения
+(`using (true) with check (true)`), новые колонка и статус под них уже попадают.

@@ -217,7 +217,10 @@ export class AdminAnimalFormPageComponent {
         needsTreatment: this.needsTreatment(),
         specialNeeds: this.specialNeeds()
       },
-      photoUrls: this.photoUrl() ? [this.photoUrl()] : []
+      photoUrls: this.photoUrl() ? [this.photoUrl()] : [],
+      // Резерв не редактируется в этой форме — им управляет статус заявки
+      // (см. Animal.reserved), поэтому при сохранении просто сохраняем как было.
+      reserved: this.existingAnimal()?.reserved ?? false
     });
   }
 }

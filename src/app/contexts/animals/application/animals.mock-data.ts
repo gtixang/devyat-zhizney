@@ -16,7 +16,8 @@ import { Animal } from '../domain';
  * placeholder (shared/ui/photo-gallery).
  *
  * Имена Луна/Мурка/Бруно/Снежок и черты характера/health Луны — взяты дословно из
- * docs/scheme/main-page.txt и docs/scheme/pet-card.txt.
+ * docs/scheme/main-page.txt и docs/scheme/pet-card.txt. `reserved: false` у всех —
+ * этот mock-набор не связан с реальными заявками (Supabase здесь не используется).
  */
 export const MOCK_ANIMALS: readonly Animal[] = [
   {
@@ -33,7 +34,8 @@ export const MOCK_ANIMALS: readonly Animal[] = [
       'https://images.unsplash.com/photo-1668036268050-ca69ef2f0ca0?w=1200&auto=format&fit=crop&q=80',
       'https://images.unsplash.com/photo-1627149400180-77f426f296cf?w=1200&auto=format&fit=crop&q=80',
       'https://images.unsplash.com/photo-1544800086-912aa3f623ee?w=1200&auto=format&fit=crop&q=80'
-    ]
+    ],
+    reserved: false
   },
   {
     id: 'murka',
@@ -45,7 +47,8 @@ export const MOCK_ANIMALS: readonly Animal[] = [
     traits: ['Ласковая', 'Любит спать на руках'],
     about: 'Мурка обожает нежиться на солнышке и совсем не боится других животных.',
     health: { vaccinated: true, sterilized: false, dewormed: true, needsTreatment: false, specialNeeds: false },
-    photoUrls: ['https://images.unsplash.com/photo-1668194273694-89a5046f0181?w=1200&auto=format&fit=crop&q=80']
+    photoUrls: ['https://images.unsplash.com/photo-1668194273694-89a5046f0181?w=1200&auto=format&fit=crop&q=80'],
+    reserved: false
   },
   {
     id: 'bruno',
@@ -57,7 +60,8 @@ export const MOCK_ANIMALS: readonly Animal[] = [
     traits: ['Активный', 'Любит детей'],
     about: 'Бруно ищет активную семью, готов на долгие прогулки и игры.',
     health: { vaccinated: true, sterilized: true, dewormed: true, needsTreatment: false, specialNeeds: false },
-    photoUrls: ['https://images.unsplash.com/photo-1559861985-8c8c4c0fcbb4?w=1200&auto=format&fit=crop&q=80']
+    photoUrls: ['https://images.unsplash.com/photo-1559861985-8c8c4c0fcbb4?w=1200&auto=format&fit=crop&q=80'],
+    reserved: false
   },
   {
     id: 'snezhok',
@@ -69,7 +73,8 @@ export const MOCK_ANIMALS: readonly Animal[] = [
     traits: ['Спокойный', 'Аккуратный'],
     about: 'Снежок — рассудительный кот, который ценит тишину и уют.',
     health: { vaccinated: true, sterilized: true, dewormed: false, needsTreatment: false, specialNeeds: false },
-    photoUrls: ['https://images.unsplash.com/photo-1653176070897-da3de9bbdc3c?w=1200&auto=format&fit=crop&q=80']
+    photoUrls: ['https://images.unsplash.com/photo-1653176070897-da3de9bbdc3c?w=1200&auto=format&fit=crop&q=80'],
+    reserved: false
   },
   {
     id: 'baron',
@@ -81,7 +86,8 @@ export const MOCK_ANIMALS: readonly Animal[] = [
     traits: ['Охраняет территорию', 'Верный'],
     about: 'Барон — надёжный компаньон для опытного хозяина.',
     health: { vaccinated: true, sterilized: false, dewormed: true, needsTreatment: false, specialNeeds: false },
-    photoUrls: []
+    photoUrls: [],
+    reserved: false
   },
   {
     id: 'ryzhik',
@@ -93,7 +99,8 @@ export const MOCK_ANIMALS: readonly Animal[] = [
     traits: ['Игривый', 'Общительный'],
     about: 'Рыжик обожает игрушки и всегда рад новым знакомствам.',
     health: { vaccinated: false, sterilized: false, dewormed: true, needsTreatment: false, specialNeeds: false },
-    photoUrls: []
+    photoUrls: [],
+    reserved: false
   },
   {
     id: 'ten',
@@ -105,7 +112,8 @@ export const MOCK_ANIMALS: readonly Animal[] = [
     traits: ['Пугливая', 'Нуждается в терпении'],
     about: 'Тень постепенно раскрывается и учится доверять людям.',
     health: { vaccinated: true, sterilized: false, dewormed: false, needsTreatment: false, specialNeeds: false },
-    photoUrls: []
+    photoUrls: [],
+    reserved: false
   },
   {
     id: 'dymka',
@@ -117,6 +125,7 @@ export const MOCK_ANIMALS: readonly Animal[] = [
     traits: ['Спокойная', 'Домоседка'],
     about: 'Дымка любит спокойную обстановку и станет отличным компаньоном.',
     health: { vaccinated: true, sterilized: true, dewormed: true, needsTreatment: false, specialNeeds: false },
-    photoUrls: []
+    photoUrls: [],
+    reserved: false
   }
 ];
