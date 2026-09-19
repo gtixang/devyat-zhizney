@@ -1,6 +1,114 @@
-<app-section class="public-page" eyebrow="Помочь" heading="Как можно помочь">
-  <p class="public-page__note">
-    Здесь появятся плитки: Приютить, Передержка, Волонтёрство, Пожертвовать,
-    Корм/вещи, Рассказать друзьям (docs/scheme/main-page.txt).
-  </p>
+<app-section class="help-page" eyebrow="Помочь" heading="Как можно помочь">
+  <div class="help-page__grid">
+    <app-card [hoverable]="true" class="help-page__item">
+      <a class="help-page__link" routerLink="/animals">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M12 21c-4-3-8-6-8-10a4 4 0 0 1 7-2.6A4 4 0 0 1 18 11c0 4-4 7-8 10Z" />
+        </svg>
+        <h3 class="help-page__title">Приютить</h3>
+        <p class="help-page__desc">Забрать животное насовсем в свою семью.</p>
+      </a>
+    </app-card>
+
+    <app-card [hoverable]="true" class="help-page__item">
+      <a class="help-page__link" routerLink="/volunteers">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M3 11l9-7 9 7M5 10v10h14V10" />
+        </svg>
+        <h3 class="help-page__title">Передержка</h3>
+        <p class="help-page__desc">Временный дом у себя дома или на даче до пристройства.</p>
+      </a>
+    </app-card>
+
+    <app-card [hoverable]="true" class="help-page__item">
+      <a class="help-page__link" routerLink="/volunteers">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path
+            d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm10 0-2-2m0 0 2-2m-2 2h6"
+          />
+        </svg>
+        <h3 class="help-page__title">Волонтёрство</h3>
+        <p class="help-page__desc">Помощь с транспортировкой, лечением, соцсетями.</p>
+      </a>
+    </app-card>
+
+    <app-card [hoverable]="true" class="help-page__item">
+      <a class="help-page__link" href="#donate">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path
+            d="M12 20.5s-7-4.35-9.5-8.5C.7 9 1.9 5.5 5 4.6 7 4 9 4.8 12 8c3-3.2 5-4 7-3.4 3.1.9 4.3 4.4 2.5 7.4-2.5 4.15-9.5 8.5-9.5 8.5Z"
+          />
+        </svg>
+        <h3 class="help-page__title">Пожертвовать</h3>
+        <p class="help-page__desc">Перевести на лечение, корм и стерилизацию животных.</p>
+      </a>
+    </app-card>
+
+    <app-card [hoverable]="true" class="help-page__item">
+      <a class="help-page__link" href="#goods">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path
+            d="M21 8V16.5a1 1 0 0 1-.5.87l-8 4.62a1 1 0 0 1-1 0l-8-4.62A1 1 0 0 1 3 16.5V8a1 1 0 0 1 .5-.87l8-4.62a1 1 0 0 1 1 0l8 4.62A1 1 0 0 1 21 8ZM3.27 6.96 12 12.01l8.73-5.05M12 22.08V12"
+          />
+        </svg>
+        <h3 class="help-page__title">Корм и вещи</h3>
+        <p class="help-page__desc">Отдать корм, наполнитель, лежанки, переноски.</p>
+      </a>
+    </app-card>
+
+    <app-card [hoverable]="true" class="help-page__item">
+      <button type="button" class="help-page__link help-page__link--button" (click)="onShare()">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7M16 6l-4-4-4 4M12 2v13" />
+        </svg>
+        <h3 class="help-page__title">Рассказать друзьям</h3>
+        <p class="help-page__desc">
+          @if (copyFeedback() === 'copied') {
+            Ссылка скопирована!
+          } @else if (copyFeedback() === 'error') {
+            Не получилось скопировать
+          } @else {
+            Поделиться сайтом в соцсетях или мессенджере.
+          }
+        </p>
+      </button>
+    </app-card>
+  </div>
+
+  <section id="donate" class="help-page__detail">
+    <h2 class="help-page__detail-heading">Реквизиты для перевода</h2>
+    <p class="help-page__detail-text">
+      Переводы принимает куратор группы Наталья Гилязова — на карты Сбербанка, Т-Банка и
+      Ozon Банка, привязанные к одному номеру телефона. В приложении вашего банка выберите
+      «Перевод по номеру телефона» и укажите:
+    </p>
+
+    <div class="help-page__donate">
+      <img class="help-page__qr" src="/donate-qr.png" alt="QR-код с номером телефона для перевода" width="200" height="200" />
+
+      <div class="help-page__donate-info">
+        <span class="help-page__donate-label">Номер телефона</span>
+        <button type="button" class="help-page__phone" (click)="onCopyPhone()">
+          {{ donationPhone }}
+        </button>
+        <p class="help-page__detail-text help-page__detail-text--sm">
+          @if (copyFeedback() === 'copied') {
+            Скопировано!
+          } @else if (copyFeedback() === 'error') {
+            Не получилось скопировать — введите номер вручную.
+          } @else {
+            Нажмите на номер, чтобы скопировать, или отсканируйте QR-код камерой.
+          }
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="goods" class="help-page__detail">
+    <h2 class="help-page__detail-heading">Корм и вещи</h2>
+    <p class="help-page__detail-text">
+      Куда именно привезти корм, наполнитель или вещи — уточняется. Если хотите помочь так,
+      напишите куратору, и вам подскажут ближайший удобный вариант.
+    </p>
+  </section>
 </app-section>

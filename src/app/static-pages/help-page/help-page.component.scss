@@ -1,10 +1,138 @@
-.public-page {
+@use 'mixins';
+
+.help-page {
   display: block;
   padding: var(--space-9) var(--space-6);
   max-width: 1280px;
   margin: 0 auto;
 
-  &__note {
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+
+    @include mixins.respond-to(tablet) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include mixins.respond-to(desktop) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  &__item {
+    display: block;
+  }
+
+  &__link {
+    display: block;
+    width: 100%;
+    padding: var(--space-6);
+    color: inherit;
+    text-align: left;
+    background: none;
+    border: none;
+    font: inherit;
+    cursor: pointer;
+
+    &:focus-visible {
+      @include mixins.focus-ring;
+      border-radius: var(--radius-lg);
+    }
+
+    svg {
+      color: var(--color-primary);
+    }
+  }
+
+  &__title {
+    margin-top: var(--space-4);
+    font-weight: 700;
+    font-size: 1.0625rem;
+  }
+
+  &__desc {
+    margin-top: var(--space-2);
     color: var(--color-text-secondary);
+    font-size: var(--text-body-sm-size);
+  }
+
+  &__detail {
+    margin-top: var(--space-9);
+    padding-top: var(--space-8);
+    border-top: 1px solid var(--color-border);
+    scroll-margin-top: var(--space-6);
+  }
+
+  &__detail-heading {
+    font-size: var(--text-h3-size);
+    font-weight: var(--text-h3-weight);
+  }
+
+  &__detail-text {
+    margin-top: var(--space-3);
+    max-width: 60ch;
+    color: var(--color-text-secondary);
+
+    &--sm {
+      margin-top: var(--space-2);
+      font-size: var(--text-body-sm-size);
+    }
+  }
+
+  &__donate {
+    margin-top: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-5);
+
+    @include mixins.respond-to(tablet) {
+      flex-direction: row;
+      align-items: center;
+    }
+  }
+
+  &__qr {
+    flex: none;
+    width: 160px;
+    height: 160px;
+    border-radius: var(--radius-md);
+    background: white;
+    padding: var(--space-2);
+  }
+
+  &__donate-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  &__donate-label {
+    color: var(--color-text-secondary);
+    font-size: var(--text-caption-size);
+    text-transform: uppercase;
+    letter-spacing: var(--text-caption-tracking);
+  }
+
+  &__phone {
+    margin-top: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    background: var(--color-surface);
+    color: var(--color-text-primary);
+    font-size: var(--text-h4-size);
+    font-weight: 700;
+    cursor: pointer;
+    transition: border-color var(--transition-fast);
+
+    &:hover {
+      border-color: var(--color-border-strong);
+    }
+
+    &:focus-visible {
+      @include mixins.focus-ring;
+    }
   }
 }
