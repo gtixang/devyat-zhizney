@@ -300,8 +300,14 @@
 
   &__link {
     display: block;
+    width: 100%;
     padding: var(--space-6);
     color: inherit;
+    text-align: left;
+    background: none;
+    border: none;
+    font: inherit;
+    cursor: pointer;
 
     &:focus-visible {
       @include mixins.focus-ring;
@@ -323,5 +329,56 @@
     margin-top: var(--space-2);
     color: var(--color-text-secondary);
     font-size: var(--text-body-sm-size);
+  }
+}
+
+// Модалка-заглушка "Пожертвовать"
+.home-donate-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6);
+  background: rgba(0, 0, 0, 0.45);
+
+  &__panel {
+    position: relative;
+    max-width: 420px;
+    width: 100%;
+    padding: var(--space-8);
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+  }
+
+  &__close {
+    position: absolute;
+    top: var(--space-4);
+    right: var(--space-4);
+    display: inline-flex;
+    color: var(--color-text-secondary);
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    &:focus-visible {
+      @include mixins.focus-ring;
+      border-radius: var(--radius-sm);
+    }
+  }
+
+  &__title {
+    font-size: var(--text-h3-size);
+    font-weight: var(--text-h3-weight);
+    padding-right: var(--space-7);
+  }
+
+  &__text {
+    margin-top: var(--space-3);
+    color: var(--color-text-secondary);
   }
 }

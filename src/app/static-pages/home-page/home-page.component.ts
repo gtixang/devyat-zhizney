@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, HostListener, computed, effect, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { catchError, of } from 'rxjs';
@@ -34,6 +34,10 @@ const SUCCESS_STORIES_COUNT = 4;
  *   запроса.
  * - successStories — отдельный запрос loadAll() (не loadAvailable(), который как
  *   раз ИСКЛЮЧАЕТ пристроенных), отфильтрованный на статус 'adopted'.
+ *
+ * "Пожертвовать" открывает модалку-заглушку вместо перехода на /help — реальных
+ * платёжных реквизитов/интеграции пока нет (см. обсуждение в чате про ЮKassa),
+ * поэтому явно показываем "скоро", а не ведём на страницу без действия по теме.
  */
 @Component({
   selector: 'app-home-page',
@@ -67,4 +71,39 @@ export class HomePageComponent {
       .filter((animal) => animal.status === 'adopted')
       .slice(0, SUCCESS_STORIES_COUNT)
   );
+
+  protected readonly isDonateModalOpen = signal(false);
+
+  constructor() {
+    // Пока открыта модалка — страница под ней не должна прокручиваться (тот же приём,
+    // что и в photo-gallery для полноэкранного просмотра).
+    effect(() => {
+      document.body.style.overflow = this.isDonateModalOpen() ? 'hidden' : '';
+    });
+
+    inject(DestroyRef).onDestroy(() => {
+      document.body.style.overflow = '';
+    });
+  }
+
+  protected openDonateModal(): void {
+    this.isDonateModalOpen.set(true);
+  }
+
+  protected closeDonateModal(): void {
+    this.isDonateModalOpen.set(false);
+  }
+
+  protected onDonateBackdropClick(event: MouseEvent): void {
+    if (event.target === event.currentTarget) {
+      this.closeDonateModal();
+    }
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  protected onKeydown(event: KeyboardEvent): void {
+    if (this.isDonateModalOpen() && event.key === 'Escape') {
+      this.closeDonateModal();
+    }
+  }
 }

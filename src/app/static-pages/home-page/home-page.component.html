@@ -102,7 +102,7 @@
     </app-card>
 
     <app-card [hoverable]="true" class="home-help__item">
-      <a class="home-help__link" routerLink="/help">
+      <button type="button" class="home-help__link" (click)="openDonateModal()">
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
           <path
             d="M12 20.5s-7-4.35-9.5-8.5C.7 9 1.9 5.5 5 4.6 7 4 9 4.8 12 8c3-3.2 5-4 7-3.4 3.1.9 4.3 4.4 2.5 7.4-2.5 4.15-9.5 8.5-9.5 8.5Z"
@@ -110,7 +110,23 @@
         </svg>
         <h3 class="home-help__title">Пожертвовать</h3>
         <p class="home-help__desc">Помочь кормом, лечением и стерилизацией животных.</p>
-      </a>
+      </button>
     </app-card>
   </div>
 </app-section>
+
+@if (isDonateModalOpen()) {
+  <div class="home-donate-modal" (click)="onDonateBackdropClick($event)">
+    <div class="home-donate-modal__panel" role="dialog" aria-modal="true" aria-labelledby="donate-modal-title">
+      <button type="button" class="home-donate-modal__close" aria-label="Закрыть" (click)="closeDonateModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M6 6l12 12M18 6 6 18" />
+        </svg>
+      </button>
+      <h2 id="donate-modal-title" class="home-donate-modal__title">Пожертвовать</h2>
+      <p class="home-donate-modal__text">
+        Скоро здесь появится удобный способ помочь переводом. Мы уже над этим работаем.
+      </p>
+    </div>
+  </div>
+}
