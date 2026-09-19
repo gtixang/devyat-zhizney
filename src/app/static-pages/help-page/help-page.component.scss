@@ -80,29 +80,8 @@
     }
   }
 
-  &__donate {
-    margin-top: var(--space-6);
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-5);
-
-    @include mixins.respond-to(tablet) {
-      flex-direction: row;
-      align-items: center;
-    }
-  }
-
-  &__qr {
-    flex: none;
-    width: 160px;
-    height: 160px;
-    border-radius: var(--radius-md);
-    background: white;
-    padding: var(--space-2);
-  }
-
   &__donate-info {
+    margin-top: var(--space-6);
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -129,6 +108,45 @@
 
     &:hover {
       border-color: var(--color-border-strong);
+    }
+
+    &:focus-visible {
+      @include mixins.focus-ring;
+    }
+  }
+
+  &__share-row {
+    margin-top: var(--space-6);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  &__share-icon {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-5);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    background: var(--color-surface);
+    color: var(--color-text-primary);
+    font-size: var(--text-body-sm-size);
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+      border-color var(--transition-fast),
+      background-color var(--transition-fast);
+
+    svg {
+      flex: none;
+      width: 20px;
+      height: 20px;
+    }
+
+    &:hover {
+      border-color: var(--color-border-strong);
+      background: var(--color-surface-hover);
     }
 
     &:focus-visible {

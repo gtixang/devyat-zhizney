@@ -3,7 +3,7 @@ import { RouterLink } from '@angular/router';
 
 import { CardComponent } from '@shared/ui/card';
 import { SectionComponent } from '@shared/ui/section';
-import { DONATION_PHONE_RAW } from './help-page.constants';
+import { DONATION_PHONE_RAW, SHARE_TEXT, getTelegramShareUrl, getVkShareUrl, getWhatsAppShareUrl } from './help-page.constants';
 
 /** На сколько показываем "Скопировано" после успешного копирования в буфер. */
 const COPY_FEEDBACK_MS = 2000;
@@ -15,13 +15,13 @@ const COPY_FEEDBACK_MS = 2000;
  * используются только куратором в админ-панели.
  *
  * "Пожертвовать" и "Корм/вещи" ведут не на отдельные маршруты, а на секции этой же
- * страницы (fragment-ссылки `#donate`/`#goods`) — им нужно больше места (QR-код,
- * реквизиты), чем помещается в компактную плитку.
+ * страницы (fragment-ссылки `#donate`/`#goods`) — им нужно больше места, чем помещается
+ * в компактную плитку.
  *
- * QR-код в public/donate-qr.png закодирован как обычный номер телефона (не платёжная
- * ссылка конкретного банка) — я не могу выпустить настоящий SBP-QR за куратора, это
- * делается через личный кабинет её банка. Задача QR — не дать ошибиться при вводе
- * номера, а не запустить перевод одним сканированием.
+ * "Рассказать друзьям" — конкретные кнопки-иконки соцсетей (VK/Telegram/WhatsApp) со
+ * стандартными share-ссылками этих платформ, плюс копирование ссылки в буфер — так
+ * понятнее и надёжнее универсального navigator.share() (которого нет в десктопных
+ * браузерах и который просто открывает системное меню, а не конкретные соцсети).
  */
 @Component({
   selector: 'app-help-page',
@@ -33,6 +33,12 @@ const COPY_FEEDBACK_MS = 2000;
 })
 export class HelpPageComponent {
   protected readonly donationPhone = DONATION_PHONE_RAW;
+
+  private readonly shareUrl = window.location.origin;
+
+  protected readonly vkShareUrl = getVkShareUrl(this.shareUrl, SHARE_TEXT);
+  protected readonly telegramShareUrl = getTelegramShareUrl(this.shareUrl, SHARE_TEXT);
+  protected readonly whatsAppShareUrl = getWhatsAppShareUrl(this.shareUrl, SHARE_TEXT);
 
   protected readonly copyFeedback = signal<'idle' | 'copied' | 'error'>('idle');
 
@@ -46,28 +52,8 @@ export class HelpPageComponent {
     void this.copyToClipboard(this.donationPhone);
   }
 
-  /**
-   * Web Share API — открывает системное меню "Поделиться" (доступно почти везде на
-   * мобильных, но не в десктопных браузерах). Там, где его нет, просто копируем ссылку
-   * на сайт в буфер обмена — тоже валидный способ "поделиться".
-   */
-  protected async onShare(): Promise<void> {
-    const shareData: ShareData = {
-      title: 'Девять жизней',
-      text: 'Волонтёрская группа «Девять жизней» помогает бездомным животным найти дом.',
-      url: window.location.origin
-    };
-
-    if (navigator.share) {
-      try {
-        await navigator.share(shareData);
-      } catch {
-        // Пользователь закрыл системное меню — не ошибка, ничего не делаем.
-      }
-      return;
-    }
-
-    await this.copyToClipboard(shareData.url ?? window.location.origin);
+  protected onCopyLink(): void {
+    void this.copyToClipboard(this.shareUrl);
   }
 
   private async copyToClipboard(text: string): Promise<void> {
