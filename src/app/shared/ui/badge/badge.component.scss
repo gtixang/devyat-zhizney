@@ -23,28 +23,28 @@
   &--primary {
     background: var(--color-primary-bg);
     border-color: transparent;
-    color: color-mix(in srgb, var(--color-primary) 55%, white 45%);
+    color: var(--color-primary-on-tint);
   }
 
   &--accent {
     background: var(--color-accent);
     border-color: transparent;
-    color: var(--color-text-primary);
+    color: var(--color-on-solid);
   }
 
   &--warning {
     background: var(--color-warning-bg);
     border-color: transparent;
-    color: color-mix(in srgb, var(--color-warning) 60%, white 40%);
+    color: var(--color-warning-on-tint);
   }
 
   &--error {
     background: var(--color-error);
     border-color: transparent;
-    color: var(--color-text-primary);
+    color: var(--color-on-solid);
 
     &::before {
-      background: var(--color-text-primary);
+      background: var(--color-on-solid);
     }
   }
 

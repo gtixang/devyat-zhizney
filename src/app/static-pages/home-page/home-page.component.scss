@@ -4,9 +4,7 @@
   display: block;
 }
 
-// ==========================================================================
 // Hero
-// ==========================================================================
 .home-hero {
   display: grid;
   grid-template-columns: 1fr;
@@ -139,14 +137,13 @@
   }
 }
 
-// ==========================================================================
 // Featured animals / Как это работает / Как можно помочь
 // Общий каркас секции (блочная, паддинг space-9, центрирована до 1280px) —
 // объявлен один раз на все три, чтобы не дублировать одинаковые правила.
-// ==========================================================================
 .home-hero,
 .home-featured,
 .home-steps,
+.home-success,
 .home-help,
 .home-final-cta {
   max-width: 1280px;
@@ -155,19 +152,22 @@
 .home-hero,
 .home-featured,
 .home-steps,
+.home-success,
 .home-help {
   margin: 0 auto;
 }
 
 .home-featured,
 .home-steps,
+.home-success,
 .home-help {
   display: block;
   padding: var(--space-9) var(--space-6);
 }
 
-// Сетка карточек — 1 колонка / 2 (планшет) / 4 (десктоп) — одинаковая у обеих секций.
+// Сетка карточек — 1 колонка / 2 (планшет) / 4 (десктоп) — одинаковая у всех трёх.
 .home-featured__grid,
+.home-success__grid,
 .home-help__grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -190,9 +190,43 @@
   }
 }
 
-// ==========================================================================
+// Срочно нужен временный дом
+.home-urgent {
+  max-width: 1280px;
+  margin: 0 auto var(--space-9);
+  padding: var(--space-8) var(--space-7);
+  background: var(--color-warning-bg);
+  border: 1px solid color-mix(in srgb, var(--color-warning) 30%, transparent);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  align-items: flex-start;
+
+  @include mixins.respond-to(tablet) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-7);
+  }
+
+  &__title {
+    font-size: var(--text-h3-size);
+    font-weight: var(--text-h3-weight);
+  }
+
+  &__desc {
+    margin-top: var(--space-2);
+    max-width: 58ch;
+    color: var(--color-text-secondary);
+  }
+
+  app-button {
+    flex: none;
+  }
+}
+
 // Как это работает
-// ==========================================================================
 .home-steps {
   &__list {
     display: grid;
@@ -225,9 +259,63 @@
   }
 }
 
-// ==========================================================================
+// Истории успеха
+.home-success {
+  &__card {
+    position: relative;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+  }
+
+  &__photo {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    display: block;
+  }
+
+  &__photo--placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-secondary);
+    background: linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--color-primary) 18%, var(--color-surface) 82%),
+      var(--color-surface) 60%
+    );
+
+    svg {
+      width: 34%;
+      height: 34%;
+      opacity: 0.35;
+    }
+  }
+
+  &__tag {
+    position: absolute;
+    top: var(--space-3);
+    left: var(--space-3);
+    padding: 5px var(--space-3);
+    border-radius: var(--radius-pill);
+    background: var(--color-success);
+    color: var(--color-on-solid);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  &__name {
+    padding: var(--space-3) var(--space-4);
+    font-size: 1.0625rem;
+    font-weight: 800;
+  }
+}
+
 // Как можно помочь
-// ==========================================================================
 .home-help {
   &__item {
     display: block;
@@ -261,9 +349,7 @@
   }
 }
 
-// ==========================================================================
 // Финальный CTA
-// ==========================================================================
 .home-final-cta {
   margin: var(--space-9) auto var(--space-11);
   background: var(--color-primary);
@@ -275,14 +361,14 @@
     font-size: var(--text-h1-size);
     font-weight: var(--text-h1-weight);
     line-height: 1.1;
-    color: var(--color-text-primary);
+    color: var(--color-on-solid);
   }
 
   &__text {
     margin-top: var(--space-3);
     max-width: 56ch;
     margin-inline: auto;
-    color: color-mix(in srgb, var(--color-text-primary) 85%, transparent);
+    color: color-mix(in srgb, var(--color-on-solid) 85%, transparent);
   }
 
   app-button {

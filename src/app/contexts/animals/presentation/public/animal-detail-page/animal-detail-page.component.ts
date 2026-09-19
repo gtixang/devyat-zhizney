@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 import { catchError, of, switchMap } from 'rxjs';
 
 import { AnimalsFacade } from '@contexts/animals/application';
-import { getGenderLabel, getHealthItems, getHealthWarnings } from '@contexts/animals/presentation';
+import { URGENT_LABEL, getGenderLabel, getHealthItems, getHealthWarnings, isUrgent } from '@contexts/animals/presentation';
 import { BadgeComponent } from '@shared/ui/badge';
 import { ButtonComponent } from '@shared/ui/button';
 import { PhotoGalleryComponent } from '@shared/ui/photo-gallery';
@@ -25,7 +25,9 @@ import { SectionComponent } from '@shared/ui/section';
  *
  * `status` животного здесь не показывается: это внутренняя учётная метка куратора
  * (где физически находится животное), а не то, что нужно человеку, который ищет
- * питомца — см. также animal-card.component.ts и обсуждение в чате.
+ * питомца — см. также animal-card.component.ts и обсуждение в чате. Исключение —
+ * "Срочно нужен дом" (isUrgent()) для needs_placement, единственный производный
+ * факт из статуса, полезный именно адоптеру.
  */
 @Component({
   selector: 'app-animal-detail-page',
@@ -55,6 +57,12 @@ export class AnimalDetailPageComponent {
       })
     )
   );
+
+  protected readonly urgentLabel = URGENT_LABEL;
+  protected readonly isUrgent = computed(() => {
+    const status = this.animal()?.status;
+    return status ? isUrgent(status) : false;
+  });
 
   protected readonly genderLabel = computed(() => {
     const gender = this.animal()?.gender;

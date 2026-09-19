@@ -49,6 +49,7 @@
   &__input:checked + &__box {
     background: var(--color-primary);
     border-color: var(--color-primary);
+    color: var(--color-on-solid);
 
     svg {
       opacity: 1;

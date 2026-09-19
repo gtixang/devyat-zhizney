@@ -19,6 +19,9 @@
         </svg>
       </div>
     }
+    @if (isUrgent()) {
+      <app-badge class="animal-card__urgent" tone="warning">{{ urgentLabel }}</app-badge>
+    }
   </a>
 
   <div class="animal-card__body">

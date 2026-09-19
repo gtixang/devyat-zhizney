@@ -1,4 +1,17 @@
-import { AnimalGender, AnimalHealth } from '@contexts/animals/domain';
+import { AnimalGender, AnimalHealth, AnimalStatus } from '@contexts/animals/domain';
+
+/**
+ * "Срочно нужен дом" — единственный кусочек статуса, который всё же имеет смысл
+ * показывать посетителю (не куратору): животное ещё не под присмотром волонтёра
+ * (см. AnimalStatus в animal.model.ts). Сам статус целиком по-прежнему не
+ * показывается — только этот один производный факт, полезный адоптеру, а не
+ * админу. См. обсуждение в чате.
+ */
+export const URGENT_LABEL = 'Срочно нужен дом';
+
+export function isUrgent(status: AnimalStatus): boolean {
+  return status === 'needs_placement';
+}
 
 /**
  * Чистые функции форматирования животного для отображения — общие для публичной
@@ -37,4 +50,13 @@ export function getHealthItems(health: AnimalHealth): readonly HealthChecklistIt
     { label: 'Стерилизована', done: health.sterilized },
     { label: 'Обработана от паразитов', done: health.dewormed }
   ];
+}
+
+/**
+ * Раньше жила только в animal-catalog-page.component.ts — теперь нужна и главной
+ * странице (счётчик срочных животных), вынесена сюда, чтобы не дублировать.
+ */
+export function formatAnimalsCount(count: number): string {
+  const isSingular = count % 10 === 1 && count % 100 !== 11;
+  return `${count} ${isSingular ? 'животное' : 'животных'}`;
 }

@@ -65,6 +65,11 @@
     display: block;
   }
 
+  &__urgent {
+    display: inline-flex;
+    margin-bottom: var(--space-3);
+  }
+
   &__name {
     font-size: var(--text-h1-size);
     font-weight: var(--text-h1-weight);

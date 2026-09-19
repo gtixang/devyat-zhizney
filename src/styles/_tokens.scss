@@ -4,40 +4,57 @@
 // и в шаблонах компонентов при необходимости точечных inline-расчётов.
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
-  // --- Цвет: базовые токены ---
-  --color-background: #080d1f;
-  --color-surface: #10172b;
-  --color-surface-hover: color-mix(in srgb, var(--color-surface) 94%, white 6%);
-  --color-surface-active: color-mix(in srgb, var(--color-surface) 88%, white 12%);
+  // --- Цвет: базовые токены (светлая тема — публичный сайт) ---
+  --color-background: #faf8f5;
+  --color-surface: #ffffff;
+  --color-surface-hover: color-mix(in srgb, var(--color-surface) 96%, black 4%);
+  --color-surface-active: color-mix(in srgb, var(--color-surface) 90%, black 10%);
 
-  --color-primary: #3155f5;
-  --color-primary-hover: color-mix(in srgb, var(--color-primary) 88%, white 12%);
-  --color-primary-active: color-mix(in srgb, var(--color-primary) 82%, black 18%);
-  --color-primary-bg: color-mix(in srgb, var(--color-primary) 16%, var(--color-surface) 84%);
+  --color-primary: #2f5d50;
+  --color-primary-hover: color-mix(in srgb, var(--color-primary) 88%, black 12%);
+  --color-primary-active: color-mix(in srgb, var(--color-primary) 78%, black 22%);
+  --color-primary-bg: color-mix(in srgb, var(--color-primary) 14%, var(--color-surface) 86%);
 
-  --color-accent: #e83d91;
-  --color-accent-hover: color-mix(in srgb, var(--color-accent) 88%, white 12%);
-  --color-accent-active: color-mix(in srgb, var(--color-accent) 82%, black 18%);
-  --color-accent-bg: color-mix(in srgb, var(--color-accent) 16%, var(--color-surface) 84%);
+  --color-accent: #d9663d;
+  --color-accent-hover: color-mix(in srgb, var(--color-accent) 88%, black 12%);
+  --color-accent-active: color-mix(in srgb, var(--color-accent) 78%, black 22%);
+  --color-accent-bg: color-mix(in srgb, var(--color-accent) 14%, var(--color-surface) 86%);
 
-  --color-text-primary: #f5f7fa;
-  --color-text-secondary: #9299ad;
-  --color-text-disabled: color-mix(in srgb, var(--color-text-secondary) 55%, var(--color-surface) 45%);
+  --color-text-primary: #221e1a;
+  --color-text-secondary: #6e655b;
+  --color-text-disabled: color-mix(in srgb, var(--color-text-secondary) 50%, var(--color-surface) 50%);
 
-  --color-border: #252d43;
-  --color-border-strong: color-mix(in srgb, var(--color-border) 60%, white 40%);
+  --color-border: #eae3da;
+  --color-border-strong: color-mix(in srgb, var(--color-border) 45%, var(--color-text-secondary) 55%);
+
+  /**
+   * Текст поверх ЗАЛИТОГО (не -bg варианта) primary/accent/error — терракотовый,
+   * тёмно-зелёный и красный тона в обеих темах достаточно насыщенные/средние по
+   * светлоте, чтобы белый текст читался на них одинаково хорошо что на светлой,
+   * что на тёмной (админской) теме — поэтому один токен, не переопределяется.
+   */
+  --color-on-solid: #f5f7fa;
 
   // --- Семантические цвета: только для валидации форм и точечных статусов ---
-  --color-success: #34c27a;
-  --color-success-bg: color-mix(in srgb, var(--color-success) 16%, var(--color-surface) 84%);
-  --color-warning: #e8a23d;
+  --color-success: #3f8f5f;
+  --color-success-bg: color-mix(in srgb, var(--color-success) 14%, var(--color-surface) 86%);
+  --color-warning: #c4791f;
   --color-warning-bg: color-mix(in srgb, var(--color-warning) 16%, var(--color-surface) 84%);
-  --color-error: #ef4757;
-  --color-error-bg: color-mix(in srgb, var(--color-error) 16%, var(--color-surface) 84%);
+  --color-error: #c23b34;
+  --color-error-bg: color-mix(in srgb, var(--color-error) 14%, var(--color-surface) 86%);
   --color-info: var(--color-primary);
   --color-info-bg: var(--color-primary-bg);
+
+  /**
+   * Текст поверх -bg варианта (бейдж "primary"/"warning" — бледная плашка): на
+   * светлом фоне читаемый текст получается затемнением тона, на тёмном (админка) —
+   * осветлением. Направление противоположное в двух темах, поэтому не формула
+   * в компоненте, а отдельный токен, переопределяемый в admin-layout.
+   */
+  --color-primary-on-tint: color-mix(in srgb, var(--color-primary) 65%, black 35%);
+  --color-warning-on-tint: color-mix(in srgb, var(--color-warning) 65%, black 35%);
 
   // --- Типографика ---
   --font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -99,10 +116,12 @@
   --radius-lg: 16px;
   --radius-pill: 999px;
 
-  // --- Тени: используются точечно (dropdown/modal/sticky header), без glow ---
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.28);
-  --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.32);
-  --shadow-lg: 0 20px 48px rgba(0, 0, 0, 0.42);
+  // --- Тени: используются точечно (dropdown/modal/sticky header), без glow.
+  // Тёплый тёмный оттенок (не чистый чёрный) и низкая непрозрачность — на светлом
+  // фоне тень должна быть едва заметной, а не тяжёлой (docs/design-direction.md). ---
+  --shadow-sm: 0 1px 2px rgba(34, 30, 26, 0.08);
+  --shadow-md: 0 8px 20px rgba(34, 30, 26, 0.1);
+  --shadow-lg: 0 20px 48px rgba(34, 30, 26, 0.14);
 
   // --- Взаимодействие ---
   --transition-fast: 150ms ease-out;

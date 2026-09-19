@@ -8,6 +8,7 @@ import { CheckboxComponent } from '@shared/ui/checkbox';
 import { AnimalsFacade } from '@contexts/animals/application';
 import { Animal, AnimalGender } from '@contexts/animals/domain';
 import { AnimalCardComponent } from '@contexts/animals/presentation/components/animal-card';
+import { formatAnimalsCount } from '@contexts/animals/presentation';
 import { AGE_BUCKETS, AgeBucketId } from './animal-catalog-page.age-buckets';
 
 const ALL_SPECIES_ID = 'all';
@@ -111,9 +112,4 @@ export class AnimalCatalogPageComponent {
     }
     this.selectedGenders.set(next);
   }
-}
-
-function formatAnimalsCount(count: number): string {
-  const isSingular = count % 10 === 1 && count % 100 !== 11;
-  return `${count} ${isSingular ? 'животное' : 'животных'}`;
 }

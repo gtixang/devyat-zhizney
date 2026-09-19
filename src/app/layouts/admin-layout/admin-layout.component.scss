@@ -3,6 +3,58 @@
 :host {
   display: block;
   min-height: 100dvh;
+  // `<body>` красится в var(--color-background) глобально (_main.scss) и остаётся
+  // светлым даже здесь (body — предок этого компонента, а не потомок, переопределение
+  // ниже на него не действует) — красим фон явно вторым слоем поверх body, иначе по
+  // краям при overscroll на мобильном будет видна светлая полоса.
+  background: var(--color-background);
+
+  // Админка нарочно остаётся тёмной, пока публичный сайт перешёл на светлую тему
+  // (см. обсуждение в чате: разная аудитория и цель — рабочий инструмент куратора,
+  // а не эмоциональная витрина). Ниже — те же самые значения, что были в _tokens.scss
+  // до перехода на светлую тему, просто область действия сужена до этого поддерева:
+  // переменные наследуются всем содержимым внутри <app-admin-layout> (sidebar, topbar,
+  // весь контент маршрутов /admin/*), а компоненты никак не меняются — они как
+  // и раньше просто читают var(--color-*), не зная, в какой теме оказались.
+  color-scheme: dark;
+
+  --color-background: #080d1f;
+  --color-surface: #10172b;
+  --color-surface-hover: color-mix(in srgb, var(--color-surface) 94%, white 6%);
+  --color-surface-active: color-mix(in srgb, var(--color-surface) 88%, white 12%);
+
+  --color-primary: #3155f5;
+  --color-primary-hover: color-mix(in srgb, var(--color-primary) 88%, white 12%);
+  --color-primary-active: color-mix(in srgb, var(--color-primary) 82%, black 18%);
+  --color-primary-bg: color-mix(in srgb, var(--color-primary) 16%, var(--color-surface) 84%);
+
+  --color-accent: #e83d91;
+  --color-accent-hover: color-mix(in srgb, var(--color-accent) 88%, white 12%);
+  --color-accent-active: color-mix(in srgb, var(--color-accent) 82%, black 18%);
+  --color-accent-bg: color-mix(in srgb, var(--color-accent) 16%, var(--color-surface) 84%);
+
+  --color-text-primary: #f5f7fa;
+  --color-text-secondary: #9299ad;
+  --color-text-disabled: color-mix(in srgb, var(--color-text-secondary) 55%, var(--color-surface) 45%);
+
+  --color-border: #252d43;
+  --color-border-strong: color-mix(in srgb, var(--color-border) 60%, white 40%);
+
+  --color-primary-on-tint: color-mix(in srgb, var(--color-primary) 55%, white 45%);
+  --color-warning-on-tint: color-mix(in srgb, var(--color-warning) 60%, white 40%);
+
+  --color-success: #34c27a;
+  --color-success-bg: color-mix(in srgb, var(--color-success) 16%, var(--color-surface) 84%);
+  --color-warning: #e8a23d;
+  --color-warning-bg: color-mix(in srgb, var(--color-warning) 16%, var(--color-surface) 84%);
+  --color-error: #ef4757;
+  --color-error-bg: color-mix(in srgb, var(--color-error) 16%, var(--color-surface) 84%);
+  --color-info: var(--color-primary);
+  --color-info-bg: var(--color-primary-bg);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.28);
+  --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.32);
+  --shadow-lg: 0 20px 48px rgba(0, 0, 0, 0.42);
 }
 
 .admin-layout {

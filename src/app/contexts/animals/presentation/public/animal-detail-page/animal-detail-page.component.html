@@ -18,6 +18,9 @@
       <app-photo-gallery class="animal-detail-page__gallery" [photos]="pet.photoUrls" [alt]="'Фото ' + pet.name"></app-photo-gallery>
 
       <div class="animal-detail-page__info">
+        @if (isUrgent()) {
+          <app-badge class="animal-detail-page__urgent" tone="warning">{{ urgentLabel }}</app-badge>
+        }
         <h1 class="animal-detail-page__name">{{ pet.name }}</h1>
         <p class="animal-detail-page__meta">{{ pet.species }} · {{ genderLabel() }} · {{ pet.age }} лет</p>
 

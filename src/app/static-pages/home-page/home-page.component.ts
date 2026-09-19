@@ -6,12 +6,15 @@ import { catchError, of } from 'rxjs';
 import { AnimalsFacade } from '@contexts/animals/application';
 import { Animal } from '@contexts/animals/domain';
 import { AnimalCardComponent } from '@contexts/animals/presentation/components/animal-card';
+import { formatAnimalsCount, isUrgent } from '@contexts/animals/presentation';
 import { ButtonComponent } from '@shared/ui/button';
 import { CardComponent } from '@shared/ui/card';
 import { SectionComponent } from '@shared/ui/section';
 
 /** Тизер показывает первых 4 доступных животных — без ручной курации по id. */
 const FEATURED_COUNT = 4;
+/** "Истории успеха" — тоже до 4 штук, чтобы блок не занимал пол-страницы. */
+const SUCCESS_STORIES_COUNT = 4;
 
 /**
  * Главная страница (docs/scheme/main-page.txt). Композирует контент из нескольких
@@ -22,6 +25,15 @@ const FEATURED_COUNT = 4;
  * раньше здесь был отдельный локальный mock-набор с захардкоженными id, из-за чего
  * на главной могло показываться животное, которое в реальной базе уже пристроено
  * (mock не знал о реальном статусе) — см. обсуждение в чате.
+ *
+ * Блок "Срочно нужен временный дом" и "Истории успеха" — по итогам разбора того,
+ * что реально важно для этой конкретной группы (нет здания-приюта, держится на
+ * волонтёрах) и что повышает доверие у посетителей (см. обсуждение в чате):
+ * - urgentCount — сколько сейчас животных со статусом needs_placement (ещё не под
+ *   присмотром волонтёра) среди уже загруженных доступных животных, без отдельного
+ *   запроса.
+ * - successStories — отдельный запрос loadAll() (не loadAvailable(), который как
+ *   раз ИСКЛЮЧАЕТ пристроенных), отфильтрованный на статус 'adopted'.
  */
 @Component({
   selector: 'app-home-page',
@@ -42,4 +54,17 @@ export class HomePageComponent {
   protected readonly totalAnimalsCount = computed(() => this.availableAnimals().length);
 
   protected readonly featuredAnimals = computed(() => this.availableAnimals().slice(0, FEATURED_COUNT));
+
+  protected readonly urgentCount = computed(() => this.availableAnimals().filter((animal) => isUrgent(animal.status)).length);
+  protected readonly urgentCountLabel = computed(() => formatAnimalsCount(this.urgentCount()));
+
+  private readonly allAnimals = toSignal(this.animalsFacade.loadAll().pipe(catchError(() => of([] as Animal[]))), {
+    initialValue: [] as Animal[]
+  });
+
+  protected readonly successStories = computed(() =>
+    this.allAnimals()
+      .filter((animal) => animal.status === 'adopted')
+      .slice(0, SUCCESS_STORIES_COUNT)
+  );
 }

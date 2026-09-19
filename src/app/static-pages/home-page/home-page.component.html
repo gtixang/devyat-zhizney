@@ -42,6 +42,19 @@
   </div>
 </app-section>
 
+@if (urgentCount() > 0) {
+  <section class="home-urgent">
+    <div class="home-urgent__text">
+      <h2 class="home-urgent__title">Срочно нужен временный дом</h2>
+      <p class="home-urgent__desc">
+        Сейчас {{ urgentCountLabel() }} ещё живут на улице и ждут, пока найдётся волонтёр,
+        готовый взять их к себе — хотя бы на время, пока не найдётся постоянная семья.
+      </p>
+    </div>
+    <app-button variant="accent" link="/volunteers">Стать временным домом</app-button>
+  </section>
+}
+
 <app-section class="home-steps" eyebrow="Как это работает" heading="Три простых шага">
   <ol class="home-steps__list">
     <li class="home-steps__item">
@@ -58,6 +71,28 @@
     </li>
   </ol>
 </app-section>
+
+@if (successStories().length > 0) {
+  <app-section class="home-success" eyebrow="Истории успеха" heading="Они уже нашли дом">
+    <div class="home-success__grid">
+      @for (animal of successStories(); track animal.id) {
+        <div class="home-success__card">
+          @if (animal.photoUrls[0]; as photo) {
+            <img class="home-success__photo" [src]="photo" [alt]="'Фото ' + animal.name" />
+          } @else {
+            <div class="home-success__photo home-success__photo--placeholder" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M4 10c0-1 1-2 2-2s2 1 2 2M16 10c0-1 1-2 2-2s2 1 2 2M8 15c1.5 1.5 6.5 1.5 8 0" />
+              </svg>
+            </div>
+          }
+          <span class="home-success__tag">Нашёл дом!</span>
+          <div class="home-success__name">{{ animal.name }}</div>
+        </div>
+      }
+    </div>
+  </app-section>
+}
 
 <app-section class="home-help" eyebrow="Участвовать" heading="Как можно помочь">
   <div class="home-help__grid">
