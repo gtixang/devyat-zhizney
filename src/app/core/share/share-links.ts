@@ -1,3 +1,4 @@
+/** Текст, который подставляется в сообщение при шаринге сайта — общий для footer и страницы "Помочь". */
 export const SHARE_TEXT = 'Волонтёрская группа «Девять жизней» помогает бездомным животным найти дом.';
 
 export function getVkShareUrl(url: string, text: string): string {

@@ -1,13 +1,11 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
+import { createCopyWithFeedback } from '@core/clipboard';
 import { ORG_PHONE_RAW } from '@core/contact';
+import { SHARE_TEXT, getTelegramShareUrl, getVkShareUrl, getWhatsAppShareUrl } from '@core/share';
 import { CardComponent } from '@shared/ui/card';
 import { SectionComponent } from '@shared/ui/section';
-import { SHARE_TEXT, getTelegramShareUrl, getVkShareUrl, getWhatsAppShareUrl } from './help-page.constants';
-
-/** На сколько показываем "Скопировано" после успешного копирования в буфер. */
-const COPY_FEEDBACK_MS = 2000;
 
 /**
  * Страница "Помочь" (docs/scheme/main-page.txt, раздел "КАК МОЖНО ПОМОЧЬ": Приютить,
@@ -21,8 +19,9 @@ const COPY_FEEDBACK_MS = 2000;
  *
  * "Рассказать друзьям" — конкретные кнопки-иконки соцсетей (VK/Telegram/WhatsApp) со
  * стандартными share-ссылками этих платформ, плюс копирование ссылки в буфер — так
- * понятнее и надёжнее универсального navigator.share() (которого нет в десктопных
- * браузерах и который просто открывает системное меню, а не конкретные соцсети).
+ * понятнее и надёжнее универсального navigator.share(). Тот же блок продублирован
+ * в футере (site-footer.component) — общая логика вынесена в core/share и
+ * core/clipboard, чтобы не дублировать её здесь и там.
  */
 @Component({
   selector: 'app-help-page',
@@ -41,34 +40,14 @@ export class HelpPageComponent {
   protected readonly telegramShareUrl = getTelegramShareUrl(this.shareUrl, SHARE_TEXT);
   protected readonly whatsAppShareUrl = getWhatsAppShareUrl(this.shareUrl, SHARE_TEXT);
 
-  protected readonly copyFeedback = signal<'idle' | 'copied' | 'error'>('idle');
-
-  private copyFeedbackTimeoutId: ReturnType<typeof setTimeout> | undefined;
-
-  constructor() {
-    inject(DestroyRef).onDestroy(() => clearTimeout(this.copyFeedbackTimeoutId));
-  }
+  private readonly copyHelper = createCopyWithFeedback(inject(DestroyRef));
+  protected readonly copyFeedback = this.copyHelper.feedback;
 
   protected onCopyPhone(): void {
-    void this.copyToClipboard(this.donationPhone);
+    this.copyHelper.copy(this.donationPhone);
   }
 
   protected onCopyLink(): void {
-    void this.copyToClipboard(this.shareUrl);
-  }
-
-  private async copyToClipboard(text: string): Promise<void> {
-    try {
-      await navigator.clipboard.writeText(text);
-      this.showCopyFeedback('copied');
-    } catch {
-      this.showCopyFeedback('error');
-    }
-  }
-
-  private showCopyFeedback(state: 'copied' | 'error'): void {
-    this.copyFeedback.set(state);
-    clearTimeout(this.copyFeedbackTimeoutId);
-    this.copyFeedbackTimeoutId = setTimeout(() => this.copyFeedback.set('idle'), COPY_FEEDBACK_MS);
+    this.copyHelper.copy(this.shareUrl);
   }
 }
