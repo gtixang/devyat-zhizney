@@ -161,10 +161,9 @@
   padding: var(--space-9) var(--space-6);
 }
 
-// Сетка карточек — 1 колонка / 2 (планшет) / 4 (десктоп) — одинаковая у всех трёх.
+// Сетка карточек — 1 колонка / 2 (планшет) / 4 (десктоп) — одинаковая у featured и success.
 .home-featured__grid,
-.home-success__grid,
-.home-help__grid {
+.home-success__grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--space-5);
@@ -175,6 +174,21 @@
 
   @include mixins.respond-to(desktop) {
     grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+// Как можно помочь — 3 плитки, поэтому десктопная раскладка своя (3 в ряд).
+.home-help__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-5);
+
+  @include mixins.respond-to(tablet) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include mixins.respond-to(desktop) {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
