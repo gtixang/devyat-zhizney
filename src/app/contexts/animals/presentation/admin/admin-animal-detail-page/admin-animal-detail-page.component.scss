@@ -99,6 +99,7 @@
   &__facts {
     display: grid;
     gap: var(--space-4);
+    margin: 0;
 
     @include mixins.respond-to(tablet) {
       grid-template-columns: repeat(3, 1fr);
@@ -107,6 +108,7 @@
 
   &__fact {
     dt {
+      margin: 0;
       color: var(--color-text-secondary);
       font-size: var(--text-caption-size);
       text-transform: uppercase;
@@ -114,7 +116,9 @@
     }
 
     dd {
-      margin-top: var(--space-2);
+      // Браузер по умолчанию даёт <dd> margin-inline-start: 40px — сбрасываем его,
+      // оставляя только собственный верхний отступ от подписи поля.
+      margin: var(--space-2) 0 0;
       color: var(--color-text-primary);
     }
   }
