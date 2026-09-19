@@ -4,9 +4,7 @@ import { RouterLink } from '@angular/router';
 import { catchError, of, switchMap } from 'rxjs';
 
 import { AnimalsFacade } from '@contexts/animals/application';
-import { ANIMAL_STATUS_LABELS, AnimalStatus } from '@contexts/animals/domain';
-import { ANIMAL_STATUS_TONE } from '@contexts/animals/presentation';
-import { BadgeComponent, BadgeTone } from '@shared/ui/badge';
+import { BadgeComponent } from '@shared/ui/badge';
 import { ButtonComponent } from '@shared/ui/button';
 import { PhotoGalleryComponent } from '@shared/ui/photo-gallery';
 import { SectionComponent } from '@shared/ui/section';
@@ -24,6 +22,10 @@ import { HealthChecklistItem } from './animal-detail-page.types';
  * Имя животного нигде не подставляется в падежные формы ("о Луне", "забрать Луну") —
  * русское склонение произвольных имён нельзя корректно автоматизировать без отдельной
  * библиотеки, поэтому заголовки сформулированы без обращения к падежам.
+ *
+ * `status` животного здесь не показывается: это внутренняя учётная метка куратора
+ * (где физически находится животное), а не то, что нужно человеку, который ищет
+ * питомца — см. также animal-card.component.ts и обсуждение в чате.
  */
 @Component({
   selector: 'app-animal-detail-page',
@@ -55,16 +57,6 @@ export class AnimalDetailPageComponent {
   );
 
   protected readonly genderLabel = computed(() => (this.animal()?.gender === 'female' ? 'девочка' : 'мальчик'));
-
-  protected readonly statusLabel = computed(() => {
-    const status = this.animal()?.status;
-    return status ? ANIMAL_STATUS_LABELS[status] : '';
-  });
-
-  protected readonly statusTone = computed<BadgeTone>(() => {
-    const status = this.animal()?.status;
-    return status ? ANIMAL_STATUS_TONE[status] : 'neutral';
-  });
 
   /**
    * needsTreatment/specialNeeds — не "выполненный пункт заботы", как vaccinated/

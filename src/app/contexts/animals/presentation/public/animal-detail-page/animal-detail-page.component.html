@@ -18,8 +18,6 @@
       <app-photo-gallery class="animal-detail-page__gallery" [photos]="pet.photoUrls" [alt]="'Фото ' + pet.name"></app-photo-gallery>
 
       <div class="animal-detail-page__info">
-        <app-badge class="animal-detail-page__status" [tone]="statusTone()">{{ statusLabel() }}</app-badge>
-
         <h1 class="animal-detail-page__name">{{ pet.name }}</h1>
         <p class="animal-detail-page__meta">{{ pet.species }} · {{ genderLabel() }} · {{ pet.age }} лет</p>
 
