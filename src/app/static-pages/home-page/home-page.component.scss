@@ -143,8 +143,7 @@
 .home-hero,
 .home-featured,
 .home-success,
-.home-help,
-.home-final-cta {
+.home-help {
   max-width: 1280px;
 }
 
@@ -310,33 +309,5 @@
     margin-top: var(--space-2);
     color: var(--color-text-secondary);
     font-size: var(--text-body-sm-size);
-  }
-}
-
-// Финальный CTA
-.home-final-cta {
-  margin: var(--space-9) auto var(--space-11);
-  background: var(--color-primary);
-  border-radius: var(--radius-lg);
-  padding: var(--space-10) var(--space-6);
-  text-align: center;
-
-  &__title {
-    font-size: var(--text-h1-size);
-    font-weight: var(--text-h1-weight);
-    line-height: 1.1;
-    color: var(--color-on-solid);
-  }
-
-  &__text {
-    margin-top: var(--space-3);
-    max-width: 56ch;
-    margin-inline: auto;
-    color: color-mix(in srgb, var(--color-on-solid) 85%, transparent);
-  }
-
-  app-button {
-    display: inline-block;
-    margin-top: var(--space-6);
   }
 }
