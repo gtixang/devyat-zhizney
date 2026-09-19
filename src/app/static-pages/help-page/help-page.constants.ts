@@ -1,7 +1,3 @@
-/** Номер привязан к картам Сбербанка, Т-Банка и Ozon Банка Натальи Гилязовой — см. обсуждение в чате. */
-export const DONATION_PHONE_RAW = '+79178956760';
-export const DONATION_PHONE_DISPLAY = '+7 917 895-67-60';
-
 export const SHARE_TEXT = 'Волонтёрская группа «Девять жизней» помогает бездомным животным найти дом.';
 
 export function getVkShareUrl(url: string, text: string): string {

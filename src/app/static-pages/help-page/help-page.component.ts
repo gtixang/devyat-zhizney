@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
+import { ORG_PHONE_RAW } from '@core/contact';
 import { CardComponent } from '@shared/ui/card';
 import { SectionComponent } from '@shared/ui/section';
-import { DONATION_PHONE_RAW, SHARE_TEXT, getTelegramShareUrl, getVkShareUrl, getWhatsAppShareUrl } from './help-page.constants';
+import { SHARE_TEXT, getTelegramShareUrl, getVkShareUrl, getWhatsAppShareUrl } from './help-page.constants';
 
 /** На сколько показываем "Скопировано" после успешного копирования в буфер. */
 const COPY_FEEDBACK_MS = 2000;
@@ -32,7 +33,7 @@ const COPY_FEEDBACK_MS = 2000;
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HelpPageComponent {
-  protected readonly donationPhone = DONATION_PHONE_RAW;
+  protected readonly donationPhone = ORG_PHONE_RAW;
 
   private readonly shareUrl = window.location.origin;
 

@@ -1,11 +1,13 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
+import { ORG_PHONE_DISPLAY, ORG_PHONE_RAW, ORG_VK_URL } from '@core/contact';
 import { ButtonComponent } from '@shared/ui/button';
 
 /**
  * Публичная шапка сайта (docs/scheme/main-page.txt): лого, навигация,
- * акцентная CTA-пилюля. На мобильном навигация сворачивается в отдельное меню.
+ * акцентная CTA-пилюля, ссылка на группу ВКонтакте и телефон куратора.
+ * На мобильном навигация и контакты сворачиваются в отдельное меню.
  */
 @Component({
   selector: 'app-site-header',
@@ -16,6 +18,10 @@ import { ButtonComponent } from '@shared/ui/button';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SiteHeaderComponent {
+  protected readonly vkUrl = ORG_VK_URL;
+  protected readonly phoneRaw = ORG_PHONE_RAW;
+  protected readonly phoneDisplay = ORG_PHONE_DISPLAY;
+
   protected readonly isMobileMenuOpen = signal(false);
 
   protected onToggleMobileMenu(): void {
