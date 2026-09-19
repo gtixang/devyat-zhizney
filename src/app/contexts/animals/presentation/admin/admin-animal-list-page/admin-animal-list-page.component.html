@@ -17,7 +17,7 @@
       <tbody>
         @for (animal of animals(); track animal.id) {
           <tr>
-            <td>{{ animal.name }}</td>
+            <td><a [routerLink]="['/admin/animals', animal.id]">{{ animal.name }}</a></td>
             <td>{{ animal.species }}</td>
             <td>{{ animal.age }}</td>
             <td><app-badge [tone]="statusTone(animal.status)">{{ statusLabel(animal.status) }}</app-badge></td>

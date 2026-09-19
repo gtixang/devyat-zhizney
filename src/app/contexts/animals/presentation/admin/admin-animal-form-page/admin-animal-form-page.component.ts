@@ -83,6 +83,7 @@ export class AdminAnimalFormPageComponent {
   protected readonly needsTreatment = signal(false);
   protected readonly specialNeeds = signal(false);
   protected readonly existingPhotoUrl = signal('');
+  protected readonly curatorName = signal('');
 
   protected readonly ageError = computed(() => {
     const raw = this.age().trim();
@@ -171,6 +172,7 @@ export class AdminAnimalFormPageComponent {
       this.needsTreatment.set(animal.health.needsTreatment);
       this.specialNeeds.set(animal.health.specialNeeds);
       this.existingPhotoUrl.set(animal.photoUrls[0] ?? '');
+      this.curatorName.set(animal.curatorName);
     });
 
     effect(() => {
@@ -220,7 +222,8 @@ export class AdminAnimalFormPageComponent {
       photoUrls: this.photoUrl() ? [this.photoUrl()] : [],
       // Резерв не редактируется в этой форме — им управляет статус заявки
       // (см. Animal.reserved), поэтому при сохранении просто сохраняем как было.
-      reserved: this.existingAnimal()?.reserved ?? false
+      reserved: this.existingAnimal()?.reserved ?? false,
+      curatorName: this.curatorName().trim()
     });
   }
 }

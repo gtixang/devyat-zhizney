@@ -50,6 +50,14 @@
           [value]="traitsInput()"
           (valueChange)="traitsInput.set($event)"
         ></app-input>
+
+        <app-input
+          label="Куратор"
+          hint="Кто сейчас фактически присматривает за животным — видно только в админке"
+          placeholder="Например, Наталья"
+          [value]="curatorName()"
+          (valueChange)="curatorName.set($event)"
+        ></app-input>
       </div>
 
       <div class="admin-form__attributes">

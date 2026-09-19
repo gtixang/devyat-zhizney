@@ -4,11 +4,11 @@ import { RouterLink } from '@angular/router';
 import { catchError, of, switchMap } from 'rxjs';
 
 import { AnimalsFacade } from '@contexts/animals/application';
+import { getGenderLabel, getHealthItems, getHealthWarnings } from '@contexts/animals/presentation';
 import { BadgeComponent } from '@shared/ui/badge';
 import { ButtonComponent } from '@shared/ui/button';
 import { PhotoGalleryComponent } from '@shared/ui/photo-gallery';
 import { SectionComponent } from '@shared/ui/section';
-import { HealthChecklistItem } from './animal-detail-page.types';
 
 /**
  * Карточка животного (docs/scheme/pet-card.md). Данные — реальная таблица `animals`
@@ -56,37 +56,18 @@ export class AnimalDetailPageComponent {
     )
   );
 
-  protected readonly genderLabel = computed(() => (this.animal()?.gender === 'female' ? 'девочка' : 'мальчик'));
-
-  /**
-   * needsTreatment/specialNeeds — не "выполненный пункт заботы", как vaccinated/
-   * sterilized/dewormed, а предупреждение, поэтому вынесены из healthItems() в
-   * отдельные бейджи (см. AnimalHealth в animal.model.ts).
-   */
-  protected readonly healthWarnings = computed<readonly string[]>(() => {
-    const health = this.animal()?.health;
-    if (!health) {
-      return [];
-    }
-    const warnings: string[] = [];
-    if (health.needsTreatment) {
-      warnings.push('Требуется лечение');
-    }
-    if (health.specialNeeds) {
-      warnings.push('Особые потребности');
-    }
-    return warnings;
+  protected readonly genderLabel = computed(() => {
+    const gender = this.animal()?.gender;
+    return gender ? getGenderLabel(gender) : '';
   });
 
-  protected readonly healthItems = computed<readonly HealthChecklistItem[]>(() => {
-    const animal = this.animal();
-    if (!animal) {
-      return [];
-    }
-    return [
-      { label: 'Привита', done: animal.health.vaccinated },
-      { label: 'Стерилизована', done: animal.health.sterilized },
-      { label: 'Обработана от паразитов', done: animal.health.dewormed }
-    ];
+  protected readonly healthWarnings = computed(() => {
+    const health = this.animal()?.health;
+    return health ? getHealthWarnings(health) : [];
+  });
+
+  protected readonly healthItems = computed(() => {
+    const health = this.animal()?.health;
+    return health ? getHealthItems(health) : [];
   });
 }

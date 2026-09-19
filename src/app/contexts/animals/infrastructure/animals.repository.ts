@@ -30,6 +30,7 @@ interface AnimalRow {
   readonly special_needs: boolean;
   readonly photo_urls: readonly string[];
   readonly reserved: boolean;
+  readonly curator_name: string;
 }
 
 function mapRowToAnimal(row: AnimalRow): Animal {
@@ -56,7 +57,8 @@ function mapRowToAnimal(row: AnimalRow): Animal {
     // `?? false` — та же граница системы: пока не выполнена миграция под reserved
     // (docs/database/schema.md), колонки нет вовсе, и ни одно животное не должно
     // считаться зарезервированным просто потому, что поле не пришло.
-    reserved: row.reserved ?? false
+    reserved: row.reserved ?? false,
+    curatorName: row.curator_name ?? ''
   };
 }
 
@@ -76,7 +78,8 @@ function mapAnimalToRow(animal: Animal): AnimalRow {
     needs_treatment: animal.health.needsTreatment,
     special_needs: animal.health.specialNeeds,
     photo_urls: animal.photoUrls,
-    reserved: animal.reserved
+    reserved: animal.reserved,
+    curator_name: animal.curatorName
   };
 }
 

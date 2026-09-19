@@ -127,6 +127,14 @@ export const routes: Routes = [
           )
       },
       {
+        // Должен идти после 'animals/new' — иначе ':id' перехватил бы 'new' как id животного.
+        path: 'animals/:id',
+        loadComponent: () =>
+          import('@contexts/animals/presentation/admin/admin-animal-detail-page/admin-animal-detail-page.component').then(
+            (m) => m.AdminAnimalDetailPageComponent
+          )
+      },
+      {
         path: 'animals/:id/edit',
         loadComponent: () =>
           import('@contexts/animals/presentation/admin/admin-animal-form-page/admin-animal-form-page.component').then(

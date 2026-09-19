@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { RouterLink } from '@angular/router';
 import { catchError, of } from 'rxjs';
 
 import { AnimalsFacade } from '@contexts/animals/application';
@@ -18,7 +19,7 @@ import { SectionComponent } from '@shared/ui/section';
 @Component({
   selector: 'app-admin-animal-list-page',
   standalone: true,
-  imports: [SectionComponent, BadgeComponent, ButtonComponent],
+  imports: [RouterLink, SectionComponent, BadgeComponent, ButtonComponent],
   templateUrl: './admin-animal-list-page.component.html',
   styleUrl: './admin-animal-list-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

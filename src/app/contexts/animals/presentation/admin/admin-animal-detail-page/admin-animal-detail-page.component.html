@@ -1,0 +1,83 @@
+@if (animal() === undefined) {
+  <div class="admin-animal-detail-page admin-animal-detail-page--empty">
+    <p>Загрузка…</p>
+  </div>
+} @else if (animal(); as pet) {
+  <article class="admin-animal-detail-page">
+    <nav class="admin-animal-detail-page__breadcrumb" aria-label="Хлебные крошки">
+      <a routerLink="/admin/animals">Животные</a>
+      <span aria-hidden="true">/</span>
+      <span>{{ pet.name }}</span>
+    </nav>
+
+    <div class="admin-animal-detail-page__hero">
+      <app-photo-gallery
+        class="admin-animal-detail-page__gallery"
+        [photos]="pet.photoUrls"
+        [alt]="'Фото ' + pet.name"
+      ></app-photo-gallery>
+
+      <div class="admin-animal-detail-page__info">
+        <h1 class="admin-animal-detail-page__name">{{ pet.name }}</h1>
+        <p class="admin-animal-detail-page__meta">{{ pet.species }} · {{ genderLabel() }} · {{ pet.age }} лет</p>
+
+        @if (pet.traits.length > 0 || healthWarnings().length > 0) {
+          <ul class="admin-animal-detail-page__traits">
+            @for (trait of pet.traits; track trait) {
+              <li><app-badge tone="neutral">{{ trait }}</app-badge></li>
+            }
+            @for (warning of healthWarnings(); track warning) {
+              <li><app-badge tone="warning">{{ warning }}</app-badge></li>
+            }
+          </ul>
+        }
+
+        <app-button class="admin-animal-detail-page__cta" variant="accent" [link]="'/admin/animals/' + pet.id + '/edit'">
+          Редактировать
+        </app-button>
+      </div>
+    </div>
+
+    <app-section class="admin-animal-detail-page__section" heading="Служебная информация">
+      <dl class="admin-animal-detail-page__facts">
+        <div class="admin-animal-detail-page__fact">
+          <dt>Статус</dt>
+          <dd><app-badge [tone]="statusTone()">{{ statusLabel() }}</app-badge></dd>
+        </div>
+        <div class="admin-animal-detail-page__fact">
+          <dt>Зарезервировано заявкой</dt>
+          <dd>{{ pet.reserved ? 'Да' : 'Нет' }}</dd>
+        </div>
+        <div class="admin-animal-detail-page__fact">
+          <dt>Куратор</dt>
+          <dd>{{ pet.curatorName || '—' }}</dd>
+        </div>
+      </dl>
+    </app-section>
+
+    <app-section class="admin-animal-detail-page__section" heading="О питомце">
+      <p class="admin-animal-detail-page__about">{{ pet.about || '—' }}</p>
+    </app-section>
+
+    <app-section class="admin-animal-detail-page__section" heading="Здоровье">
+      <ul class="admin-animal-detail-page__health">
+        @for (item of healthItems(); track item.label) {
+          <li
+            class="admin-animal-detail-page__health-item"
+            [class.admin-animal-detail-page__health-item--done]="item.done"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+              <path d="M20 6 9 17l-5-5" />
+            </svg>
+            {{ item.label }}
+          </li>
+        }
+      </ul>
+    </app-section>
+  </article>
+} @else {
+  <div class="admin-animal-detail-page admin-animal-detail-page--empty">
+    <p>Животное не найдено.</p>
+    <a routerLink="/admin/animals">Вернуться к списку</a>
+  </div>
+}

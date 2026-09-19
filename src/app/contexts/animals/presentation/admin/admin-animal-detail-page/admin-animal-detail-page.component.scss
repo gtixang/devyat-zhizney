@@ -1,0 +1,158 @@
+@use 'mixins';
+
+.admin-animal-detail-page {
+  display: block;
+  padding: var(--space-8) var(--space-6) var(--space-11);
+  max-width: 1000px;
+  margin: 0 auto;
+
+  &--empty {
+    text-align: center;
+    padding-top: var(--space-11);
+    color: var(--color-text-secondary);
+
+    a {
+      display: inline-block;
+      margin-top: var(--space-4);
+      color: var(--color-primary);
+
+      &:hover {
+        color: var(--color-primary-hover);
+      }
+    }
+  }
+
+  &__breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--color-text-secondary);
+    font-size: var(--text-body-sm-size);
+
+    a {
+      color: var(--color-text-secondary);
+      transition: color var(--transition-fast);
+
+      &:hover {
+        color: var(--color-text-primary);
+      }
+
+      &:focus-visible {
+        @include mixins.focus-ring;
+        border-radius: var(--radius-sm);
+      }
+    }
+
+    span:last-child {
+      color: var(--color-text-primary);
+      font-weight: 600;
+    }
+  }
+
+  &__hero {
+    margin-top: var(--space-6);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+
+    @include mixins.respond-to(desktop) {
+      grid-template-columns: 1fr 1fr;
+      align-items: start;
+    }
+  }
+
+  &__gallery {
+    display: block;
+  }
+
+  &__name {
+    font-size: var(--text-h1-size);
+    font-weight: var(--text-h1-weight);
+    line-height: var(--text-h1-lh);
+  }
+
+  &__meta {
+    margin-top: var(--space-2);
+    color: var(--color-text-secondary);
+    font-size: var(--text-body-lg-size);
+  }
+
+  &__traits {
+    margin-top: var(--space-5);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  &__cta {
+    display: inline-flex;
+    margin-top: var(--space-7);
+  }
+
+  &__section {
+    display: block;
+    margin-top: var(--space-10);
+    padding-top: var(--space-8);
+    border-top: 1px solid var(--color-border);
+  }
+
+  &__facts {
+    display: grid;
+    gap: var(--space-4);
+
+    @include mixins.respond-to(tablet) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  &__fact {
+    dt {
+      color: var(--color-text-secondary);
+      font-size: var(--text-caption-size);
+      text-transform: uppercase;
+      letter-spacing: var(--text-caption-tracking);
+    }
+
+    dd {
+      margin-top: var(--space-2);
+      color: var(--color-text-primary);
+    }
+  }
+
+  &__about {
+    max-width: 68ch;
+    color: var(--color-text-secondary);
+  }
+
+  &__health {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  &__health-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    color: var(--color-text-secondary);
+
+    svg {
+      flex: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 1px solid var(--color-border-strong);
+      padding: 3px;
+      opacity: 0.4;
+    }
+
+    &--done {
+      color: var(--color-text-primary);
+
+      svg {
+        border-color: var(--color-primary);
+        color: var(--color-primary);
+        opacity: 1;
+      }
+    }
+  }
+}

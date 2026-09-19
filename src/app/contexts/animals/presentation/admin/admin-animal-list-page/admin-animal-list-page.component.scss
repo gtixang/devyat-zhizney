@@ -1,3 +1,5 @@
+@use 'mixins';
+
 .admin-page {
   display: block;
 
@@ -54,6 +56,21 @@
 
   tbody td {
     color: var(--color-text-primary);
+
+    a {
+      color: var(--color-text-primary);
+      font-weight: 600;
+
+      &:hover {
+        color: var(--color-primary);
+        text-decoration: underline;
+      }
+
+      &:focus-visible {
+        @include mixins.focus-ring;
+        border-radius: var(--radius-sm);
+      }
+    }
   }
 
   &__empty {

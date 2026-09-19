@@ -297,3 +297,16 @@ alter table public.adoption_applications add constraint adoption_applications_st
 редактирует животных"` на `animals` и `"Куратор меняет статус заявки"` на
 `adoption_applications`) уже разрешают `authenticated` любые значения
 (`using (true) with check (true)`), новые колонка и статус под них уже попадают.
+
+## Миграция: куратор животного (Animal.curatorName)
+
+Служебное поле — кто из волонтёров сейчас фактически присматривает за животным.
+Видно только в админке (список и новая карточка животного `/admin/animals/:id`),
+не показывается на публичном сайте. Выполнить **один раз** в Supabase Dashboard →
+**SQL Editor** → New query → Run:
+
+```sql
+alter table public.animals add column if not exists curator_name text not null default '';
+```
+
+RLS не меняется — та же политика `UPDATE`, что и для остальных полей `animals`.
